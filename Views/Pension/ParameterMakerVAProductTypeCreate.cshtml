@@ -1,0 +1,28 @@
+﻿@model DPLK.Models.VaProductType
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> Create New VA Product Type</h4>
+
+    <form asp-action="ParameterMakerVAProductTypeCreate" method="post">
+        <div class="form-group">
+            <label for="VaNmbr">VA Number:</label>
+            <input type="text" class="form-control" id="VaNmbr" name="VaNmbr" required>
+        </div>
+        <div class="form-group">
+            <label for="ProductTypeNmbr">Product Type Number:</label>
+            <input type="number" class="form-control" id="ProductTypeNmbr" name="ProductTypeNmbr" required>
+        </div>
+        <div class="form-group">
+            <label for="LastChangeDt">Last Change Date:</label>
+            <input type="datetime-local" class="form-control" id="LastChangeDt" name="LastChangeDt">
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-action="ParameterMakerVAProductType" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

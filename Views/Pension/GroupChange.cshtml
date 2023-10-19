@@ -1,0 +1,59 @@
+﻿@model DPLK.Models.GroupCharge
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="card-body">
+    <form asp-action="GroupChange" method="post">
+
+        <div class="mb-3 row">
+            <label asp-for="GroupNmbr" class="col-md-2 col-form-label">Group Number</label>
+            <div class="col-md-2">
+                <input asp-for="GroupNmbr" class="form-control" type="text" placeholder="NEW" id="html5-text-input" readonly />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="ChargeTypeNmbr" class="col-md-2 col-form-label">Charge Type</label>
+            <div class="col-md-4">
+                @Html.DropDownList("ChargeTypeNmbr", (IEnumerable<SelectListItem>)ViewData["DdlParamsChangeType"], new { @class = "form-control" })
+                <span asp-validation-for="ChargeTypeNmbr" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="PayRspnNmbr" class="col-md-2 col-form-label">Payment Responsbility</label>
+            <div class="col-md-4">
+                @Html.DropDownList("PayRspnNmbr", (IEnumerable<SelectListItem>)ViewData["DdlParamsPayResponseType"], new { @class = "form-control" })
+                <span asp-validation-for="PayRspnNmbr" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="FreqTypeNmbr" class="col-md-2 col-form-label">Frequency </label>
+            <div class="col-md-4">
+                @Html.DropDownList("FreqTypeNmbr", (IEnumerable<SelectListItem>)ViewData["DdlParamsFrequencyType"], new { @class = "form-control" })
+                <span asp-validation-for="FreqTypeNmbr" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="NextChargeDt" class="col-md-2 col-form-label">Next Charge Date</label>
+            <div class="col-md-2">
+                <input asp-for="NextChargeDt" class="form-control" type="date"  id="html5-text-input" readonly />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="ChargeTrmntnDt" class="col-md-2 col-form-label">Charge Termination Date</label>
+            <div class="col-md-2">
+                <input asp-for="ChargeTrmntnDt" class="form-control" type="date" id="html5-text-input" readonly />
+            </div>
+        </div>
+     
+        <div class="mb-3 row">
+            <div class="col-md-4 offset-md-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

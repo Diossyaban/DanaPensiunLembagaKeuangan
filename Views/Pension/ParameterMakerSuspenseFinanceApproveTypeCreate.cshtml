@@ -1,0 +1,31 @@
+﻿@model DPLK.Models.SuspnFinApprvType
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> Create New Suspense Finance Approve Type</h4>
+
+    <form asp-action="ParameterMakerSuspenseFinanceApproveTypeCreate" method="post">
+        <div class="col-md-4">
+            <label for="FinApprvTypeNmbr">ID:</label>
+            <input type="text" class="form-control col-md-4" id="FinApprvTypeNmbr" name="FinApprvTypeNmbr" required>
+        </div>
+        <div class="col-md-4">
+            <label for="FinApprvTypeNm">Description:</label>
+            <input type="text" class="form-control" id="FinApprvTypeNm" name="FinApprvTypeNm" required>
+        </div>
+        <div class="col-md-4">
+            <label for="OldTypeNmbr">Old Type Number:</label>
+            <input type="text" class="form-control" id="OldTypeNmbr" name="OldTypeNmbr">
+        </div>
+        <div class="col-md-4">
+            <label for="LastChangeDt">Last Change Date:</label>
+            <input type="datetime-local" class="form-control" id="LastChangeDt" name="LastChangeDt">
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-action="ParameterMakerSuspenseFinanceApproveType" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

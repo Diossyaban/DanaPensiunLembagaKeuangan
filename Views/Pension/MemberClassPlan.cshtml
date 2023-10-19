@@ -1,0 +1,77 @@
+﻿@model DPLK.Models.MbrClsPlan
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="card-body">
+    <form asp-action="MemberClassPlan" method="post">
+
+        <div class="mb-3 row">
+            <label asp-for="GroupNmbr" class="col-md-2 col-form-label">Group Number</label>
+            <div class="col-md-2">
+                <input asp-for="GroupNmbr" class="form-control" type="text" placeholder="NEW" id="html5-text-input" readonly />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="McpNmbr" class="col-md-2 col-form-label">MCP Number</label>
+            <div class="col-md-4">
+                @Html.DropDownList("McpNmbr", (IEnumerable<SelectListItem>)ViewData["DdlParamsMcpType"], new { @class = "form-control" })
+                <span asp-validation-for="McpNmbr" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="cntrb_amt_ER" class="col-md-2 col-form-label">Contribution Amount ER</label>
+            <div class="col-md-4">
+                <input type="number" id="cntrb_amt_ER" name="cntrb_amt_ER" class="form-control" />
+            </div>
+            <label for="cntrb_rt_ER" class="col-md-2 col-form-label">Contribution Rate ER</label>
+            <div class="col-md-4">
+                <input type="number" id="cntrb_rt_ER" name="cntrb_rt_ER" class="form-control" />
+            </div>
+        </div>
+       
+
+        <div class="mb-3 row">
+            <label for="cntrb_amt_EE" class="col-md-2 col-form-label">Contribution Amount EE</label>
+            <div class="col-md-4">
+                <input type="number" id="cntrb_amt_EE" name="cntrb_amt_EE" class="form-control" />
+            </div>
+            <label for="cntrb_rt_EE" class="col-md-2 col-form-label">Contribution Rate EE</label>
+            <div class="col-md-4">
+                <input type="number" id="cntrb_rt_EE" name="cntrb_rt_EE" class="form-control" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="cntrb_amt_TU" class="col-md-2 col-form-label">Contribution Amount TU</label>
+            <div class="col-md-4">
+                <input type="number" id="cntrb_amt_TU" name="cntrb_amt_TU" class="form-control" />
+            </div>
+                <label for="cntrb_rt_TU" class="col-md-2 col-form-label">Contribution Rate TU</label>
+            <div class="col-md-4">
+                    <input type="number" id="cntrb_rt_TU" name="cntrb_rt_TU" class="form-control" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="cntrb_amt_FT" class="col-md-2 col-form-label">Contribution Amount FT</label>
+            <div class="col-md-4">
+                <input type="number" id="cntrb_amt_FT" name="cntrb_amt_FT" class="form-control" />
+            </div>
+            <label for="cntrb_rt_FT" class="col-md-2 col-form-label">Contribution Rate FT</label>
+            <div class="col-md-4">
+                <input type="number" id="cntrb_rt_FT" name="cntrb_rt_FT" class="form-control" />
+            </div>
+        </div>
+
+
+
+        <div class="mb-3 row">
+            <div class="col-md-4 offset-md-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

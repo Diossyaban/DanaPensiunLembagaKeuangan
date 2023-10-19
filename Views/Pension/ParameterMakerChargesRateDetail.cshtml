@@ -1,0 +1,89 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.RateTableDetail>
+@using X.PagedList.Mvc.Core
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="table-responsive text-nowrap">
+        <div class="card-header">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> Parameter Maker - Charges Rate Detail</h4>
+
+            <a class="btn btn-primary text-end" asp-action="ParameterMakerChargesRateDetailCreate"><span class="tf-icons bx bx-book-add"></span>&nbsp;  New Record</a>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <form asp-action="ParameterMakerChargesRateDetail" method="get">
+                        <div class="input-group mb-3">
+                            <input type="text" name="searchString" class="form-control" placeholder="Search...">
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <a asp-action="ParameterMakerChargesRateDetail" asp-route-sortOrder="RateTypeNmbr" asp-route-page="1">ID</a>
+                        </th>
+                        <th>
+                            <a asp-action="ParameterMakerChargesRateDetail" asp-route-sortOrder="RateSeqNmbr" asp-route-page="1">SEQ</a>
+                        </th>
+                        <th>
+                            <a asp-action="ParameterMakerChargesRateDetail" asp-route-sortOrder="StartAmt" asp-route-page="1">FROM</a>
+                        </th>
+                        <th>
+                            <a asp-action="ParameterMakerChargesRateDetail" asp-route-sortOrder="EndAmt" asp-route-page="1">TO</a>
+                        </th>
+                        <th>
+                            <a asp-action="ParameterMakerChargesRateDetail" asp-route-sortOrder="RatePct" asp-route-page="1">RATE PCT</a>
+                        </th>
+                        <th>
+                            <a asp-action="ParameterMakerChargesRateDetail" asp-route-sortOrder="RateAmt" asp-route-page="1">RATE AMT</a>
+                        </th>
+                        <th>
+                            <a asp-action="ParameterMakerChargesRateDetail" asp-route-sortOrder="LastChangeDt" asp-route-page="1">Last Change Date</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var invType in Model)
+                    {
+                        <tr>
+                            <td>@invType.RateTypeNmbr</td>
+                            <td>@invType.RateSeqNmbr</td>
+                            <td>@string.Format("Rp {0:N}", invType.StartAmt)</td>
+                            <td>@string.Format("Rp {0:N}", invType.EndAmt)</td>
+                            <td>@invType.RatePct</td>
+                            <td>@invType.RateAmt</td>
+                            <td>@invType.LastChangeDt</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        @Html.PagedListPager(Model, page => Url.Action("ParameterMakerChargesRateDetail", new { page, currentFilter = ViewBag.CurrentFilter, sortOrder = ViewBag.CurrentSort }))
+    </div>
+</div>
+<script>
+    function formatRupiah(angka) {
+        var rupiah = '';
+        var angkarev = angka.toString().split('').reverse().join('');
+        for (var i = 0; i < angkarev.length; i++) {
+            if (i % 3 == 0 && i != 0) {
+                rupiah += '.';
+            }
+            rupiah += angkarev[i];
+        }
+        return 'Rp ' + rupiah.split('').reverse().join('');
+    }
+</script>

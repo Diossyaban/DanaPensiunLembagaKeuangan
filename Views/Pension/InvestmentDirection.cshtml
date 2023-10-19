@@ -1,0 +1,84 @@
+﻿@model DPLK.Models.GrpInvDrct
+
+
+<form asp-action="InvestmentDirection" method="post">
+    <div class="mb-3 row">
+        <label asp-for="GroupNmbr" class="col-md-2 col-form-label">Company Name</label>
+        <div class="col-md-4">
+            @Html.DropDownList("Company", (IEnumerable<SelectListItem>)ViewData["DdlGroupPIC"], new { @class = "form-control" })
+            <span asp-validation-for="GroupNmbr" class="text-danger"></span>
+        </div>
+        <label class="col-md-2 col-form-label">Billed  (%)</label>
+        <div class="col-md-4">
+            <input type="text" name="billed_percent" class="form-control" />
+
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label asp-for="InvTypeNmbr" class="col-md-2 col-form-label">Investment Option</label>
+        <div class="col-md-4">
+            @Html.DropDownList("InvestmentType", (IEnumerable<SelectListItem>)ViewData["DdlParamsInv"], new { @class = "form-control" })
+            <span asp-validation-for="InvTypeNmbr" class="text-danger"></span>
+        </div>
+        <label class="col-md-2 col-form-label">Deducated  (%)</label>
+        <div class="col-md-4">
+            <input type="text" name="deducatedPatePercent" class="form-control" />
+
+        </div>
+
+    </div>
+
+ 
+    <div class="mb-3 row">
+        <label class="col-md-2 col-form-label">Charge Charge Payment Responsibility</label>
+        <div class="col-md-4">
+            @Html.DropDownList("changePaymentResponsbility", (IEnumerable<SelectListItem>)ViewData["DdlParamsRspnType"], new { @class = "form-control" })
+        </div>
+        <label class="col-md-2 col-form-label">Charge Rate (%)</label>
+        <div class="col-md-4">
+            <input type="text" name="charge_rate_percent" class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-md-2 col-form-label">Charge Frequency</label>
+        <div class="col-md-4">
+            @Html.DropDownList("ChargeFrequency", (IEnumerable<SelectListItem>)ViewData["DdlParamsFrequensy"], new { @class = "form-control" })
+        </div>
+        <label class="col-md-2 col-form-label">Charge Amount </label>
+        <div class="col-md-4">
+            <input type="text" name="charge_amount" class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-md-2 col-form-label">Next Charge Date</label>
+        <div class="col-md-4">
+            <input type="date" name="next_charge_date" class="form-control" />
+        </div>
+        <label asp-for="MaxPercent" class="col-md-2 col-form-label">Max Percent</label>
+        <div class="col-md-4">
+
+            <input asp-for="MaxPercent" class="form-control" />
+            <span asp-validation-for="MaxPercent" class="text-danger"></span>
+        </div>
+    </div>
+
+ 
+
+
+
+    
+
+
+
+    <div class="mb-3 row">
+        <label asp-for="MinPercent" class="col-md-2 col-form-label">Min Percent</label>
+        <div class="col-md-4">
+
+            <input asp-for="MinPercent" class="form-control" />
+            <span asp-validation-for="MinPercent" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

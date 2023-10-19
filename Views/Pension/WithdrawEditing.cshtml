@@ -1,0 +1,99 @@
+﻿@model DPLK.Models.TferPayInfo2
+@{
+    ViewData["Title"] = "Withdraw Editing";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Transaction /</span> Editing Claim </h4>
+<div class="card mb-4">
+    <div class="card-body">
+        @using (Html.BeginForm("WithdrawEditing", "WithdrawEditing", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3 row">
+                <label asp-for="CerNmbr">Cer Number</label>
+                <div class="col-md-4">
+                    <input asp-for="CerNmbr" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label asp-for="TrnsSeqNmbr">Transaction Sequence Number</label>
+                <div class="col-md-4">
+
+                    <input asp-for="TrnsSeqNmbr" class="form-control" readonly />
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label asp-for="TferTypeNmbr">Transfer Type Number</label>
+                <div class="col-md-4">
+
+                    <input asp-for="TferTypeNmbr" class="form-control" readonly />
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label asp-for="BankNm">Bank Name</label>
+                <div class="col-md-4">
+
+                    <input asp-for="BankNm" class="form-control" />
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label asp-for="AcctNmbr">Account Number</label>
+                <div class="col-md-4">
+
+                    <input asp-for="AcctNmbr" class="form-control" />
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="AcctNm">Account Name</label>
+                <div class="col-md-4">
+
+                    <input asp-for="AcctNm" class="form-control" />
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-md-6 offset-md-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+
+@*<div class="mb-5">
+    <nav class="navbar navbar-example navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbar-ex-2"
+                    aria-controls="navbar-ex-2"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-ex-2">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-danger mx-2">Save</button>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>*@

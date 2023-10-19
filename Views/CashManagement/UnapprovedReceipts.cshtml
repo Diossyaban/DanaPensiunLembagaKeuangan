@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> Cash Management / </span> Un Approved Receipt</h4>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="mb-2 row">
+            <label for="html5-text-input" class="col-md-2 col-form-label">Client Code</label>
+            <div class="col-md-2">
+                <input class="form-control" type="text" value="" id="html5-text-input" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Client Name</label>
+            <div class="col-md-4">
+                <input class="form-control" type="search" value="" id="html5-search-input" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Identity</label>
+            <div class="col-md-4">
+                <select class="form-select" asp-items="ViewBag.NewBussines"></select>
+
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Identity Number</label>
+            <div class="col-md-4">
+                <input class="form-control" type="search" value="" id="html5-search-input" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Gender</label>
+            <div class="col-md-4">
+                <select class="form-select" asp-items="ViewBag.NewBussines"></select>
+
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Place of Birth </label>
+            <div class="col-md-4">
+                <input class="form-control" type="search" value="" id="html5-search-input" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-datetime-local-input" class="col-md-2 col-form-label">Effective Date</label>
+            <div class="col-md-4">
+                <input class="form-control"
+                       type="datetime-local"
+                       value=""
+                       id="html5-datetime-local-input" />
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Material Status</label>
+            <div class="col-md-4">
+                <select class="form-select" asp-items="ViewBag.NewBussines"></select>
+
+            </div>
+            <label for="html5-search-input" class="col-md-2 col-form-label">Maiden Name </label>
+            <div class="col-md-4">
+                <input class="form-control" type="search" value="" id="html5-search-input" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Email</label>
+            <div class="col-md-4">
+                <input class="form-control" type="search" value="" id="html5-search-input" />
+            </div>
+            <label for="html5-search-input" class="col-md-2 col-form-label">NPWP Client</label>
+            <div class="col-md-4">
+                <input class="form-control" type="file" id="formFile" />
+            </div>
+
+        </div>
+
+
+
+        <div class="mb-5">
+            <h6 class="mt-2 mb-3 text-muted">Action</h6>
+            <nav class="navbar navbar-example navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbar-ex-2"
+                            aria-controls="navbar-ex-2"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbar-ex-2">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-danger mx-2">Save</button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-primary mx-2">Edit Beneficiery</button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-success mx-2">Edit Phone</button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-success mx-2">Edit Address</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+    </div>
+

@@ -1,0 +1,105 @@
+﻿@model IEnumerable<DPLK.Models.SuspenseRecord>
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light">Suspense Records</span>
+</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Suspense Number
+            </th>
+
+            <th>
+                Rest Amount
+            </th>
+            <th>
+                Description 1
+            </th>
+            <th>
+                Suspense Type Number
+            </th>
+            <th>
+                Received Date
+            </th>
+            <th>
+                Group Number
+            </th>
+            <th>
+                Company Name
+            </th>
+            <th>
+                Paycenter Name
+            </th>
+            <th>
+                Date Sorting
+            </th>
+            <th>
+                Reference Bank
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.suspn_nmbr)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.REST_AMT)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.suspn_desc1)
+                </td>
+                <td>
+                    @if (item.suspn_type_nm != null)
+                    {
+                        @item.suspn_type_nm
+                    }
+                    else
+                    {
+                        <span class="text-danger">Invalid Type</span>
+                    }
+                </td>
+
+        @*
+                <td>
+                    @{
+                        if (item.RECEIVED_DATE is DateTime receivedDate)
+                        {
+                            @receivedDate.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span class="text-danger">Invalid Date</span>
+                        }
+                    }
+                </td>*@
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.group_nmbr)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.company_nm)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PAYCENTER_nm)
+                </td>
+            @*    <td>
+                    @item.datesorting.ToString("dd/MM/yyyy")
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ref_Bank)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

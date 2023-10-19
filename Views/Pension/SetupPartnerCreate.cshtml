@@ -1,0 +1,117 @@
+﻿@model DPLK.Models.DplkRollover
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+<div class="col-xxl">
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> Create New DPLK Rollover</h4>
+            @if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+            {
+                <div class="alert alert-success" role="alert">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            <form asp-action="SetupPartnerCreate" method="post">
+                <div class="mb-3 row">
+                    <label asp-for="DplkNm" class="col-md-2 col-form-label">Institution Name:</label>
+                    <div class="col-md-4">
+
+                        <input asp-for="DplkNm" class="form-control" />
+                        <span asp-validation-for="DplkNm" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label asp-for="BankNm" class="col-md-2 col-form-label"></label>
+                    <div class="col-md-4">
+
+                        <select asp-for="BankNm" class="form-select" id="BankNm" name="BankNm">
+                            @foreach (var bank in ViewBag.BankList)
+                            {
+                                <option value="@bank.Value">@bank.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="BankNm" class="text-danger"></span>
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#BankNm').select2();
+                    });
+                </script>
+                <div class="mb-3 row">
+                    <label asp-for="AcctNmbr" class="col-md-2 col-form-label">Account Number:</label>
+                    <div class="col-md-4">
+
+                        <input asp-for="AcctNmbr" class="form-control" />
+                        <span asp-validation-for="AcctNmbr" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label asp-for="DplkAddress1" class="col-md-2 col-form-label">Address 1:</label>
+                    <div class="col-md-4">
+
+                        <input asp-for="DplkAddress1" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label asp-for="DplkAddress2" class="col-md-2 col-form-label">Address 2:</label>
+                    <div class="col-md-4">
+
+                        <input asp-for="DplkAddress2" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label asp-for="DplkAddress3" class="col-md-2 col-form-label">Address 3:</label>
+                    <div class="col-md-4">
+
+                        <input asp-for="DplkAddress3" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label asp-for="DplkCity" class="col-md-2 col-form-label">City:</label>
+                    <div class="col-md-4">
+
+                        <input asp-for="DplkCity" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label asp-for="DplkPostalCd" class="col-md-2 col-form-label">Postal Code:</label>
+                    <div class="col-md-4">
+
+                        <input asp-for="DplkPostalCd" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label asp-for="DplkContactPerson" class="col-md-2 col-form-label">Contact Person:</label>
+                    <div class="col-md-4">
+
+                        <input asp-for="DplkContactPerson" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label asp-for="LastChangeDt" class="col-md-2 col-form-label">Last Change Date:</label>
+                    <div class="col-md-4">
+
+                        <input asp-for="LastChangeDt" type="datetime-local" class="form-control" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a asp-action="SetupPartner" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

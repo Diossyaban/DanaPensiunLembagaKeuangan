@@ -1,0 +1,132 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.AgentMaster>
+@using X.PagedList.Mvc.Core
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Setup Agent Index";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h2>@ViewData["Title"]</h2>
+
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<a class="btn btn-primary text-end" asp-action="SetupAgentCreate"><span class="tf-icons bx bx-book-add"></span>&nbsp; Create New</a>
+
+<div class="mb-3">
+    <form asp-action="SetupAgentIndex">
+        <div class="input-group">
+            <input type="text" class="form-control" name="searchString" value="@ViewBag.CurrentFilter" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="AgentNm" asp-route-page="1">Agent Name</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="AgentNmbr" asp-route-page="1">Agent Number</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="EmployeeCode" asp-route-page="1">Employee Code</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="BirthDt" asp-route-page="1">Birth Dt</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="Address" asp-route-page="1">Address</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="City" asp-route-page="1">City </a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="PostalCd" asp-route-page="1">Postal Code</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="PhoneNmbr" asp-route-page="1">Phone Number</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="MobilePhone" asp-route-page="1">Mobile Number</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="Email" asp-route-page="1">Email</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="AcctNmbr" asp-route-page="1">Account Number</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="AcctNm" asp-route-page="1">Account Name</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="BankNm" asp-route-page="1">Bank Name</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="BankAddress" asp-route-page="1">Bank Address</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="AgentStatus" asp-route-page="1">Agent Status</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="TaxIdNmbr" asp-route-page="1">TaxIdNmbr</a>
+                    </th>
+                    <th>
+                        <a asp-action="SetupAgentIndex" asp-route-sortOrder="AgentType" asp-route-page="1">AgentType</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var agentMaster in Model)
+                {
+                    <tr>
+                        <td>@agentMaster.AgentNm</td>
+                        <td>@agentMaster.AgentNmbr</td>
+                        <td>@agentMaster.EmployeeCode</td>
+                        <td>@agentMaster.BirthDt</td>
+                        <td>@agentMaster.Address</td>
+                        <td>@agentMaster.City</td>
+                        <td>@agentMaster.PostalCd</td>
+                        <td>@agentMaster.PhoneNmbr</td>
+                        <td>@agentMaster.MobilePhone</td>
+                        <td>@agentMaster.Email</td>
+                        <td>@agentMaster.AcctNmbr</td>
+                        <td>@agentMaster.AcctNm</td>
+                        <td>@agentMaster.BankNm</td>
+                        <td>@agentMaster.BankAddress</td>
+                        <td>
+                            @if (agentMaster.AgentStatus == "Active")
+                            {
+                                <span class="badge bg-label-primary me-1 hover">@agentMaster.AgentStatus</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-label-success me-1 hover">@agentMaster.AgentStatus</span>
+                            }
+                        </td>
+
+                       
+                        <td>@agentMaster.TaxIdNmbr</td>
+                        <td>@agentMaster.AgentType</td>
+
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    @Html.PagedListPager(Model, page => Url.Action("SetupAgentIndex", new { page, currentFilter = ViewBag.CurrentFilter, sortOrder = ViewBag.CurrentSort }))
+</div>

@@ -1,0 +1,65 @@
+﻿@model DPLK.Models.GroupPic
+
+
+
+<div class="card-body">
+    <form asp-action="GroupPic" method="post">
+
+        <div class="mb-3 row">
+            <label asp-for="GroupNmbr" class="col-md-2 col-form-label">Company Name</label>
+            <div class="col-md-4">
+                @Html.DropDownList("Company", (IEnumerable<SelectListItem>)ViewData["DdlGroupPIC"], new { @class = "form-control" })
+                <span asp-validation-for="GroupNmbr" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="mb-3 row">
+            <label asp-for="Title" class="col-md-2 col-form-label"></label>
+            <div class="col-md-4">
+                <select asp-for="Title" class="form-control">
+                    <option value="1">Bapak</option>
+                    <option value="0">Ibu</option>
+                </select>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label asp-for="IsActive" class="col-md-2 col-form-label"></label>
+            <div class="col-md-4">
+                <select asp-for="IsActive" class="form-control">
+                    <option value="0">Aktif</option>
+                    <option value="1">Tidak Aktif</option>
+                </select>
+                <span asp-validation-for="IsActive" class="text-danger"></span>
+            </div>
+        </div>
+
+
+
+        <div class="mb-3 row">
+            <label asp-for="NamaPic" class="col-md-2 col-form-label">PIC Name </label>
+            <div class="col-md-4">
+                <input asp-for="NamaPic" class="form-control" />
+                <span asp-validation-for="NamaPic" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="Jabatan" class="col-md-2 col-form-label">Jabatan  </label>
+            <div class="col-md-4">
+                <input asp-for="Jabatan" class="form-control" />
+                <span asp-validation-for="Jabatan" class="text-danger"></span>
+            </div>
+        </div>
+
+
+
+
+        <div class="mb-3 row">
+            <div class="col-md-6 offset-md-2">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </form>
+</div>

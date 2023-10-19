@@ -1,0 +1,124 @@
+﻿@model DPLK.Models.Company
+
+@{
+    ViewData["Title"] = "Create Company";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension/</span> Create Company</h4>
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-action="NewBussinesCompanyIndex" method="post">
+
+            <div class="mb-3 row">
+                <label asp-for="CompanyNm" class="col-md-2 col-form-label">
+                   @* <i class="bx bx-user"></i>*@ Company Name
+                </label>
+                <div class="col-md-4">
+                    <input asp-for="CompanyNm" class="form-control" />
+                    <span asp-validation-for="CompanyNm" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="BusinessLineNmbr" class="col-md-2 col-form-label">Business Line</label>
+                <div class="col-md-4">
+                    @Html.DropDownListFor(model => model.BusinessLineNmbr, (IEnumerable<SelectListItem>)ViewData["DdlParamsBusinessSctr"], new { @class = "form-select" })
+                    <span asp-validation-for="BusinessLineNmbr" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="ContactPerson" class="col-md-2 col-form-label">Contact Person</label>
+                <div class="col-md-4">
+                    <input asp-for="ContactPerson" class="form-control" />
+                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Email" class="col-md-2 col-form-label">Email CP</label>
+                <div class="col-md-4">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-md-2 col-form-label">
+                    Has Paycenter
+                </label>
+                <div class="col-md-4">
+                    <select asp-for="HasPaycenter" class="form-select">
+                        <option value="">Please Select</option>
+                        @foreach (var option in ViewBag.HasPaycenterOptions as List<SelectListItem>)
+                        {
+                            <option value="@option.Value">@option.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="HasPaycenter" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="AdArt" class="col-md-2 col-form-label">No. AD/ART</label>
+                <div class="col-md-4">
+                    <input asp-for="AdArt" class="form-control" />
+                    <span asp-validation-for="AdArt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Npwp" class="col-md-2 col-form-label">NPWP</label>
+                <div class="col-md-4">
+                    <input asp-for="Npwp" class="form-control" />
+                    <span asp-validation-for="Npwp" class="text-danger"></span>
+                </div>
+                <label asp-for="BankNm" class="col-md-2 col-form-label">Bank Name</label>
+                <div class="col-md-4">
+                    <input asp-for="BankNm" class="form-control" />
+                    <span asp-validation-for="BankNm" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Siup" class="col-md-2 col-form-label">SIUP</label>
+                <div class="col-md-4">
+                    <input asp-for="Siup" class="form-control" />
+                    <span asp-validation-for="Siup" class="text-danger"></span>
+                </div>
+                <label asp-for="AccountNmbr" class="col-md-2 col-form-label">Account Number</label>
+                <div class="col-md-4">
+                    <input asp-for="AccountNmbr" class="form-control" />
+                    <span asp-validation-for="AccountNmbr" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="MnySrcType" class="col-md-2 col-form-label">Money Source</label>
+                <div class="col-md-4">
+                    @Html.DropDownListFor(model => model.MnySrcType, (IEnumerable<SelectListItem>)ViewData["DdlParamsMnySrc"], new { @class = "form-select" })
+                    <span asp-validation-for="MnySrcType" class="text-danger"></span>
+                </div>
+                <label asp-for="AccountNm" class="col-md-2 col-form-label">Account Name</label>
+                <div class="col-md-4">
+                    <input asp-for="AccountNm" class="form-control" />
+                    <span asp-validation-for="AccountNm" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-md-2 col-form-label">
+                    PDP Driver
+                </label>
+                <div class="col-md-4">
+                    <select asp-for="PdpFlg" class="form-select">
+                        <option value="">Please Select</option>
+                        @foreach (var option in ViewBag.PdpFlgOptions as List<SelectListItem>)
+                        {
+                            <option value="@option.Value">@option.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="PdpFlg" class="text-danger"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="background-color: #0073fe">Submit</button>
+            <a asp-action="NewBussinesCompany" style="background-color: #fd0017" class="btn btn-secondary">Back</a>
+
+
+
+        </form>
+
+    </div>
+</div>

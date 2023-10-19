@@ -1,0 +1,91 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.Paycenter>
+@using X.PagedList.Mvc.Core
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = " Pay Center List";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h2>@ViewData["Title"]</h2>
+
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<div class="mb-3">
+    <form asp-action="NewBussinesPayCenter">
+        <div class="input-group">
+            <input type="text" class="form-control" name="searchString" value="@ViewBag.CurrentFilter" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<a class="btn btn-primary" asp-action="NewBussinesPayLaterIndex">
+    <span class="tf-icons bx bx-book-add"></span>&nbsp; Create New
+</a>
+
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        Client Number
+                    </th>
+                    <th>
+                        Pay Center Number
+                    </th>
+                    <th>
+                        Pay Center Name
+                    </th>
+                    <th>
+                        Master Pay Center Number
+                    </th>
+                    <th>
+                        Contact Person
+                    </th>
+                    <th>
+                        Last Change Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ClientNmbr</td>
+                        <td>@item.PaycenterNmbr</td>
+                        <td>@item.PaycenterNm</td>
+                        <td>@item.MasterPaycenterNmbr</td>
+                        <td>@item.ContactPerson</td>
+                        <td>@item.LastChangeDt</td>
+
+                        <td>
+
+                            <div class="dropdown">
+                                <button type="button"
+                                        class="btn p-0 dropdown-toggle hide-arrow"
+                                        data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-action="NewBussinesPayLaterEdit" asp-route-id="@item.ClientNmbr"><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                                    <a class="dropdown-item" asp-action="DeletePayCenter" asp-route-id="@item.ClientNmbr"><i class="bx bx-trash me-1"></i>Delete</a>
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="text-center mt-4">
+    @Html.PagedListPager(Model, page => Url.Action("NewBussinesPayCenter", new { page, currentFilter = ViewBag.CurrentFilter }))
+</div>

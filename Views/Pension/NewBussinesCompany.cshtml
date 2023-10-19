@@ -1,0 +1,154 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.Company>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common;
+
+
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@*<style>
+    .new-company {
+        background-color: #9fe400;
+    }
+</style>*@
+<div class="container-fluid px-4">
+    <div class="card my-4">
+        <div class="card-header">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> Company List</h4>
+            <a class="btn btn-primary" asp-action="NewBussinesCompanyIndex" style="background-color: #0073fe;">
+                <span class="tf-icons bx bx-book-add"></span>&nbsp; Create New
+            </a>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <form asp-action="NewBussinesCompany" method="get">
+                        <div class="input-group mb-3">
+                            <input type="text" name="searchString" class="form-control" placeholder="Search...">
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            @*                        <th>
+                            <a asp-action="NewBussinesCompany" asp-route-sortOrder="ClientNmbr" asp-route-page="1">Client Number</a>
+                            </th>*@
+                            <th>
+                                <a asp-action="NewBussinesCompany" asp-route-sortOrder="CompanyNm" asp-route-page="1">Company Name</a>
+                            </th>
+                            <th>
+                                <a asp-action="NewBussinesCompany" asp-route-sortOrder="ContactPerson" asp-route-page="1">Contact Person</a>
+                            </th>
+                            <th>
+                                <a asp-action="NewBussinesCompany" asp-route-sortOrder="BankNm" asp-route-page="1">Bank Name</a>
+                            </th>
+                            <th>
+                                <a asp-action="NewBussinesCompany" asp-route-sortOrder="AccountNmbr" asp-route-page="1">Account Number</a>
+                            </th>
+                            <th>
+                                <a asp-action="NewBussinesCompany" asp-route-sortOrder="Email" asp-route-page="1">Email</a>
+                            </th>
+                            @*     <th>
+                            <a asp-action="NewBussinesCompany" asp-route-sortOrder="BusinessLineNmbr" asp-route-page="1">Bussines Line</a>
+                            </th>*@
+                            @*<th>
+                            <a asp-action="NewBussinesCompany" asp-route-sortOrder="MnySrcType" asp-route-page="1">Money Source</a>
+                            </th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var company in Model)
+                        {
+                            <tr class="@((company.LastChangeDt != DateTime.MinValue) ? "new-company" : "")">
+                                @*                            <td>@company.ClientNmbr</td>
+                            *@
+@*                                <td class="company-name" data-isnew="@((company.LastChangeDt != DateTime.MinValue).ToString().ToLower())">@company.CompanyNm</td>
+*@                                <td>@company.CompanyNm</td>
+
+                                <td>@company.ContactPerson</td>
+                                <td>@company.BankNm</td>
+                                <td>@company.AccountNmbr</td>
+                                <td>@company.Email</td>
+                                @*                            <td>@company.BusinessSctrNm</td>
+                            *@
+                                @*          <td>
+                            @if (company.MnySrcType == 0)
+                            {
+                            <span>Please Select</span>
+                            }
+                            else if (company.MnySrcType == 100)
+                            {
+                            <span>Employee</span>
+                            }
+                            else if (company.MnySrcType == 200)
+                            {
+                            <span>Employer</span>
+                            }
+                            else
+                            {
+                            <span>Unknown</span>
+                            }
+                            </td>*@
+                                <td>
+
+                                    <div class="dropdown">
+                                        <button type="button"
+                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-action="NewBussinesCompanyEdit" asp-route-id="@company.ClientNmbr"><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                                            <a class="dropdown-item" asp-action="DeleteConfirmation" asp-route-id="@company.ClientNmbr"><i class="bx bx-trash me-1"></i>Delete</a>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="text-center mt-4">
+        Page @(Model.PageNumber) of @Model.PageCount
+        @Html.PagedListPager(Model, page => Url.Action("NewBussinesCompany", new { page, currentFilter = ViewBag.CurrentFilter }), PagedListRenderOptions.TwitterBootstrapPager)
+    </div>
+
+</div>
+
+
+@section scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var companies = document.querySelectorAll('.company-name');
+            companies.forEach(function (company) {
+                var isNew = company.getAttribute('data-isnew');
+                if (isNew === 'True') {
+                    var newBadge = document.createElement('span');
+                    newBadge.classList.add('badge', 'bg-info', 'text-white');
+                    newBadge.innerText = 'New';
+                    company.appendChild(newBadge);
+                }
+            });
+        });
+    </script>
+}

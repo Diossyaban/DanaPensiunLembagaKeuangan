@@ -1,0 +1,27 @@
+﻿@model DPLK.Models.Company
+
+<h1>Create New Business Company</h1>
+
+@using (Html.BeginForm("Create", "Pension", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CompanyNm)
+        @Html.TextBoxFor(model => model.CompanyNm, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Npwp)
+        @Html.TextBoxFor(model => model.Npwp, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ContactPerson)
+        @Html.TextBoxFor(model => model.ContactPerson, new { @class = "form-control" })
+    </div>
+
+    <!-- Add more form fields as needed -->
+
+    <button type="submit" class="btn btn-primary">Create</button>
+}

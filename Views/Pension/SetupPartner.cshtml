@@ -1,0 +1,87 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.DplkRollover>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common;
+
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="table-responsive text-nowrap">
+        <div class="card-header">
+            <h1>Setup Panther</h1>
+            <a class="btn btn-primary text-end" asp-action="SetupPartnerCreate"><span class="tf-icons bx bx-book-add"></span>&nbsp; Create New</a>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <form asp-action="SetupPartner" method="get">
+                        <div class="input-group mb-3">
+                            <input type="text" name="searchString" class="form-control" placeholder="Search...">
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+            <table class="table table-bordered-sm">
+                <thead>
+                    <tr>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="DplkNmbr" asp-route-page="1">DPLK Number</a>
+                        </th>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="DplkNm" asp-route-page="1">DPLK Name</a>
+                        </th>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="BankNm" asp-route-page="1">Bank Name</a>
+                        </th>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="AcctNmbr" asp-route-page="1">Account Number</a>
+                        </th>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="DplkAddress1" asp-route-page="1">Address 1</a>
+                        </th>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="DplkAddress2" asp-route-page="1">Address 2</a>
+                        </th>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="DplkAddress3" asp-route-page="1">Address 3</a>
+                        </th>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="DplkCity" asp-route-page="1">City</a>
+                        </th>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="DplkPostalCd" asp-route-page="1">Postal</a>
+                        </th>
+                        <th>
+                            <a asp-action="SetupPartner" asp-route-sortOrder="DplkContactPerson" asp-route-page="1">Contact Person</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var panther in Model)
+                    {
+                        <tr>
+                            <td>@panther.DplkNmbr</td>
+                            <td>@panther.DplkNm</td>
+                            <td>@panther.BankNm</td>
+                            <td>@panther.AcctNmbr</td>
+                            <td>@panther.DplkAddress1</td>
+                            <td>@panther.DplkAddress2</td>
+                            <td>@panther.DplkAddress3</td>
+                            <td>@panther.DplkCity</td>
+                            <td>@panther.DplkPostalCd</td>
+                            <td>@panther.DplkContactPerson</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+<div class="text-center mt-4">
+    Page @(Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("SetupPartner", new { page, currentFilter = ViewBag.CurrentFilter }), PagedListRenderOptions.TwitterBootstrapPager)
+</div>
+

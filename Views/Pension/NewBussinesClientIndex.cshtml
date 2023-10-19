@@ -1,0 +1,268 @@
+﻿@model DPLK.Models.Client
+@using DPLK.Models
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> Pension / </span> New Bussines - Client</h4>
+<div class="row">
+    <div class="container-xxl flex-grow-1 container-p-y">
+@*        <h6 class="text-muted">Basic</h6>
+*@        <div class="nav-align-top mb-4">
+            <ul class="nav nav-pills mb-3" role="tablist">
+                <li class="nav-item">
+                    <button type="button"
+                            class="nav-link active"
+                            role="tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-top-home"
+                            aria-controls="navs-pills-top-home"
+                            aria-selected="true">
+                        Client Info
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button type="button"
+                            class="nav-link"
+                            role="tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-top-profile"
+                            aria-controls="navs-pills-top-profile"
+                            aria-selected="false">
+                        Certificate Info
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button type="button"
+                            class="nav-link"
+                            role="tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-top-messages"
+                            aria-controls="navs-pills-top-messages"
+                            aria-selected="false">
+                        Fund Info
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button type="button"
+                            class="nav-link"
+                            role="tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-top"
+                            aria-controls="navs-pills-top"
+                            aria-selected="false">
+                        Status % Salary 
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button type="button"
+                            class="nav-link"
+                            role="tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-top"
+                            aria-controls="navs-pills-top-5"
+                            aria-selected="false">
+                        Transaction
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button type="button"
+                            class="nav-link"
+                            role="tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-top"
+                            aria-controls="navs-pills-top-item"
+                            aria-selected="false">
+                        Claim Historical
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="navs-pills-top-home" role="tabpanel">
+                    <div class="card-body">
+                        <form asp-action="NewBussinesClientIndex" method="post">
+
+                            <div class="mb-2 row">
+                                <label for="clientCode" class="col-md-2 col-form-label">Client Code</label>
+                                <div class="col-md-2">
+                                    <input class="form-control" type="text" value="" id="html5-text-input" readonly />
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label asp-for="ClientNm" class="col-md-2 col-form-label">
+                                    Client Name
+                                </label>
+                                <div class="col-md-4">
+                                    <input asp-for="ClientNm" class="form-control" />
+                                    <span asp-validation-for="ClientNm" class="text-danger"></span>
+                                </div>
+                            </div>
+                  
+                            <div class="mb-3 row">
+                                <label asp-for="IdentityType" class="col-md-2 col-form-label">Identity Type </label>
+                                <div class="col-md-4">
+                                    @Html.DropDownListFor(model => model.IdentityType, (IEnumerable<SelectListItem>)ViewData["DdlParamIdType"], new { @class = "form-select" })
+                                    <span asp-validation-for="IdentityType" class="text-danger"></span>
+                                </div>
+                            </div>
+
+
+                            <div class="mb-3 row">
+                                <label asp-for="IdentityNmbr" class="col-md-2 col-form-label">Identity Number</label>
+                                <div class="col-md-4">
+                                    <input asp-for="IdentityNmbr" class="form-control" />
+                                    <span asp-validation-for="IdentityNmbr" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label asp-for="Gender" class="col-md-2 col-form-label">Gender </label>
+                                <div class="col-md-4">
+                                    @Html.DropDownListFor(model => model.Gender, (IEnumerable<SelectListItem>)ViewData["GenderOptions"], new { @class = "form-control" })
+                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label asp-for="BirthDt" class="col-md-2 col-form-label">Birth Date</label>
+                                <div class="col-md-4">
+                                    <input asp-for="BirthDt" class="form-control" type="datetime-local" />
+                                    <span asp-validation-for="BirthDt" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label asp-for="DobPlace" class="col-md-2 col-form-label">Place of Birth</label>
+                                <div class="col-md-4">
+                                    <input asp-for="DobPlace" class="form-control" />
+                                    <span asp-validation-for="DobPlace" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label asp-for="MaritalStatusNmbr" class="col-md-2 col-form-label">Martial Status </label>
+                                <div class="col-md-4">
+                                    @Html.DropDownListFor(model => model.MaritalStatusNmbr, (IEnumerable<SelectListItem>)ViewData["DdlParamMaritalStatusType"], new { @class = "form-select" })
+                                    <span asp-validation-for="MaritalStatusNmbr" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label asp-for="MaidenNm" class="col-md-2 col-form-label">Maiden Name</label>
+                                <div class="col-md-4">
+                                    <input asp-for="MaidenNm" class="form-control" />
+                                    <span asp-validation-for="MaidenNm" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label asp-for="EmailAddr" class="col-md-2 col-form-label">Email</label>
+                                <div class="col-md-4">
+                                    <input asp-for="EmailAddr" class="form-control" />
+                                    <span asp-validation-for="EmailAddr" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="html5-search-input" class="col-md-2 col-form-label">Email</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="search" value="" id="html5-search-input" />
+                                </div>
+                                <label for="html5-search-input" class="col-md-2 col-form-label">NPWP Client</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="file" id="formFile" />
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="mb-5">
+                                <h6 class="mt-2 mb-3 text-muted">Action</h6>
+                                <nav class="navbar navbar-example navbar-expand-lg navbar-light bg-light">
+                                    <div class="container-fluid">
+                                        <button class="navbar-toggler"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#navbar-ex-2"
+                                                aria-controls="navbar-ex-2"
+                                                aria-expanded="false"
+                                                aria-label="Toggle navigation">
+                                            <span class="navbar-toggler-icon"></span>
+                                        </button>
+                                        <div class="collapse navbar-collapse" id="navbar-ex-2">
+                                            <ul class="navbar-nav ms-auto">
+                                                <li class="nav-item">
+                                                    <button type="submit" class="btn btn-outline-danger mx-2">Save</button>
+                                                </li>
+                                                @*        <li class="nav-item">
+                                                <button type="button" class="btn btn-outline-primary mx-2">Edit Beneficiery</button>
+                                                </li>
+                                                <li class="nav-item">
+                                                <button type="button" class="btn btn-outline-success mx-2">Edit Phone</button>
+                                                </li>
+                                                <li class="nav-item">
+                                                <button type="button" class="btn btn-outline-success mx-2">Edit Address</button>
+                                                </li>*@
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="navs-pills-top-profile" role="tabpanel">
+                    @await Html.PartialAsync("CertificateInfo")
+
+                </div>
+                <div class="tab-pane fade" id="navs-pills-top-messages" role="tabpanel">
+                    <p>
+                        Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
+                        cupcake gummi bears cake chocolate.
+                    </p>
+                    <p class="mb-0">
+                        Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
+                        roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
+                        jelly-o tart brownie jelly.
+                    </p>
+                </div>
+                <div class="tab-pane fade" id="navs-pills-top" role="tabpanel">
+                    <p>
+                        Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
+                        cupcake gummi bears cake chocolate.
+                    </p>
+                    <p class="mb-0">
+                        Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
+                        roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
+                        jelly-o tart brownie jelly.
+                    </p>
+                </div>
+                <div class="tab-pane fade" id="navs-pills-top-5" role="tabpanel">
+                    <p>
+                        Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
+                        cupcake gummi bears cake chocolate.
+                    </p>
+                    <p class="mb-0">
+                        Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
+                        roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
+                        jelly-o tart brownie jelly.
+                    </p>
+                </div>
+                <div class="tab-pane fade" id="navs-pills-top-item" role="tabpanel">
+                    <p>
+                        Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
+                        cupcake gummi bears cake chocolate.
+                    </p>
+                    <p class="mb-0">
+                        Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
+                        roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
+                        jelly-o tart brownie jelly.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

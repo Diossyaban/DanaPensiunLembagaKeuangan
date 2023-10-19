@@ -1,0 +1,204 @@
+﻿@model DPLK.Models.Company
+
+@{
+    ViewData["Title"] = "Create Company";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> New Business - Company</h4>
+
+<div class="card mb-4">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="card-body card-body-container">
+            <!-- Add class to the card body div -->
+            <div class="mb-3 row">
+                <label for="ClientNmbr" class="col-md-2 col-form-label">Company Code</label>
+                <div class="col-md-4">
+                    <input asp-for="ClientNmbr" class="form-control" />
+                    <span asp-validation-for="ClientNmbr" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="CompanyNm" class="col-md-2 col-form-label">Company Name</label>
+                <div class="col-md-4">
+                    <input asp-for="CompanyNm" class="form-control" />
+                    <span asp-validation-for="CompanyNm" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="ContactPerson" class="col-md-2 col-form-label">Contact Person </label>
+                <div class="col-md-4">
+                    <input asp-for="ContactPerson" class="form-control" />
+                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Email" class="col-md-2 col-form-label">Email CP </label>
+                <div class="col-md-4">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            @*
+            <div class="mb-3 row">
+            <label for="BusinessLineNmbr" class="col-md-2 col-form-label">Business Line</label>
+            <div class="col-md-4">
+            <select asp-for="BusinessLineNmbr" class="form-select">
+            @foreach (var businessLine in ViewBag.BusinessLines)
+            {
+            <option value="@businessLine.Id">@businessLine.Name</option>
+            }
+            </select>
+            <span asp-validation-for="BusinessLineNmbr" class="text-danger"></span>
+            </div>
+            </div>*@
+
+            <div class="mb-3 row">
+                <label for="PdpFlg" class="col-md-2 col-form-label">PDP Deliver</label>
+                <div class="col-md-4">
+                    <select asp-for="PdpFlg" class="form-select">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                    <span asp-validation-for="PdpFlg" class="text-danger"></span>
+                </div>
+                <label for="MnySrcType" class="col-md-2 col-form-label">Money Source</label>
+                <div class="col-md-4">
+                    <select asp-for="MnySrcType" class="form-select">
+                        <option value="true">Employee</option>
+                        <option value="false">Employer</option>
+                    </select>
+                    <span asp-validation-for="MnySrcType" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="HasPaycenter" class="col-md-2 col-form-label">Has PayCenter</label>
+                <div class="col-md-4">
+                    <select asp-for="HasPaycenter" class="form-select">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                    <span asp-validation-for="HasPaycenter" class="text-danger"></span>
+                </div>
+                <label for="BankNm" class="col-md-2 col-form-label">Bank Name</label>
+                <div class="col-md-4">
+                    <input asp-for="BankNm" class="form-control" />
+                    <span asp-validation-for="BankNm" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="AdArt" class="col-md-2 col-form-label">No. AD/ART</label>
+                <div class="col-md-4">
+                    <input asp-for="AdArt" class="form-control" />
+                    <span asp-validation-for="AdArt" class="text-danger"></span>
+                </div>
+                <label for="Npwp" class="col-md-2 col-form-label">NPWP</label>
+                <div class="col-md-4">
+                    <input asp-for="Npwp" id="npwp" class="form-control" />
+                    <span asp-validation-for="Npwp" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="AccountNm" class="col-md-2 col-form-label">Account Name</label>
+                <div class="col-md-4">
+                    <input asp-for="AccountNm" class="form-control" />
+                    <span asp-validation-for="AccountNm" class="text-danger"></span>
+                </div>
+                <label for="AccountNmbr" class="col-md-2 col-form-label">Account Number</label>
+                <div class="col-md-4">
+                    <input asp-for="AccountNmbr" class="form-control" />
+                    <span asp-validation-for="AccountNmbr" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Siup" class="col-md-2 col-form-label">SIUP</label>
+                <div class="col-md-4">
+                    <input asp-for="Siup" class="form-control" />
+                    <span asp-validation-for="Siup" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        @*   <div class="form-group float-right">
+        <input type="submit" value="Create" class="btn btn-outline-warning" />
+        </div>*@
+
+        <div class="mb-5">
+            <nav class="navbar navbar-example navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbar-ex-2"
+                            aria-controls="navbar-ex-2"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbar-ex-2">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <button type="submit" value="Create" class="btn btn-outline-danger mx-2">Save</button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-primary mx-2">New Company</button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-success mx-2">Edit Phone</button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-success mx-2">Edit Address</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </form>
+
+
+</div>
+
+@*
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const NPWP = document.getElementById("npwp");
+
+            NPWP.addEventListener("input", function (e) {
+                e.target.value = autoFormatNPWP(e.target.value);
+            });
+
+            function autoFormatNPWP(NPWPString) {
+                try {
+                    var cleaned = ("" + NPWPString).replace(/\D/g, "");
+                    var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})?$/);
+                    return [
+                        match[1],
+                        match[2] ? "." : "",
+                        match[2],
+                        match[3] ? "." : "",
+                        match[3],
+                        match[4] ? "." : "",
+                        match[4],
+                        match[5] ? "-" : "",
+                        match[5],
+                        match[6] ? "." : "",
+                        match[6]].join("");
+                } catch (err) {
+                    return "";
+                }
+            }
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}*@
+

@@ -1,0 +1,107 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.AgentCommison>
+@using X.PagedList.Mvc.Core
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card-header">
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> Agent Commision List</h4>
+
+        <a class="btn btn-primary text-end" asp-action="SetupAgentCreateCommision"><span class="tf-icons bx bx-book-add"></span>&nbsp; Create New</a>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <form asp-action="AgentCommision" method="get">
+                    <div class="input-group mb-3">
+                        <input type="text" name="searchString" class="form-control" placeholder="Search...">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <a asp-action="AgentCommision" asp-route-sortOrder="group_nmbr" asp-route-page="1">Group Number</a>
+                        </th>
+                        <th>
+                            <a asp-action="AgentCommision" asp-route-sortOrder="company_nm" asp-route-page="1">Company Name</a>
+                        </th>
+                        <th>
+                            <a asp-action="AgentCommision" asp-route-sortOrder="agent_nmbr" asp-route-page="1">Agent Number</a>
+                        </th>
+                        <th>
+                            <a asp-action="AgentCommision" asp-route-sortOrder="agent_nm" asp-route-page="1">Agent Name</a>
+                        </th>
+                        <th>
+                            <a asp-action="AgentCommision" asp-route-sortOrder="EfctvDate" asp-route-page="1">Effective Date</a>
+                        </th>
+                        <th>
+                            <a asp-action="AgentCommision" asp-route-sortOrder="TerminationDate" asp-route-page="1">Termination Date</a>
+                        </th>
+                        <th>
+                            <a asp-action="AgentCommision" asp-route-sortOrder="comm_pct" asp-route-page="1">Commission Percentage</a>
+                        </th>
+                        <th>
+                            <a asp-action="AgentCommision" asp-route-sortOrder="comm_amt" asp-route-page="1">Commission Amount</a>
+                        </th>
+                        <th>
+                            <a asp-action="AgentCommision" asp-route-sortOrder="max_comm" asp-route-page="1">Maximum Commission</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var commison in Model)
+                    {
+                        <tr>
+                            <td>@commison.group_nmbr</td>
+                            <td>@commison.company_nm</td>
+                            <td>@commison.agent_nmbr</td>
+                            <td>@commison.agent_nm</td>
+                            <td>@commison.EfctvDate</td>
+                            <td>@commison.TerminationDate</td>
+                            <td>@commison.comm_pct</td>
+                            <td>@commison.comm_amt</td>
+                            <td>@commison.max_comm</td>
+
+                            <td>
+
+                                <div class="dropdown">
+                                    <button type="button"
+                                            class="btn p-0 dropdown-toggle hide-arrow"
+                                            data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-action="Edit" asp-route-id=""><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                                        <a class="dropdown-item" asp-action="Details" asp-route-id=""><i class="bx bx-detail me-1"></i>Details</a>
+                                        <a class="dropdown-item" asp-action="Delete" asp-route-id=""><i class="bx bx-trash me-1"></i>Delete</a>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        @Html.PagedListPager(Model, page => Url.Action("NewBussinesCompany", new { page, currentFilter = ViewBag.CurrentFilter, sortOrder = ViewBag.CurrentSort }))
+    </div>
+

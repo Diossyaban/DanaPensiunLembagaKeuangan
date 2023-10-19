@@ -1,0 +1,94 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.CycleCertificateChargeAdjustment>
+@using X.PagedList.Mvc.Core
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="table-responsive text-nowrap">
+        <div class="card-header">
+            <h1>Adjustment Accrue Fee</h1>
+            <a class="btn btn-primary" asp-action="AdjustmentAccrueFeeCreate"><span class="tf-icons bx bx-book-add"></span>&nbsp; Create New</a>
+
+        </div>
+
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <a asp-action="AdjustmentAccrueFee" asp-route-sortOrder="InvTypeNmbr" asp-route-page="1">Inv Type Number</a>
+                        </th>
+                        <th>
+                            <a asp-action="AdjustmentAccrueFee" asp-route-sortOrder="FeePeriodStart" asp-route-page="1">Fee Period Start</a>
+                        </th>
+                        <th>
+                            <a asp-action="AdjustmentAccrueFee" asp-route-sortOrder="FeePeriodEnd" asp-route-page="1">Fee Period End</a>
+                        </th>
+                        <th>
+                            <a asp-action="AdjustmentAccrueFee" asp-route-sortOrder="AdjAmt" asp-route-page="1">Adjustment Amount</a>
+                        </th>
+              
+                        <th>
+                            <a asp-action="AdjustmentAccrueFee" asp-route-sortOrder="UserNm" asp-route-page="1">User Name</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.InvTypeNmbr</td>
+                            <td>@item.FeePeriodStart</td>
+                            <td>@item.FeePeriodEnd</td>
+                            <td>@string.Format("Rp {0:N}", item.AdjAmt)</td>
+                            <td>@item.UserNm</td>
+
+                            <td>
+
+                                <div class="dropdown">
+                                    <button type="button"
+                                            class="btn p-0 dropdown-toggle hide-arrow"
+                                            data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-action="AdjustmentAccrueFeeEdit" asp-route-id="@item.InvTypeNmbr"><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                                        <a class="dropdown-item" asp-action="AdjustmentAccrueFeeDelete" asp-route-id="@item.InvTypeNmbr"><i class="bx bx-trash me-1"></i>Delete</a>
+                                    </div>
+
+                                </div>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        @Html.PagedListPager(Model, page => Url.Action("AdjustmentAccrueFee", new { page, currentFilter = ViewBag.CurrentFilter, sortOrder = ViewBag.CurrentSort }))
+    </div>
+</div>
+<script>
+    function formatRupiah(angka) {
+        var rupiah = '';
+        var angkarev = angka.toString().split('').reverse().join('');
+        for (var i = 0; i < angkarev.length; i++) {
+            if (i % 3 == 0 && i !== 0) {
+                rupiah += '.';
+            }
+            rupiah += angkarev[i];
+        }
+        return 'Rp ' + rupiah.split('').reverse().join('');
+    }
+</script>

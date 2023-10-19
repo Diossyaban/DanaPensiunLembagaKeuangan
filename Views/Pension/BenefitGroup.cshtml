@@ -1,0 +1,129 @@
+﻿@model DPLK.Models.GroupBeneSetup
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="card-body">
+    <form asp-action="BenefitGroup" method="post">
+        <div class="mb-3 row">
+            <label asp-for="GroupNmbr" class="col-md-2 col-form-label">Company Name</label>
+            <div class="col-md-4">
+                @Html.DropDownList("Company", (IEnumerable<SelectListItem>)ViewData["DdlGroupPIC"], new { @class = "form-control" })
+                <span asp-validation-for="GroupNmbr" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="McpTypeNmbr" class="col-md-2 col-form-label">MCP Type</label>
+            <div class="col-md-4">
+                @Html.DropDownList("McpTypeNumber", (IEnumerable<SelectListItem>)ViewData["DdlParamsMcpType"], new { @class = "form-control" })
+                <span asp-validation-for="McpTypeNmbr" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="BeneTypeNmbr" class="col-md-2 col-form-label">Benefit Name</label>
+            <div class="col-md-4">
+                @Html.DropDownList("BenefitTypeNumber", (IEnumerable<SelectListItem>)ViewData["DdlParamsBeneType"], new { @class = "form-control" })
+                <span asp-validation-for="BeneTypeNmbr" class="text-danger"></span>
+            </div>
+            <label asp-for="SiCalcTypeNmbr" class="col-md-2 col-form-label">Sum Insured Calc Method</label>
+            <div class="col-md-4">
+                @Html.DropDownList("SiCalcTypeNumber", (IEnumerable<SelectListItem>)ViewData["DdlParamsValue"], new { @class = "form-control" })
+                <span asp-validation-for="SiCalcTypeNmbr" class="text-danger"></span>
+            </div>
+        </div>
+        
+        <div class="mb-3 row">
+            <label asp-for="DefaultSumInsured" class="col-md-2 col-form-label">Default Sum Insued Amount</label>
+            <div class="col-md-4">
+                <input asp-for="DefaultSumInsured" class="form-control" />
+                <span asp-validation-for="DefaultSumInsured" class="text-danger"></span>
+            </div>
+            <label asp-for="MaxSumInsured" class="col-md-2 col-form-label">Max Sum Insured Ammount</label>
+            <div class="col-md-4">
+                <input asp-for="MaxSumInsured" class="form-control" />
+                <span asp-validation-for="MaxSumInsured" class="text-danger"></span>
+            </div>
+        </div>
+       
+        <div class="mb-3 row">
+            <label asp-for="CoiDiscontFlg" class="col-md-2 col-form-label">Discount Coi</label>
+            <div class="col-md-4">
+                <select asp-for="CoiDiscontFlg" class="form-select">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+                <span asp-validation-for="CoiDiscontFlg" class="text-danger"></span>
+            </div>
+            <label asp-for="CoiDiscontValue" class="col-md-2 col-form-label">Discount Pct</label>
+            <div class="col-md-4">
+                <input asp-for="CoiDiscontValue" class="form-control" />
+                <span asp-validation-for="CoiDiscontValue" class="text-danger"></span>
+            </div>
+        </div>
+
+        
+        <div class="mb-3 row">
+            <label class="col-md-2 col-form-label">
+                Loading Coi
+            </label>
+            <div class="col-md-4">
+                <select asp-for="CoiLoadingFlg" class="form-select">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+                <span asp-validation-for="CoiLoadingFlg" class="text-danger"></span>
+            </div>
+            <label asp-for="CoiLoadingValue" class="col-md-2 col-form-label">Loading Pct</label>
+            <div class="col-md-4">
+                <input asp-for="CoiLoadingValue" class="form-control" />
+                <span asp-validation-for="CoiLoadingValue" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="mb-3 row">
+            <label asp-for="CoiTypeNmbr" class="col-md-2 col-form-label">Coi Rate</label>
+            <div class="col-md-4">
+                @Html.DropDownList("CoiTypeNumber", (IEnumerable<SelectListItem>)ViewData["DdlParamsCoiType"], new { @class = "form-control" })
+                <span asp-validation-for="CoiTypeNmbr" class="text-danger"></span>
+            </div>
+            <label asp-for="ChangeDt" class="col-md-2 col-form-label">Effective Date</label>
+            <div class="col-md-4">
+                <input asp-for="ChangeDt" class="form-control" type="date" />
+                <span asp-validation-for="ChangeDt" class="text-danger"></span>
+            </div>
+        </div>
+     
+        <div class="mb-3 row">
+            <label asp-for="MaxEntryAge" class="col-md-2 col-form-label">Max Entry Age</label>
+            <div class="col-md-4">
+                <input asp-for="MaxEntryAge" class="form-control" />
+                <span asp-validation-for="MaxEntryAge" class="text-danger"></span>
+            </div>
+            <label asp-for="MaxCovAge" class="col-md-2 col-form-label">Max Coverage Age</label>
+            <div class="col-md-4">
+                <input asp-for="MaxCovAge" class="form-control" />
+                <span asp-validation-for="MaxCovAge" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label asp-for="SubTrnsNmbr" class="col-md-2 col-form-label">Claim Type for Additional Benefit </label>
+            <div class="col-md-4">
+                @Html.DropDownList("SubTransactionNumber", (IEnumerable<SelectListItem>)ViewData["DdlParamsWD"], new { @class = "form-control" })
+                <span asp-validation-for="SubTrnsNmbr" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="mb-3 row">
+            <div class="col-md-6 offset-md-2">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </form>
+</div>

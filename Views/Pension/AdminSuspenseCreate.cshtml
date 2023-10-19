@@ -1,0 +1,80 @@
+﻿@model DPLK.Models.SuspenseHst
+
+@{
+    ViewData["Title"] = "Create Suspense";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h2>Suspense Request</h2>
+
+<form asp-action="AdminSuspenseCreate">
+
+
+    <div class="mb-3 row">
+        <label asp-for="SuspnNmbr" class="col-md-2 col-form-label">Suspense Number</label>
+        <div class="col-md-4">
+            <input asp-for="SuspnNmbr" class="form-control" />
+            <span asp-validation-for="SuspnNmbr" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="SuspnAmt" class="col-md-2 col-form-label">Suspense Amount</label>
+        <div class="col-md-4">
+            <input asp-for="SuspnAmt" class="form-control" />
+            <span asp-validation-for="SuspnAmt" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="SuspnDesc1" class="col-md-2 col-form-label">Suspense Desciption</label>
+        <div class="col-md-4">
+            <input asp-for="SuspnDesc1" class="form-control" />
+            <span asp-validation-for="SuspnDesc1" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="SuspnTypeNmbr" class="col-md-2 col-form-label">Suspense Type </label>
+        <div class="col-md-4">
+            @Html.DropDownListFor(model => model.SuspnTypeNmbr, (IEnumerable<SelectListItem>)ViewData["DdlParamsSuspenseType"], new { @class = "form-select" })
+            <span asp-validation-for="SuspnTypeNmbr" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="ReceivedDt" class="col-md-2 col-form-label">Received Date</label>
+        <div class="col-md-4">
+            <input asp-for="ReceivedDt" class="form-control" type="date" />
+            <span asp-validation-for="ReceivedDt" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- Bagian Dropdown Paycenter -->
+    <div class="mb-3 row">
+        <label asp-for="PaycenterNmbr" class="col-md-2 col-form-label">Pay Center</label>
+        <div class="col-md-4">
+            @Html.DropDownListFor(model => model.PaycenterNmbr, ViewBag.PaycenterList as SelectList, "-- Please Select --", new { @class = "form-control" })
+            <span asp-validation-for="PaycenterNmbr" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- Bagian Dropdown Group -->
+    <div class="mb-3 row">
+        <label asp-for="GroupNmbr" class="col-md-2 col-form-label">Group</label>
+        <div class="col-md-4">
+            @Html.DropDownListFor(model => model.GroupNmbr, ViewBag.GroupList as SelectList, "-- Please Select --", new { @class = "form-control" })
+            <span asp-validation-for="GroupNmbr" class="text-danger"></span>
+        </div>
+    </div>
+
+
+    <div class="mb-3 row">
+        <label asp-for="RefBank" class="col-md-2 col-form-label">Reference Bank</label>
+        <div class="col-md-4">
+            <input asp-for="RefBank" class="form-control" />
+            <span asp-validation-for="RefBank" class="text-danger"></span>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

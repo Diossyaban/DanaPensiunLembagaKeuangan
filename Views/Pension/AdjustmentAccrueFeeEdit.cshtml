@@ -1,0 +1,84 @@
+﻿@model DPLK.Models.CycleCertificateChargeAdjustment
+
+@{
+    ViewData["Title"] = "Edit Adjustment Accrue Fee";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h1>Edit Adjustment Accrue Fee</h1>
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="AdjustmentAccrueFeeEdit" method="post">
+            <div class="form-group">
+                <label for="InvTypeNmbr">Fund</label>
+                <select asp-for="InvTypeNmbr" class="form-control">
+                    <option value="">-- Select --</option>
+                    @foreach (var fund in ViewBag.FundList)
+                    {
+                        <option value="@fund.Value">@fund.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="FeePeriodStart">From Date</label>
+                <input asp-for="FeePeriodStart" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="FeePeriodEnd">To Date</label>
+                <input asp-for="FeePeriodEnd" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="AdjAmt">Fee Adjustment Amount</label>
+                <div class="input-group">
+                    <input type="text" id="AdjAmtInput" class="form-control" value="@Model.AdjAmt" />
+                    <input type="hidden" asp-for="AdjAmt" id="AdjAmtHidden" value="@Model.AdjAmt" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="UserNm">User Name</label>
+                <input asp-for="UserNm" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a asp-action="AdjustmentAccrueFee" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    <script>
+        function formatRupiah(angka) {
+            var rupiah = '';
+            var angkarev = angka.toString().split('').reverse().join('');
+            for (var i = 0; i < angkarev.length; i++) {
+                if (i % 3 === 0 && i !== 0) {
+                    rupiah += '.';
+                }
+                rupiah += angkarev[i];
+            }
+            return 'Rp ' + rupiah.split('').reverse().join('');
+        }
+
+        var adjAmtInput = document.getElementById("AdjAmtInput");
+        var adjAmtHidden = document.getElementById("AdjAmtHidden");
+
+        adjAmtInput.addEventListener("input", function () {
+            var value = parseFloat(this.value.replace(/[^\d]/g, ''));
+            adjAmtHidden.value = value;
+            this.value = formatRupiah(value);
+        });
+
+        document.querySelector("form").addEventListener("submit", function () {
+            adjAmtHidden.value = parseFloat(adjAmtHidden.value);
+        });
+    </script>
+

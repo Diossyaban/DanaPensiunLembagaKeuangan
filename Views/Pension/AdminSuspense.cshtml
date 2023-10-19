@@ -1,0 +1,171 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.AdminSuspense>
+@using X.PagedList.Mvc.Core
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Admin Suspense List";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<ul class="nav nav-pills mb-3" role="tablist">
+    <li class="nav-item">
+        <button type="button"
+                class="nav-link active"
+                role="tab"
+                data-bs-toggle="tab"
+                data-bs-target="#navs-pills-top-home"
+                aria-controls="navs-pills-top-home"
+                aria-selected="true">
+            Home
+        </button>
+    </li>
+    <li class="nav-item">
+        <button type="button"
+                class="nav-link"
+                role="tab"
+                data-bs-toggle="tab"
+                data-bs-target="#navs-pills-top-profile"
+                aria-controls="navs-pills-top-profile"
+                aria-selected="false">
+            Profile
+        </button>
+    </li>
+    <li class="nav-item">
+        <button type="button"
+                class="nav-link"
+                role="tab"
+                data-bs-toggle="tab"
+                data-bs-target="#navs-pills-top-messages"
+                aria-controls="navs-pills-top-messages"
+                aria-selected="false">
+            Messages
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content">
+  
+    <div class="tab-pane fade show active" id="navs-pills-top-home" role="tabpanel">
+
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> Suspense Request</h4>
+
+        <a class="btn btn-primary text-end" asp-action="AdminSuspenseCreate"><span class="tf-icons bx bx-book-add"></span>&nbsp; Create New</a>
+        <br />
+        <div class="card">
+            @if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+            {
+                <div class="alert alert-success" role="alert">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+   
+            <div class="mb-3">
+                <form asp-action="AdminSuspense">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="searchString" value="@ViewBag.CurrentFilter" />
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="suspn_nmbr" asp-route-page="1">
+                                    Suspense Number
+                                </a>
+
+                            </th>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="suspn_amt" asp-route-page="1">
+                                    Suspense Amount
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="suspn_desc1" asp-route-page="1">
+                                    Desctiption
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="suspn_type_nm" asp-route-page="1">
+                                    Suspense Type
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="received_dt" asp-route-page="1">
+                                    Recived Date
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="group_nmbr" asp-route-page="1">
+                                    Group Number
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="company_nm" asp-route-page="1">
+                                    Company Name
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="paycenter_nm" asp-route-page="1">
+                                    Paycenter Name
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="datesorting" asp-route-page="1">
+                                    Date Sorting
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="AdminSuspense" asp-route-sortOrder="Ref_Bank" asp-route-page="1">
+                                    Reference Bank
+                                </a>
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.suspn_nmbr</td>
+                                <td>@item.suspn_amt</td>
+                                <td>@item.suspn_desc1</td>
+                                <td>@item.suspn_type_nm</td>
+                                <td>@item.received_dt</td>
+                                <td>@item.group_nmbr</td>
+                                <td>@item.company_nm</td>
+                                <td>@item.paycenter_nm</td>
+                                <td>@item.datesorting</td>
+                                <td>@item.Ref_Bank</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            @Html.PagedListPager(Model, page => Url.Action("NewBussinesCompany", new { page, currentFilter = ViewBag.CurrentFilter, sortOrder = ViewBag.CurrentSort }))
+        </div>
+    </div>
+ 
+
+    <!-- Tab Profile -->
+    <div class="tab-pane fade" id="navs-pills-top-profile" role="tabpanel">
+        <!-- Isi dari tab Profile di sini -->
+    </div>
+
+    <!-- Tab Messages -->
+    <div class="tab-pane fade" id="navs-pills-top-messages" role="tabpanel">
+        <!-- Isi dari tab Messages di sini -->
+    </div>
+</div>
+
+

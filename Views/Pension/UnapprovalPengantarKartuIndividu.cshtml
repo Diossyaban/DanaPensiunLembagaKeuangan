@@ -1,0 +1,25 @@
+﻿@model List<DPLK.Models.IndividuSuratPengantarKartu>
+
+<table>
+    <thead>
+        <tr>
+            <th>No Surat</th>
+            <th>Ditujukan</th>
+            <th>Tanggal Surat</th>
+            <th>Company Name</th>
+            <th>Group Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NoSurat</td>
+                <td>@item.Ditujukan</td>
+                <td>@item.TanggalSurat</td>
+                <td>@item.CompanyName</td>
+                <td>@item.GroupNumber</td>
+            </tr>
+        }
+    </tbody>
+</table>

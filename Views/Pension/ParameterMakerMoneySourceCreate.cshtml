@@ -1,0 +1,31 @@
+﻿@model DPLK.Models.MnySrc
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> Create New Money Source</h4>
+
+    <form asp-action="ParameterMakerMoneySourceCreate" method="post">
+        <div class="col-md-4">
+            <label for="MnySrcType">ID:</label>
+            <input type="text" class="form-control col-md-4" id="MnySrcType" name="MnySrcType" required>
+        </div>
+        <div class="col-md-4">
+            <label for="MnySrcNm">Description:</label>
+            <input type="text" class="form-control" id="MnySrcNm" name="MnySrcNm" required>
+        </div>
+        <div class="col-md-4">
+            <label for="OldTypeNmbr">Old Type Number:</label>
+            <input type="text" class="form-control" id="OldTypeNmbr" name="OldTypeNmbr">
+        </div>
+        <div class="col-md-4">
+            <label for="LastChangeDt">Last Change Date:</label>
+            <input type="datetime-local" class="form-control" id="LastChangeDt" name="LastChangeDt">
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-action="ParameterMakerMoneySource" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

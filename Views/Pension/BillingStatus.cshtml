@@ -1,0 +1,64 @@
+﻿@model DPLK.Models.BillingStatus
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="card-body">
+    <form asp-action="BillingStatus" method="post">
+
+        <div class="mb-3 row">
+            <label asp-for="GroupNmbr" class="col-md-2 col-form-label">Company Name</label>
+            <div class="col-md-4">
+                <input asp-for="GroupNmbr" class="form-control" type="text" placeholder="NEW" id="html5-text-input" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="GroupNmbr" class="col-md-2 col-form-label">Group Number</label>
+            <div class="col-md-4">
+                <input asp-for="GroupNmbr" class="form-control" type="text" placeholder="NEW" id="html5-text-input" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="NextPslDt" class="col-md-2 col-form-label">Next Fee Periode</label>
+            <div class="col-md-4">
+                <input asp-for="NextPslDt" class="form-control" type="date" id="html5-text-input"  />
+            </div>
+            <label asp-for="NextCntrbDt" class="col-md-2 col-form-label">Next Contribution Periode</label>
+            <div class="col-md-4">
+                <input asp-for="NextCntrbDt" class="form-control" type="date" id="html5-text-input"  />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="NextPslDt" class="col-md-2 col-form-label">Next Fee Periode</label>
+            <div class="col-md-4">
+                <input asp-for="NextPslDt" class="form-control" type="date" id="html5-text-input"  />
+            </div>
+            <label asp-for="NextCntrbPrd" class="col-md-2 col-form-label">Next Contribution GenerateDate</label>
+            <div class="col-md-4">
+                <input asp-for="NextCntrbPrd" class="form-control" type="date" id="html5-text-input"  />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="BillFreqNmbr" class="col-md-2 col-form-label"> Fee Frequency </label>
+            <div class="col-md-4">
+                @Html.DropDownList("FreqTypeNmbr", (IEnumerable<SelectListItem>)ViewData["DdlParamsFrequencyType"], new { @class = "form-control" })
+                <span asp-validation-for="BillFreqNmbr" class="text-danger"></span>
+            </div>
+            <label asp-for="CntrbFreqNmbr" class="col-md-2 col-form-label"> Contribution  Frequency </label>
+            <div class="col-md-4">
+                @Html.DropDownList("FreqTypeNmbr", (IEnumerable<SelectListItem>)ViewData["DdlParamsFrequencyType"], new { @class = "form-control" })
+                <span asp-validation-for="CntrbFreqNmbr" class="text-danger"></span>
+            </div>
+        </div>
+ 
+        <div class="mb-3 row">
+            <div class="col-md-4 offset-md-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

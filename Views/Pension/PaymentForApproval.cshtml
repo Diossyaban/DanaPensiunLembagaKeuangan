@@ -1,0 +1,73 @@
+﻿@model IEnumerable<DPLK.Models.PaymentForApproval>
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light">Pension /</span> Payment Approval
+</h4>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaycenterNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EffectiveDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SequenceNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TypeDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaycenterNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EffectiveDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SequenceNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TypeDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CompanyName">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CompanyName">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CompanyName">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

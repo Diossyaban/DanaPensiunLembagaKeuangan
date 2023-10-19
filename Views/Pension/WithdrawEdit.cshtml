@@ -1,0 +1,55 @@
+﻿@model IEnumerable<DPLK.Models.TferPayInfo>
+
+@{
+    ViewData["Title"] = "Withdraw Edit";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h2>Withdraw Edit</h2>
+
+<form method="get" action="">
+    <div class="form-group">
+        <input type="text" name="searchString" class="form-control" value="@ViewBag.currentFilter" placeholder="Search by Note">
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Transfer Type</th>
+            <th>Transaction Sequence</th>
+            <!-- Tambahkan kolom-kolom lain sesuai kebutuhan -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payment in Model)
+        {
+            <tr>
+                <td>@payment.TferTypeNmbr</td>
+                <td>@payment.TrnsSeqNmbr</td>
+                <!-- Tambahkan sel untuk kolom-kolom lain -->
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    int pageSize = ViewBag.psize != null ? (int)ViewBag.psize : 5;
+    int totalItems = Model.Count();
+    int pageCount = (int)Math.Ceiling((double)totalItems / pageSize);
+
+    if (pageCount > 1)
+    {
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                @for (int i = 1; i <= pageCount; i++)
+                {
+                    <li class="page-item @(i == ViewBag.page ? "active" : "")">
+                        <a class="page-link" href="?page=@i&pageSize=@pageSize">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+}

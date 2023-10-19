@@ -1,0 +1,106 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.UnitPrice>
+@using X.PagedList.Mvc.Core
+
+@{
+    ViewData["Title"] = "Unit Prices";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h2>Unit Prices</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<!-- Form pencarian -->
+<div class="mb-3">
+    <form asp-action="UnitPrice">
+        <div class="input-group">
+            <input type="text" class="form-control" name="searchString" value="@ViewBag.CurrentFilter" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<!-- Tabel -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="UnitPrice" asp-route-sortOrder="InvTypeNmbr">Inv Type Number</a>
+            </th>
+            <th>
+                <a asp-action="UnitPrice" asp-route-sortOrder="EfctvDt">Effective Date</a>
+            </th>
+            <th>
+                <a asp-action="UnitPrice" asp-route-sortOrder="Price">Price</a>
+            </th>
+            <th>
+                <a asp-action="UnitPrice" asp-route-sortOrder="ApprovalFlg">Approval Flag</a>
+            </th>
+            <th>
+                <a asp-action="UnitPrice" asp-route-sortOrder="LastChangeDt">Last Change Date</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.InvTypeName</td>
+                <td>@item.EfctvDt.ToShortDateString()</td>
+                <td>@item.Price</td>
+                <td>@item.ApprovalFlg</td>
+                <td>@item.LastChangeDt.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Navigasi halaman -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="text-center">
+            Page @(Model.PageNumber) of @Model.PageCount
+        </div>
+        <ul class="pagination justify-content-center">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="UnitPrice" asp-route-page="1" asp-route-sortOrder="@ViewBag.CurrentSort">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" asp-action="UnitPrice" asp-route-page="@(Model.PageNumber - 1)" asp-route-sortOrder="@ViewBag.CurrentSort">Previous</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">First</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="UnitPrice" asp-route-page="@(Model.PageNumber + 1)" asp-route-sortOrder="@ViewBag.CurrentSort">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" asp-action="UnitPrice" asp-route-page="@Model.PageCount" asp-route-sortOrder="@ViewBag.CurrentSort">Last</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Last</span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

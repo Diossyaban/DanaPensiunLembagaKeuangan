@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> Accounting / </span> Entry FLP</h4>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="mb-3 row">
+            <label for="html5-datetime-local-input" class="col-md-2 col-form-label">Jurnal No.</label>
+            <div class="col-md-4">
+                @*<input class="form-control"
+                       type="datetime-local"
+                       value=""
+                       id="html5-datetime-local-input" />*@
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-date-input" class="col-md-2 col-form-label">Date</label>
+            <div class="col-md-4">
+                <input class="form-control"
+                       type="date"
+                       value=""
+                       id="html5-date-input" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Fund</label>
+            <div class="col-md-4">
+                <select class="form-select" asp-items="ViewBag.NewBussines"></select>
+
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Correction</label>
+            <div class="col-md-4">
+                <select class="form-select" asp-items="ViewBag.NewBussines"></select>
+
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="html5-search-input" class="col-md-2 col-form-label">Description </label>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input class="form-control" type="search" value="" id="html5-search-input" />
+                    <button class="btn btn-dark" type="button" id="searchButton">Create New</button>
+                </div>
+            </div>
+        </div>
+      
+
+        </div>
+
+     
+
+    </div>
+

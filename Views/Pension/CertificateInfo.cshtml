@@ -1,0 +1,249 @@
+﻿@model DPLK.Models.CertificateInfo
+
+
+<form asp-action="CertificateInfo" method="post">
+
+    <div class="card-body">
+        <div class="mb-3 row">
+            <label asp-for="CertificateNumber" class="col-md-2 col-form-label">Certificate Code</label>
+            <div class="col-md-4">
+                <input asp-for="CertificateNumber" class="form-control" />
+                <span asp-validation-for="CertificateNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="FundSourceNumber" class="col-md-2 col-form-label">Fund Source</label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.FundSourceNumber, (IEnumerable<SelectListItem>)ViewData["DdlParamsMnySrc"], new { @class = "form-select" })
+                <span asp-validation-for="FundSourceNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="OldCertificateNumber" class="col-md-2 col-form-label">Old Cert. Code</label>
+            <div class="col-md-4">
+                <input asp-for="OldCertificateNumber" class="form-control" />
+                <span asp-validation-for="OldCertificateNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="ApplicationReceiveDate" class="col-md-2 col-form-label">Application Received </label>
+            <div class="col-md-4">
+                <input asp-for="ApplicationReceiveDate" class="form-control" type="date" />
+                <span asp-validation-for="ApplicationReceiveDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="GroupNumber" class="col-md-2 col-form-label">Group</label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.GroupNumber, ViewBag.GroupList as SelectList, new { @class = "form-control" })
+                <span asp-validation-for="GroupNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="CompletionDate" class="col-md-2 col-form-label">Application Completed </label>
+            <div class="col-md-4">
+                <input asp-for="CompletionDate" class="form-control" type="date" />
+                <span asp-validation-for="CompletionDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="EmployeeNumber" class="col-md-2 col-form-label">Employee Code</label>
+            <div class="col-md-4">
+                <input asp-for="EmployeeNumber" class="form-control" />
+                <span asp-validation-for="EmployeeNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="EffectiveDate" class="col-md-2 col-form-label"> Create Date </label>
+            <div class="col-md-4">
+                <input asp-for="EffectiveDate" class="form-control" type="date" />
+                <span asp-validation-for="EffectiveDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label asp-for="EmploymentDate" class="col-md-2 col-form-label">Employment Date</label>
+            <div class="col-md-4">
+                <input asp-for="EmploymentDate" class="form-control" type="date" />
+                <span asp-validation-for="EmploymentDate" class="text-danger"></span>
+            </div>
+            <label asp-for="TerminationDate" class="col-md-2 col-form-label"> Termination Date </label>
+            <div class="col-md-4">
+                <input asp-for="TerminationDate" class="form-control" type="date" />
+                <span asp-validation-for="TerminationDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label asp-for="RetirementAge" class="col-md-2 col-form-label">Retirement Age </label>
+            <div class="col-md-4">
+                <input asp-for="RetirementAge" class="form-control" />
+                <span asp-validation-for="RetirementAge" class="text-danger"></span>
+            </div>
+            <label asp-for="KitDeliveryDate" class="col-md-2 col-form-label"> Certificate Delivery Date </label>
+            <div class="col-md-4">
+                <input asp-for="KitDeliveryDate" class="form-control" type="date" />
+                <span asp-validation-for="KitDeliveryDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="PaymentTypeNumber" class="col-md-2 col-form-label">Payment Method </label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.PaymentTypeNumber, (IEnumerable<SelectListItem>)ViewData["DdlParamsPaymentType"], new { @class = "form-select" })
+                <span asp-validation-for="PaymentTypeNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="FirstPremiumFlag" class="col-md-2 col-form-label">First Premium Paid</label>
+            <div class="col-md-4">
+                <select asp-for="FirstPremiumFlag" class="form-select">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+                <span asp-validation-for="FirstPremiumFlag" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="CitizenshipCode" class="col-md-2 col-form-label">Citizenship </label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.CitizenshipCode, (IEnumerable<SelectListItem>)ViewData["DdlParamsCitizenship"], new { @class = "form-select" })
+                <span asp-validation-for="CitizenshipCode" class="text-danger"></span>
+            </div>
+            <label asp-for="OtherDPPKFlag" class="col-md-2 col-form-label">Have Other DPLK</label>
+            <div class="col-md-4">
+                <select asp-for="OtherDPPKFlag" class="form-select">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+                <span asp-validation-for="OtherDPPKFlag" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="TaxIdNumber" class="col-md-2 col-form-label">Tax ID </label>
+            <div class="col-md-4">
+                <input asp-for="TaxIdNumber" class="form-control" />
+                <span asp-validation-for="TaxIdNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="SumInsuredEffectiveDate" class="col-md-2 col-form-label"> Sum Insured Efective Date </label>
+            <div class="col-md-4">
+                <input asp-for="SumInsuredEffectiveDate" class="form-control" type="date" />
+                <span asp-validation-for="SumInsuredEffectiveDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="PremiumTypeNumber" class="col-md-2 col-form-label">Jenis Premi </label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.PremiumTypeNumber, (IEnumerable<SelectListItem>)ViewData["DdlParamsPremiumType"], new { @class = "form-select" })
+                <span asp-validation-for="PremiumTypeNumber" class="text-danger"></span>
+            </div>
+
+
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="RiderTypeNumber" class="col-md-2 col-form-label">Jenis Rider </label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.RiderTypeNumber, (IEnumerable<SelectListItem>)ViewData["DdlParamsRiderType"], new { @class = "form-select" })
+                <span asp-validation-for="RiderTypeNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="StatusTypeName" class="col-md-2 col-form-label"> Status </label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.StatusTypeName, (IEnumerable<SelectListItem>)ViewData["DdlStatusType"], new { @class = "form-select" })
+                <span asp-validation-for="StatusTypeName" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="AgentNumber" class="col-md-2 col-form-label">Nama Agen </label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.AgentNumber, (IEnumerable<SelectListItem>)ViewData["DdlParamsAgentMaster"], new { @class = "form-select" })
+                <span asp-validation-for="AgentNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="StatusEffectiveDate" class="col-md-2 col-form-label">Status Effective Date </label>
+            <div class="col-md-4">
+                <input asp-for="StatusEffectiveDate" class="form-control" type="date" />
+                <span asp-validation-for="StatusEffectiveDate" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="mb-3 row">
+            <label asp-for="CommissionTypeNumber" class="col-md-2 col-form-label">Jenis Komisi </label>
+            <div class="col-md-4">
+                <span asp-validation-for="CommissionTypeNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="SalaryEffectiveDate" class="col-md-2 col-form-label">Salary Effective Date </label>
+            <div class="col-md-4">
+                <input asp-for="SalaryEffectiveDate" class="form-control" type="date" />
+                <span asp-validation-for="SalaryEffectiveDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="PlanTypeNumber" class="col-md-2 col-form-label">Member Class Plan </label>
+            <div class="col-md-4">
+                <span asp-validation-for="PlanTypeNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="SalaryAmount" class="col-md-2 col-form-label">Salary Amount </label>
+            <div class="col-md-4">
+                <input asp-for="SalaryAmount" class="form-control" />
+                <span asp-validation-for="SalaryAmount" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="PlanTypeNumber" class="col-md-2 col-form-label">Virtual Account Number  </label>
+            <div class="col-md-4">
+                <span asp-validation-for="PlanTypeNumber" class="text-danger"></span>
+            </div>
+            <label asp-for="Branch" class="col-md-2 col-form-label">Branch  </label>
+            <div class="col-md-4">
+                <input asp-for="Branch" class="form-control" />
+                <span asp-validation-for="Branch" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp="" class="col-md-2 col-form-label text-center"> </label>
+            <div class="col-md-4">
+            </div>
+            <label asp-for="ApuPpt" class="col-md-2 col-form-label">APU PPT</label>
+            <div class="col-md-4">
+                <select asp-for="ApuPpt" class="form-select">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+                <span asp-validation-for="ApuPpt" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+   @* <div class="mb-3 row">
+        <div class="col-md-4 offset-md-2">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>*@
+    <div class="card">
+        <div class="card-header">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">  </span> Balance Info</h4>
+
+
+
+
+            <div class="mb-3 row">
+                <label asp-for="StatusTypeName" class="col-md-2 col-form-label">Effective Date</label>
+                <div class="col-md-4">
+                    @Html.DropDownListFor(model => model.StatusTypeName, (IEnumerable<SelectListItem>)ViewData["DdlParamsMoneyType"], new { @class = "form-select" })
+                    <span asp-validation-for="StatusTypeName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="EffectiveDate" class="col-md-2 col-form-label">Investment Name </label>
+                <div class="col-md-4">
+                    <input asp-for="EffectiveDate" class="form-control" />
+                    <span asp-validation-for="EffectiveDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="StatusTypeName" class="col-md-2 col-form-label">Money Type </label>
+                <div class="col-md-4">
+                    @Html.DropDownListFor(model => model.StatusTypeName, (IEnumerable<SelectListItem>)ViewData["DdlParamsMoneyType"], new { @class = "form-select" })
+                    <span asp-validation-for="StatusTypeName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="RetirementAge" class="col-md-2 col-form-label">Persentage </label>
+                <div class="col-md-4">
+                    <input asp-for="RetirementAge" class="form-control" />
+                    <span asp-validation-for="RetirementAge" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

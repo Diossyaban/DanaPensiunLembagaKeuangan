@@ -1,0 +1,103 @@
+﻿@model DPLK.Models.AgentCommMethod
+
+@{
+    ViewData["Title"] = "Setup Agent Create Commission";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h2>Setup Agent Create Commission</h2>
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<form asp-action="SetupAgentCreateCommision">
+
+    <div class="mb-3 row">
+        <label class="col-md-2 col-form-label">Agent Name</label>
+        <div class="col-md-4">
+            <input type="text" id="AgentName" class="form-control" />
+            <span asp-validation-for="AgentNmbr" class="text-danger"></span>
+        </div>
+        <div class="col-md-1">
+            <button type="button" id="lookupAgentButton" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-md-2 col-form-label">Effective Date</label>
+        <div class="col-md-4">
+            <input type="date" id="EfctvDt" class="form-control" />
+            <span asp-validation-for="EfctvDt" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-md-2 col-form-label">Termination Date</label>
+        <div class="col-md-4">
+            <input type="date" id="TerminationDt" class="form-control" />
+            <span asp-validation-for="TerminationDt" class="text-danger"></span>
+        </div>
+    </div>
+
+
+
+    <div class="mb-3 row">
+        <label class="col-md-2 col-form-label">Commission Percentage</label>
+        <div class="col-md-4">
+            <input type="text" id="CommPct" class="form-control" />
+            <span asp-validation-for="CommPct" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-md-2 col-form-label">Commission Amount</label>
+        <div class="col-md-4">
+            <input type="text" id="CommAmt" class="form-control" />
+            <span asp-validation-for="CommAmt" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-md-2 col-form-label">Max Commission</label>
+        <div class="col-md-4">
+            <input type="text" id="MaxComm" class="form-control" />
+            <span asp-validation-for="MaxComm" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#lookupAgentButton").click(function () {
+                $("#lookupAgent").lookupbox({
+                    title: 'Search Agent',
+                    url: '/Pension/GetAgentName/?name=' + $("#AgentName").val(),
+                    method: 'GET',
+                    success: function (data) {
+                        console.log(data);
+                        $("#AgentName").val(data.agentName);
+                    },
+                    tableHeader: ['Agent Name'],
+                    colWidth: [null]
+                });
+            });
+
+        
+        });
+    </script>
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include lookupbox plugin -->
+    <script src="/path/to/lookupbox-plugin.js"></script>
+}
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
