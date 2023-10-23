@@ -1,0 +1,163 @@
+﻿@model DPLK.Models.TNotaHeader
+
+@{
+    ViewData["Title"] = "Entry Nota Billing";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pension /</span> Transcation - Entry Nota Billing</h4>
+
+<div class="card mb-4">
+    <form asp-action="EntryNota">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="card-body card-body-container">
+            <div class="mb-3 row">
+                <label for="NoNota" class="col-md-2 col-form-label">No Nota</label>
+                <div class="col-md-4">
+                    <input asp-for="NoNota" class="form-control" />
+                    <span asp-validation-for="NoNota" class="text-danger"></span>
+                </div>
+                <label for="NoKontrak" class="col-md-2 col-form-label">No Kontrak</label>
+                <div class="col-md-4">
+                    <input asp-for="NoKontrak" class="form-control" />
+                    <span asp-validation-for="NoKontrak" class="text-danger"></span>
+                </div>
+            </div>
+
+
+
+            <div class="mb-3 row">
+                <label for="TglJatuhTempo" class="col-md-2 col-form-label">Tgl Jatuh Tempo</label>
+                <div class="col-md-4">
+                    <input asp-for="TglJatuhTempo" class="form-control" type="date" />
+                    <span asp-validation-for="TglJatuhTempo" class="text-danger"></span>
+                </div>
+                <label for="JmlKaryawan" class="col-md-2 col-form-label">Jumlah Karyawan</label>
+                <div class="col-md-4">
+                    <input asp-for="JmlKaryawan" class="form-control" />
+                    <span asp-validation-for="JmlKaryawan" class="text-danger"></span>
+                </div>
+            </div>
+
+
+
+            <div class="mb-3 row">
+                <label for="JangkaPembayaran" class="col-md-2 col-form-label">Jangka Pembayaran</label>
+                <div class="col-md-4">
+                    <input asp-for="JangkaPembayaran" class="form-control" />
+                    <span asp-validation-for="JangkaPembayaran" class="text-danger"></span>
+                </div>
+                <label for="TglTerbit" class="col-md-2 col-form-label">Tgl Terbit</label>
+                <div class="col-md-4">
+                    <input asp-for="TglTerbit" class="form-control" type="date" />
+                    <span asp-validation-for="TglTerbit" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label for="KantorPerwakilan" class="col-md-2 col-form-label">Kantor Perwakilan</label>
+                <div class="col-md-4">
+                    <input asp-for="KantorPerwakilan" class="form-control" />
+                    <span asp-validation-for="KantorPerwakilan" class="text-danger"></span>
+                </div>
+                <label for="Up" class="col-md-2 col-form-label">Up</label>
+                <div class="col-md-4">
+                    <input asp-for="Up" class="form-control" />
+                    <span asp-validation-for="Up" class="text-danger"></span>
+                </div>
+            </div>
+
+
+
+            <div class="mb-3 row">
+                <label for="NamaPerusahaan" class="col-md-2 col-form-label">Nama Perusahaan</label>
+                <div class="col-md-4">
+                    @Html.DropDownListFor(model => model.NamaPerusahaan, (IEnumerable<SelectListItem>)ViewData["DDLCompanyProcessClaimRequest"], new { @class = "form-select" })
+                    <span asp-validation-for="NamaPerusahaan" class="text-danger"></span>
+                </div>
+                <label for="Alamat1" class="col-md-2 col-form-label">Alamat 1</label>
+                <div class="col-md-4">
+                    <input asp-for="Alamat1" class="form-control" />
+                    <span asp-validation-for="Alamat1" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label for="Alamat2" class="col-md-2 col-form-label">Alamat 2</label>
+                <div class="col-md-4">
+                    <input asp-for="Alamat2" class="form-control" />
+                    <span asp-validation-for="Alamat2" class="text-danger"></span>
+                </div>
+                <label for="Alamat3" class="col-md-2 col-form-label">Alamat 3</label>
+                <div class="col-md-4">
+                    <input asp-for="Alamat3" class="form-control" />
+                    <span asp-validation-for="Alamat3" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label for="KodePos" class="col-md-2 col-form-label">Kode Pos</label>
+                <div class="col-md-4">
+                    <input asp-for="KodePos" class="form-control" />
+                    <span asp-validation-for="KodePos" class="text-danger"></span>
+                </div>
+                <label for="Perihal" class="col-md-2 col-form-label">Perihal</label>
+                <div class="col-md-4">
+                    <input asp-for="Perihal" class="form-control" />
+                    <span asp-validation-for="Perihal" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label for="NamaBank" class="col-md-2 col-form-label">Nama Bank</label>
+                <div class="col-md-4">
+                    <input asp-for="NamaBank" class="form-control" />
+                    <span asp-validation-for="NamaBank" class="text-danger"></span>
+                </div>
+                <label for="CabangBank" class="col-md-2 col-form-label">Cabang Bank</label>
+                <div class="col-md-4">
+                    <input asp-for="CabangBank" class="form-control" />
+                    <span asp-validation-for="CabangBank" class="text-danger"></span>
+                </div>
+            </div>
+
+
+
+            <div class="mb-3 row">
+                <label for="NoRekening" class="col-md-2 col-form-label">Nomor Rekening</label>
+                <div class="col-md-4">
+                    @Html.DropDownListFor(model => model.NoRekening, (IEnumerable<SelectListItem>)ViewData["RekeningList"], new { @class = "form-select" })
+                    <span asp-validation-for="NoRekening" class="text-danger"></span>
+                </div>
+                <label for="AtasNama" class="col-md-2 col-form-label">Atas Nama</label>
+                <div class="col-md-4">
+                    <input asp-for="AtasNama" class="form-control" />
+                    <span asp-validation-for="AtasNama" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="Penyetuju" class="col-md-2 col-form-label">Penyetuju</label>
+                <div class="col-md-4">
+                    <input asp-for="Penyetuju" class="form-control" />
+                    <span asp-validation-for="Penyetuju" class="text-danger"></span>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+            <button type="reset" class="btn btn-danger">Reset</button>
+
+        </div>
+  
+    </form>
+</div>

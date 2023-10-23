@@ -4,6 +4,7 @@ namespace DPLK.Controllers.CashManagement
 {
     public class CashManagementController : Controller
     {
+
         public IActionResult Index()
         {
             return View();

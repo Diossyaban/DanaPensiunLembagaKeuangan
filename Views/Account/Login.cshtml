@@ -1,0 +1,59 @@
+﻿@model DPLK.Models.Dto.Login
+
+
+
+
+@{
+    Layout = "_AutLayout";
+}
+
+<div>
+
+    <p class="mb-4">
+    <p class="text-center">
+        Dana Pensiun Lembaga Keuangan
+    </p>
+
+    <form id="formAuthentication" class="mb-3" asp-action="Login" method="POST" asp-router-returnUrl="@ViewData["ReturnUrl"]">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">USER ID </label>
+            <input asp-for="Email" class="form-control" placeholder="Enter your USER ID"
+                   autofocus>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3 form-password-toggle">
+            <div class="d-flex justify-content-between">
+                <label class="form-label" asp-for="Password">Password</label>
+            @*    <a href="#">
+                    <small>Forgot Password?</small>
+                </a>*@
+            </div>
+            <div class="input-group input-group-merge">
+                <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input class="form-check-input" asp-for="RememberMe">
+                <label class="form-check-label" for="remember-me">
+                    Remember Me
+                </label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary d-grid w-100" type="submit">LOGIN</button>
+        </div>
+    </form>
+
+ 
+</div>
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
+
+
+

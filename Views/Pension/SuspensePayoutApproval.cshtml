@@ -1,0 +1,52 @@
+﻿@model List<DPLK.Models.SuspensePayoutViewModel>
+
+@{
+    ViewData["Title"] = "Suspense Payout Approval";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Suspense Payout /</span> Approval</h4>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Seq Number</th>
+            <th>Regis ID</th>
+            <th>Certificate Number</th>
+            <th>Client Name</th>
+            <th>Bank Name</th>
+            <th>Bank Address</th>
+            <th>Account Number</th>
+            <th>Account Name</th>
+            <th>Amount</th>
+            <th>Check Amount</th>
+            <th>Net Amount</th>
+            <th>Remarks</th>
+            <th>Suspense Number</th>
+            <th>Prepared By</th>
+            <th>Approval Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.SeqNmbr</td>
+                <td>@item.RegisId</td>
+                <td>@item.CerNmbr</td>
+                <td>@item.ClientNm</td>
+                <td>@item.BankNm</td>
+                <td>@item.BankAddress</td>
+                <td>@item.AcctNmbr</td>
+                <td>@item.AcctNm</td>
+                <td>@item.Amount</td>
+                <td>@item.CheckAmt</td>
+                <td>@item.NetAmt</td>
+                <td>@item.Remarks</td>
+                <td>@item.SuspenseNmbr</td>
+                <td>@item.PrepareBy</td>
+                <td>@item.ApprovalDt</td>
+            </tr>
+        }
+    </tbody>
+</table>

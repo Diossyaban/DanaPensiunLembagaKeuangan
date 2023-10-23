@@ -1,0 +1,28 @@
+﻿@page
+@model List<DPLK.Models.dto.GetKartuIndividu>
+
+<h1>Data Kartu Individu</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>No Surat</th>
+            <th>Ditujukan</th>
+            <th>Tanggal Surat</th>
+            <th>Nama Client</th>
+            <th>Nomor Sertifikat</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.no_surat</td>
+                <td>@item.ditujukan</td>
+                <td>@item.tgl_surat</td>
+                <td>@item.client_nm</td>
+                <td>@item.cer_nmbr</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,4 +1,5 @@
 ﻿using DPLK.Models;
+using DPLK.Models.dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -1303,7 +1304,7 @@ namespace DPLK.Controllers.Pension
             ViewData["DdlGroupPIC"] = GetCompaniesAndGroupNumbers();
             ViewData["DDLCompanyProcessClaimRequest"] = GetCompanyNamesFromDatabase();
             ViewData["TransactionTypes"] = GetTransactionTypes();
-
+            ViewData["RekeningList"] = GetRekeningList();
             //ViewData["DdlParamsMCP"] = GetDDLParamsMCP();
 
 
@@ -1332,6 +1333,32 @@ namespace DPLK.Controllers.Pension
 
             return ddlParams;
         }
+        private List<SelectListItem> GetRekeningList()
+        {
+            var rekeningList = new List<SelectListItem>();
+
+            using (var connection = new SqlConnection(_connectionString))
+
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand("SELECT Code_Bank, Rekening FROM tbRekBank", connection))
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var codeBank = reader["Code_Bank"].ToString();
+                        var rekening = reader["Rekening"].ToString();
+
+                        rekeningList.Add(new SelectListItem { Value = codeBank, Text = rekening });
+                    }
+                }
+            }
+
+            return rekeningList;
+        }
+
+
         private List<SelectListItem> GetDDL(string ddlParamName)
         {
             var ddlParams = new List<SelectListItem>();
@@ -1826,6 +1853,36 @@ namespace DPLK.Controllers.Pension
         public IActionResult TransactionDeletingClaim()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult TransactionDeletingClaim(int cerNmbr, int batchId)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand("usp_delete_claim", connection))
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        command.Parameters.AddWithValue("@cer_nmbr", cerNmbr);
+                        command.Parameters.AddWithValue("@batch_id", batchId);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                TempData["SuccessMessage"] = "Claim deleted successfully.";
+                return RedirectToAction("TransactionDeletingClaim", "Claim");
+            }
+            catch (System.Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error: " + ex.Message;
+                return RedirectToAction("TransactionDeletingClaim", "Claim");
+            }
         }
         public IActionResult EntryPayrollContribution()
         {
@@ -4268,7 +4325,7 @@ namespace DPLK.Controllers.Pension
                 searchString = currentFilter;
             }
 
-            var suspenseStatusTypes = _context.SuspnStatusTypes.ToList(); // Ganti dengan koleksi yang sesuai
+            var suspenseStatusTypes = _context.SuspnStatusTypes.ToList();
             ViewBag.curruentfilter = searchString;
 
             if (!string.IsNullOrEmpty(searchString))
@@ -6343,7 +6400,7 @@ namespace DPLK.Controllers.Pension
 
         public IActionResult PayoutSuspense(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
         {
-            int pageIndex = page ?? 1;
+            int pageIndex = page ?? 5;
             int defaultSize = pageSize ?? 5;
             ViewBag.psize = defaultSize;
 
@@ -6442,7 +6499,185 @@ namespace DPLK.Controllers.Pension
         }
 
 
+        public IActionResult MutationsFunds(int sourceCer, string sourceNm, float amount, string processorId, int destinationCer, string destinationNm)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
 
+                using (var command = new SqlCommand("sp_mutation_fund", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@source_cer", sourceCer);
+                    command.Parameters.AddWithValue("@source_nm", sourceNm);
+                    command.Parameters.AddWithValue("@amount", amount);
+                    command.Parameters.AddWithValue("@processor_id", processorId);
+                    command.Parameters.AddWithValue("@destination_cer", destinationCer);
+                    command.Parameters.AddWithValue("@destination_nm", destinationNm);
+
+                    var result = new MutationResult();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            result.result = reader["result"].ToString();
+                        }
+                    }
+
+                    return View(result);
+                }
+            }
+        }
+
+        [HttpGet]
+        public IActionResult EntryNota()
+        {
+            DDL();
+            return View();
+        }
+        [HttpPost]
+        public IActionResult EntryNota(TNotaHeader nota)
+        {
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand("SPD_NOTA_DEBET_INSERT", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@No_Nota", nota.NoNota);
+                    command.Parameters.AddWithValue("@No_Kontrak", nota.NoKontrak);
+                    command.Parameters.AddWithValue("@Tgl_Jatuh_Tempo", nota.TglJatuhTempo);
+                    command.Parameters.AddWithValue("@Jml_Karyawan", nota.JmlKaryawan);
+                    command.Parameters.AddWithValue("@Jangka_Pembayaran", nota.JangkaPembayaran);
+                    command.Parameters.AddWithValue("@Tgl_Terbit", nota.TglTerbit);
+                    command.Parameters.AddWithValue("@Kantor_Perwakilan", nota.KantorPerwakilan);
+                    command.Parameters.AddWithValue("@Up", nota.Up);
+                    command.Parameters.AddWithValue("@Nama_Perusahaan", nota.NamaPerusahaan);
+                    command.Parameters.AddWithValue("@Alamat1", nota.Alamat1);
+                    command.Parameters.AddWithValue("@Alamat2", nota.Alamat2);
+                    command.Parameters.AddWithValue("@Alamat3", nota.Alamat3);
+                    command.Parameters.AddWithValue("@Kode_Pos", nota.KodePos);
+                    command.Parameters.AddWithValue("@Perihal", nota.Perihal);
+                    command.Parameters.AddWithValue("@Nama_Bank", nota.NamaBank);
+                    command.Parameters.AddWithValue("@Cabang_Bank", nota.CabangBank);
+                    command.Parameters.AddWithValue("@No_Rekening", nota.NoRekening);
+                    command.Parameters.AddWithValue("@Atas_Nama", nota.AtasNama);
+                    command.Parameters.AddWithValue("@Penyetuju", nota.Penyetuju);
+                    command.Parameters.AddWithValue("@hostname", "your_hostname");
+                    command.Parameters.AddWithValue("@UserID", "your_user_id");
+
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            return RedirectToAction("EntryNota");
+        }
+
+        public IActionResult SuspensePayoutApproval()
+        {
+            List<SuspensePayoutViewModel> suspensePayouts = new List<SuspensePayoutViewModel>();
+
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(
+                    "SELECT seq_nmbr, regisid, cer_nmbr, client_nm, " +
+                    "COALESCE(bank_nm, '') AS bank_nm, COALESCE(bank_address, '') AS bank_address, " +
+                    "acct_nmbr, acct_nm, amount, check_amt, amount - check_amt AS net_amt, " +
+                    "Remarks, Suspense_nmbr, Prepare_by, approval_dt " +
+                    "FROM retur_info " +
+                    "WHERE approval_dt IS NULL " +
+                    "ORDER BY retur_dt ASC;", connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            SuspensePayoutViewModel payout = new SuspensePayoutViewModel
+                            {
+                                SeqNmbr = Convert.ToInt32(reader["seq_nmbr"]),
+                                RegisId = reader["regisid"].ToString(),
+                                CerNmbr = Convert.ToInt32(reader["cer_nmbr"]),
+                                ClientNm = reader["client_nm"].ToString(),
+                                BankNm = reader["bank_nm"].ToString(),
+                                BankAddress = reader["bank_address"].ToString(),
+                                AcctNmbr = reader["acct_nmbr"].ToString(),
+                                AcctNm = reader["acct_nm"].ToString(),
+                                Amount = Convert.ToDecimal(reader["amount"]),
+                                CheckAmt = Convert.ToDecimal(reader["check_amt"]),
+                                NetAmt = Convert.ToDecimal(reader["net_amt"]),
+                                Remarks = reader["Remarks"].ToString(),
+                                SuspenseNmbr = Convert.ToInt32(reader["Suspense_nmbr"]),
+                                PrepareBy = reader["Prepare_by"].ToString(),
+                                ApprovalDt = reader["approval_dt"] == DBNull.Value ? null : (DateTime?)reader["approval_dt"]
+                            };
+                            suspensePayouts.Add(payout);
+                        }
+                    }
+                }
+            }
+
+            return View(suspensePayouts);
+        }
+
+        /*        public IActionResult KartuIndividu()
+                {
+                    List<GetKartuIndividu> suratKeluarList = new List<GetKartuIndividu>();
+
+                    using (SqlConnection connection = new SqlConnection(_connectionString))
+                    {
+                        connection.Open();
+
+                        using (SqlCommand command = new SqlCommand(
+                            "SELECT DISTINCT sk.no_surat, sk.ditujukan, sk.tgl_surat, cl.client_nm, pk.cer_nmbr " +
+                            "FROM svrapp.dbhr.dbo.t_admsrt_surat_keluar sk " +
+                            "INNER JOIN pengantar_kartu pk ON pk.no_surat = sk.no_surat " +
+                            "INNER JOIN certificate cer ON cer.cer_nmbr = pk.cer_nmbr " +
+                            "INNER JOIN client cl ON cl.client_nmbr = cer.client_nmbr " +
+                            "WHERE cer.group_nmbr IN (10078, 10341, 10343, 10344, 10345, 10346) " +
+                            "AND status_surat = 0 " +
+                            "ORDER BY sk.tgl_surat DESC;", connection))
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                GetKartuIndividu suratKeluar = new GetKartuIndividu
+                                {
+                                    NoSurat = reader.GetString(0),
+                                    Ditujukan = reader.GetString(1),
+                                    TglSurat = reader.GetDateTime(2),
+                                    ClientNm = reader.GetString(3),
+                                    CerNmbr = reader.GetInt32(4)
+                                };
+
+                                suratKeluarList.Add(suratKeluar);
+                            }
+                        }
+                    }
+
+                    return View(suratKeluarList);
+                }
+        */
+        public async Task<JsonResult> KartuIndividu(string name)
+        {
+            var kartuIndivu = await _context.GetKartuIndividus
+                .FromSqlRaw("SELECT DISTINCT sk.no_surat, sk.ditujukan, sk.tgl_surat, cl.client_nm, pk.cer_nmbr " +
+                            "FROM svrapp.dbhr.dbo.t_admsrt_surat_keluar sk " +
+                            "INNER JOIN pengantar_kartu pk ON pk.no_surat = sk.no_surat " +
+                            "INNER JOIN certificate cer ON cer.cer_nmbr = pk.cer_nmbr " +
+                            "INNER JOIN client cl ON cl.client_nmbr = cer.client_nmbr " +
+                            "WHERE cer.group_nmbr IN (10078, 10341, 10343, 10344, 10345, 10346) " +
+                            "AND status_surat = 0 " +
+                            "ORDER BY sk.tgl_surat DESC")
+                .ToListAsync();
+
+            return Json(kartuIndivu);
+        }
 
 
     }

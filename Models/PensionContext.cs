@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using DPLK.Models;
 using System.Collections.Generic;
+using DPLK.Models.dto;
 
 #nullable disable
 
@@ -23,6 +24,8 @@ namespace DPLK.Models
 
         //public virtual DbSet<CompanyOnScrPaycenterModel> CompanyOnScrPaycenterModels { get; set; }  //Ini SP
         //baru 
+        public virtual DbSet<GetKartuIndividu> GetKartuIndividus { get; set; }
+
         public virtual DbSet<GroupBenefit> GroupBenefits { get; set; }
 
         public virtual DbSet<UnitPriceIndex> UnitPriceIndexs { get; set; }
@@ -495,7 +498,7 @@ namespace DPLK.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<GetKartuIndividu>().HasNoKey();
             modelBuilder.Entity<AccType>(entity =>
             {
                 entity.HasNoKey();
