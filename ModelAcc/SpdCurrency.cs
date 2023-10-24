@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+
+#nullable disable
+
+namespace DPLK.ModelAcc
+{
+    public partial class SpdCurrency
+    {
+        public string Code { get; set; }
+        public string Description { get; set; }
+    }
+}

@@ -2164,7 +2164,11 @@ namespace DPLK.Controllers.Pension
         {
             return View();
         }
-
+    /*    [HttpGet]
+        public IActionResult DPLKRider()
+        {
+            return View();
+        }*/
 
         public IActionResult SuratPengantarKartu()
         {

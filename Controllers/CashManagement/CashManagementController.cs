@@ -1,9 +1,40 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System;
+using DPLK.Controllers.Pension;
+using DPLK.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using X.PagedList;
+using DPLK.ModelAcc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
+using Microsoft.CodeAnalysis.Differencing;
 
 namespace DPLK.Controllers.CashManagement
 {
     public class CashManagementController : Controller
     {
+        private readonly PensionContext _context;
+        private readonly PensionAccContext _contextAcc;
+
+        private readonly string _connectionString;
+        private readonly string _connectionStrings;
+
+        public CashManagementController(ILogger<CashManagementController> logger, PensionContext context, PensionAccContext contextAcc, IConfiguration configuration)
+        {
+            /*            _logger = logger;
+            */
+            _context = context;
+            _contextAcc = contextAcc;
+            _connectionString = configuration.GetConnectionString("Pension");
+            _connectionStrings = configuration.GetConnectionString("PensionAcc");
+
+        }
+
 
         public IActionResult Index()
         {
@@ -70,6 +101,27 @@ namespace DPLK.Controllers.CashManagement
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult BankListIndex()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BankListIndex(SpdInvestBank spdInvestBank)
+        {
+            if (ModelState.IsValid)
+            {
+                _contextAcc.SpdInvestBanks.Add(spdInvestBank);
+                await _contextAcc.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(spdInvestBank);
+        }
+
+
+   
         public IActionResult ClaimRequestAmount()
         {
             return View();
