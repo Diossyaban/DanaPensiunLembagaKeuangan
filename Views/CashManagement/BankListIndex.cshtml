@@ -1,20 +1,20 @@
 ﻿@model DPLK.ModelAcc.SpdInvestBank
 
 @{
-    ViewData["Title"] = "Edit BankList";
+    ViewData["Title"] = "Create BankList";
     Layout = "~/Views/Shared/DPLK_Layout.cshtml";
 }
 
 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Cash Management/</span> Edit BankList</h4>
 <div class="card mb-4">
     <div class="card-body">
-        <form asp-action="BankListEdit" method="post">
+        <form asp-action="BankListIndex" method="post">
             <div class="mb-3 row">
                 <label asp-for="Code" class="col-md-2 col-form-label">
                     Code
                 </label>
                 <div class="col-md-4">
-                    <input asp-for="Code" class="form-control" readonly />
+                    <input asp-for="Code" class="form-control" />
                     <span asp-validation-for="Code" class="text-danger"></span>
                 </div>
             </div>

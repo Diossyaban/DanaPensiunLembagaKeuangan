@@ -1,11 +1,12 @@
 using DPLK.ModelAcc;
-using DPLK.Models;
+using DPLK.Models.context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace Test1
 {
@@ -26,6 +27,7 @@ namespace Test1
                 options.UseSqlServer(Configuration.GetConnectionString("PesionAcc")));
 
             services.AddControllersWithViews();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

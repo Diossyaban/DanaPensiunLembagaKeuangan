@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using Microsoft.CodeAnalysis.Differencing;
+using System.IO;
+using DPLK.Models.context;
 
 namespace DPLK.Controllers.CashManagement
 {
@@ -35,78 +37,57 @@ namespace DPLK.Controllers.CashManagement
 
         }
 
+        //--- BankList ---
+        public async Task<IActionResult> BankList(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
+        {
+            int pageIndex = page ?? 1;
+            int defaultSize = pageSize ?? 20;
+            ViewBag.psize = defaultSize;
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult CreateFLPFPP()
-        {
-            return View();
-        }
-        // anak nya flp/fpp
-        public IActionResult EnterFLP()
-        {
-            return View();
-        }
-        public IActionResult QueryFLPPendingApproval()
-        {
-            return View();
-        }
-        public IActionResult EnterFPP()
-        {
-            return View();
-        }
-        public IActionResult QueryFPPPendingApproval()
-        {
-            return View();
-        }
-        //anak" nya create FLP/FPP end
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
-        public IActionResult UnapprovedReceipts()
-        {
-            return View();
+            var companyIndex = await _contextAcc.SpdInvestBanks.ToListAsync();
+            ViewBag.currentfilter = searchString;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                companyIndex = companyIndex.Where(address =>
+                address.Code != null &&
+                address.Code.ToString().ToLower().Contains(searchString.ToLower())
+            ).ToList();
+            }
+
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.SortOrder = sortOrder == "Code" ? "" : "Code";
+
+            switch (sortOrder)
+            {
+                case "Code":
+                    companyIndex = companyIndex.OrderBy(address => address.Code).ToList();
+                    break;
+                default:
+                    companyIndex = companyIndex.OrderByDescending(address => address.Code).ToList();
+                    break;
+            }
+            return View(companyIndex.ToPagedList(pageIndex, defaultSize));
         }
-        public IActionResult UnapprovedPayment()
-        {
-            return View();
-        }
-        public IActionResult RostedCDVCRV()
-        {
-            return View();
-        }
-        public IActionResult DBDirect()
-        {
-            return View();
-        }
-        //anak" nya DB Direct 
-        public IActionResult CreateDBDirect()
-        {
-            return View();
-        }
-        public IActionResult CreateInHouseTransferDBDirect()
-        {
-            return View();
-        }
-        public IActionResult CreateDBDirectFormFLPFPP()
-        {
-            return View();
-        }
-        public IActionResult CreateBITDBDirect()
-        {
-            return View();
-        }
-        //anak" nya DB Direct end
-        public IActionResult BankList()
-        {
-            return View();
-        }
+
+        //Modif|24-10-2023|DwiPrasetyo
+
         [HttpGet]
         public IActionResult BankListIndex()
         {
             return View();
         }
 
+        // Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> BankListIndex(SpdInvestBank spdInvestBank)
@@ -115,26 +96,64 @@ namespace DPLK.Controllers.CashManagement
             {
                 _contextAcc.SpdInvestBanks.Add(spdInvestBank);
                 await _contextAcc.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(BankList));
             }
             return View(spdInvestBank);
         }
 
-
-   
-        public IActionResult ClaimRequestAmount()
+        [HttpGet]
+        public async Task<IActionResult> DeleteBankConfirmation(int id)
         {
-            return View();
+            var bank = await _contextAcc.SpdInvestBanks.FindAsync(id);
+            if (bank == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Code = id; // Gunakan ViewBag.Code
+
+            return View(bank);
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteBank(int id)
+        {
+            try
+            {
+                var bankToDelete = await _contextAcc.SpdInvestBanks.FindAsync(id);
+                if (bankToDelete == null)
+                {
+                    return NotFound();
+                }
+
+                _contextAcc.SpdInvestBanks.Remove(bankToDelete);
+                await _contextAcc.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Bank deleted successfully.";
+
+                return RedirectToAction("BankList");
+            }
+            catch (System.Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting the bank.";
+                return RedirectToAction("BankList");
+            }
+        }
+
+
         public IActionResult FundSwitchingClaimReqFundApproval()
         {
             return View();
         }
-        public IActionResult UploadClaimTransferDate()
+
+
+        public IActionResult EnterFLP()
         {
             return View();
         }
-        
-
     }
 }
+
+//End Modif|24-10-2023|DwiPrasetyo

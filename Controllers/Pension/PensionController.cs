@@ -1,19 +1,23 @@
 ﻿using DPLK.Models;
+using DPLK.Models.context;
 using DPLK.Models.dto;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DPLK.Controllers.Pension
 {
@@ -21,13 +25,63 @@ namespace DPLK.Controllers.Pension
     {
         private readonly PensionContext _context;
         private readonly string _connectionString;
-        public PensionController(ILogger<PensionController> logger, PensionContext context, IConfiguration configuration)
-        {
-            /*            _logger = logger;
-            */
-            _context = context;
+        private readonly ILogger<PensionController> _logger;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
+        public PensionController(ILogger<PensionController> logger, PensionContext context, IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
+        {
+            _context = context;
             _connectionString = configuration.GetConnectionString("Pension");
+            _logger = logger;
+            _hostingEnvironment = hostingEnvironment;
+
+        }
+
+        [HttpGet]
+        public IActionResult ShowReport(string code)
+        {
+            var report = _context.SpdReports.FirstOrDefault(r => r.Code == code);
+
+            if (report == null)
+            {
+                return RedirectToAction("ReportList");
+            }
+
+            return View("ShowReport", report);
+        }
+
+        [HttpPost]
+        public IActionResult ShowReport(SpdReport spdReport)
+        {
+            if (string.IsNullOrEmpty(spdReport.Code))
+            {
+                return RedirectToAction("ReportList");
+            }
+
+            var selectedReport = _context.SpdReports.FirstOrDefault(report => report.Code == spdReport.Code);
+
+            if (selectedReport == null)
+            {
+                return RedirectToAction("ReportList");
+            }
+
+            return View("ShowReport", selectedReport);
+        }
+
+        public IActionResult ReportList()
+        {
+            ViewBag.ReportList = GetShowReports();
+            return View();
+        }
+
+        private List<SelectListItem> GetShowReports()
+        {
+            var reportList = _context.SpdReports
+                .OrderBy(r => r.Name)
+                .Select(r => new SelectListItem { Value = r.Code, Text = r.Name })
+                .ToList();
+
+            return reportList;
         }
 
 
@@ -1305,12 +1359,22 @@ namespace DPLK.Controllers.Pension
             ViewData["DDLCompanyProcessClaimRequest"] = GetCompanyNamesFromDatabase();
             ViewData["TransactionTypes"] = GetTransactionTypes();
             ViewData["RekeningList"] = GetRekeningList();
-            //ViewData["DdlParamsMCP"] = GetDDLParamsMCP();
+/*            ViewData["ReportList"] = GetShowReports();
+*/
 
 
 
         }
 
+     /*   private List<SelectListItem> GetShowReports()
+        {
+            var reportList = _context.SpdReports
+                                    .OrderBy(r => r.Name)
+                                    .Select(r => new SelectListItem { Value = r.Code.ToString(), Text = r.Name })
+                                    .ToList();
+
+            return reportList;
+        }*/
 
         private List<SelectListItem> GetDDLParamsWD()
         {
@@ -1320,6 +1384,28 @@ namespace DPLK.Controllers.Pension
             {
                 connection.Open();
                 using (var command = new SqlCommand("select sub_trns_nmbr,sub_trns_nm from trns_type where trns_type_nmbr = 400 order by trns_type_nmbr asc", connection))
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var value = reader[0].ToString();
+                        var text = reader[1].ToString();
+                        ddlParams.Add(new SelectListItem { Value = value, Text = text });
+                    }
+                }
+            }
+
+            return ddlParams;
+        }
+
+        private List<SelectListItem> GetShowReport()
+        {
+            var ddlParams = new List<SelectListItem>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("select CODE, NAME from SPD_REPORTS order by NAME", connection))
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -2164,11 +2250,11 @@ namespace DPLK.Controllers.Pension
         {
             return View();
         }
-    /*    [HttpGet]
-        public IActionResult DPLKRider()
-        {
-            return View();
-        }*/
+        /*    [HttpGet]
+            public IActionResult DPLKRider()
+            {
+                return View();
+            }*/
 
         public IActionResult SuratPengantarKartu()
         {
@@ -6683,9 +6769,280 @@ namespace DPLK.Controllers.Pension
             return Json(kartuIndivu);
         }
 
+        public IActionResult JoinAccount()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> AccountListing()
+        {
+            var result = await _context.AccountListingModels.FromSqlRaw("EXEC sp_join_account_listing").ToListAsync();
+
+            return View(result);
+        }
+        public IActionResult JoinAccountCreate()
+        {
+            return View(new JoinAccountCheckingResult());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult JointAccountCheck(JoinAccountCheckingResult input)
+        {
+            if (ModelState.IsValid)
+            {
+                List<JoinAccountCheckingResult> results = CallStoredProcedures(input);
+
+                if (results != null)
+                {
+                    return View("Result", results);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "An error occurred while processing the request.");
+                }
+            }
+
+            return View("Create", input);
+        }
+
+        private List<JoinAccountCheckingResult> CallStoredProcedures(JoinAccountCheckingResult input)
+        {
+            try
+            {
+                var cerNmbrSrcParam = new SqlParameter("@cer_nmbr_src", input.CerNmbrSrc);
+                var cerNmbrDstParam = new SqlParameter("@cer_nmbr_dst", input.CerNmbrDst);
+                var efctvDtParam = new SqlParameter("@efctv_dt", input.EfctvDt);
+                var trnsTypeParam = new SqlParameter("@trns_type", input.TrnsType);
+                var groupNmbrParam = new SqlParameter("@group_nmbr", SqlDbType.Int);
+                groupNmbrParam.Value = (object)input.GroupNmbr ?? DBNull.Value;
+
+                var results = _context.JoinAccountCheckingResults.FromSqlRaw(
+                    "EXEC sp_join_account_cheking @cer_nmbr_src, @cer_nmbr_dst, @efctv_dt, @trns_type, @group_nmbr",
+                    cerNmbrSrcParam, cerNmbrDstParam, efctvDtParam, trnsTypeParam, groupNmbrParam
+                ).ToList();
+
+                return results;
+            }
+            catch (System.Exception ex)
+            {
+
+                return null;
+            }
+        }
+
+        /*  public IActionResult UploadNewParticipant()
+          {
+              return View();
+          }
+
+          [HttpPost]
+          public IActionResult UploadNewParticipant(SpdFtp model, IFormFile uploadedFile)
+          {
+              if (ModelState.IsValid)
+              {
+                  try
+                  {
+                      if (uploadedFile != null && uploadedFile.Length > 0)
+                      {
+                          // Lokasi untuk menyimpan file yang diunggah
+                          string uploadPath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                          string fileName = Path.GetFileName(uploadedFile.FileName);
+                          string filePath = Path.Combine(uploadPath, fileName);
+
+                          if (!Directory.Exists(uploadPath))
+                          {
+                              Directory.CreateDirectory(uploadPath);
+                          }
+
+                          using (var stream = new FileStream(filePath, FileMode.Create))
+                          {
+                              uploadedFile.CopyTo(stream);
+                          }
+
+                          string fileExtension = Path.GetExtension(fileName).ToLower();
+                          if (fileExtension == ".xls" || fileExtension == ".xlsx")
+                          {
+                              using (var package = new ExcelPackage(new FileInfo(filePath)))
+                              {
+                                  var worksheet = package.Workbook.Worksheets[0];
+
+                                  for (int row = 2; row <= worksheet.Dimension.Rows; row++)
+                                  {
+                                      var participant = new UploadNewParticipant
+                                      {
+                                          GroupNumber = worksheet.Cells[row, 1].Value.ToString(),
+                                          Gender = worksheet.Cells[row, 2].Value.ToString(),
+                                          Nip = worksheet.Cells[row, 3].Value.ToString(),
+                                          Client_Name = worksheet.Cells[row, 4].Value.ToString(),
+                                      };
+
+                                      _context.UploadNewParticipants.Add(participant);
+                                  }
+
+                                  _context.SaveChanges(); // Simpan perubahan ke database
+                              }
+                          }
+                          else
+                          {
+                              ModelState.AddModelError(string.Empty, "Format file yang diunggah tidak valid. Harap unggah file Excel (XLS atau XLSX).");
+                              return View(model);
+                          }
+
+                          return RedirectToAction("ActionSetelahUpload");
+                      }
+                      else
+                      {
+                          ModelState.AddModelError(string.Empty, "Anda harus memilih file untuk diunggah.");
+                          return View(model);
+                      }
+                  }
+                  catch (System.Exception ex)
+                  {
+                      _logger.LogError(ex, "Terjadi kesalahan saat mengunggah atau memproses data.");
+                      ModelState.AddModelError(string.Empty, "Terjadi kesalahan saat mengunggah atau memproses data.");
+                  }
+              }
+
+              return View(model);
+          }*/
+
+        public IActionResult UploadParticipant()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadParticipant(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                ModelState.AddModelError(string.Empty, "Please select a file to upload.");
+                return View();
+            }
+
+            if (Path.GetExtension(file.FileName).ToLower() != ".xlsx")
+            {
+                ModelState.AddModelError(string.Empty, "Please upload a valid Excel file (.xlsx).");
+                return View();
+            }
+
+            try
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                // Proses file Excel dan simpan data ke database
+                using (var package = new ExcelPackage(new FileInfo(filePath)))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+                    int rowCount = worksheet.Dimension.Rows;
+
+                    for (int row = 2; row <= rowCount; row++)
+                    {
+                        var participant = new UploadNewParticipant
+                        {
+                            GroupNumber = int.Parse(worksheet.Cells[row, 1].Value.ToString()),
+                            Gender = worksheet.Cells[row, 2].Value.ToString(),
+                            Nip = worksheet.Cells[row, 3].Value.ToString(),
+                            ClientName = worksheet.Cells[row, 4].Value.ToString(),
+                            MaidenName = worksheet.Cells[row, 5].Value.ToString(),
+                            Dob = DateTime.Parse(worksheet.Cells[row, 6].Value.ToString()),
+                            DobLocation = worksheet.Cells[row, 7].Value.ToString(),
+                            CoverageDate = DateTime.Parse(worksheet.Cells[row, 8].Value.ToString()),
+                            EmploymentDate = DateTime.Parse(worksheet.Cells[row, 9].Value.ToString()),
+                            EmploymentLevel = int.Parse(worksheet.Cells[row, 10].Value.ToString()),
+                            RetirementAge = int.Parse(worksheet.Cells[row, 11].Value.ToString()),
+                            IdentityType = int.Parse(worksheet.Cells[row, 12].Value.ToString()),
+                            IdentityNumber = worksheet.Cells[row, 13].Value.ToString(),
+                            MaritalStatus = int.Parse(worksheet.Cells[row, 14].Value.ToString()),
+                            TaxIdNumber = worksheet.Cells[row, 15].Value.ToString(),
+                            Citizenship = int.Parse(worksheet.Cells[row, 16].Value.ToString()),
+                            ApplicationReceivedDate = DateTime.Parse(worksheet.Cells[row, 17].Value.ToString()),
+                            CompletedFlag = int.Parse(worksheet.Cells[row, 18].Value.ToString()),
+                            JobType = int.Parse(worksheet.Cells[row, 19].Value.ToString()),
+                            FundSource = int.Parse(worksheet.Cells[row, 20].Value.ToString()),
+                            AddressType = int.Parse(worksheet.Cells[row, 21].Value.ToString()),
+                            Address1 = worksheet.Cells[row, 22].Value.ToString(),
+                            Address2 = worksheet.Cells[row, 23].Value.ToString(),
+                            Address3 = worksheet.Cells[row, 24].Value.ToString(),
+                            City = worksheet.Cells[row, 25].Value.ToString(),
+                            Province = int.Parse(worksheet.Cells[row, 26].Value.ToString()),
+                            PostalCode = worksheet.Cells[row, 27].Value.ToString(),
+                            HomePhone = worksheet.Cells[row, 28].Value.ToString(),
+                            MobilePhone = worksheet.Cells[row, 29].Value.ToString(),
+                            Fax = worksheet.Cells[row, 30].Value.ToString(),
+                            OfficePhone = worksheet.Cells[row, 31].Value.ToString(),
+                            Paycenter = int.Parse(worksheet.Cells[row, 32].Value.ToString()),
+                            SalaryAmount = double.Parse(worksheet.Cells[row, 33].Value.ToString()),
+                            BeneTypeNmbr = int.Parse(worksheet.Cells[row, 34].Value.ToString()),
+                            SumInsured = double.Parse(worksheet.Cells[row, 35].Value.ToString()),
+                            BeneficiaryName1 = worksheet.Cells[row, 36].Value.ToString(),
+                            BeneficiaryDob1 = DateTime.Parse(worksheet.Cells[row, 37].Value.ToString()),
+                            BeneficiaryRelation1 = int.Parse(worksheet.Cells[row, 38].Value.ToString()),
+                            BeneficiaryName2 = worksheet.Cells[row, 39].Value.ToString(),
+                            BeneficiaryDob2 = DateTime.Parse(worksheet.Cells[row, 40].Value.ToString()),
+                            BeneficiaryRelation2 = int.Parse(worksheet.Cells[row, 41].Value.ToString()),
+                            BeneficiaryName3 = worksheet.Cells[row, 42].Value.ToString(),
+                            BeneficiaryDob3 = DateTime.Parse(worksheet.Cells[row, 43].Value.ToString()),
+                            BeneficiaryRelation3 = int.Parse(worksheet.Cells[row, 44].Value.ToString()),
+                            BeneficiaryName4 = worksheet.Cells[row, 45].Value.ToString(),
+                            BeneficiaryDob4 = DateTime.Parse(worksheet.Cells[row, 46].Value.ToString()),
+                            BeneficiaryRelation4 = int.Parse(worksheet.Cells[row, 47].Value.ToString()),
+                            BeneficiaryName5 = worksheet.Cells[row, 48].Value.ToString(),
+                            BeneficiaryDob5 = DateTime.Parse(worksheet.Cells[row, 49].Value.ToString()),
+                            BeneficiaryRelation5 = int.Parse(worksheet.Cells[row, 50].Value.ToString()),
+                            ContributionRateEr = double.Parse(worksheet.Cells[row, 51].Value.ToString()),
+                            ContributionAmountEr = double.Parse(worksheet.Cells[row, 52].Value.ToString()),
+                            ContributionRateMbr = double.Parse(worksheet.Cells[row, 53].Value.ToString()),
+                            ContributionAmountMbr = double.Parse(worksheet.Cells[row, 54].Value.ToString()),
+                            ContributionRateTu = double.Parse(worksheet.Cells[row, 55].Value.ToString()),
+                            ContributionAmountTu = double.Parse(worksheet.Cells[row, 56].Value.ToString()),
+                            ContributionRateFt = double.Parse(worksheet.Cells[row, 57].Value.ToString()),
+                            ContributionAmountFt = double.Parse(worksheet.Cells[row, 58].Value.ToString()),
+                            InvestmentType1 = int.Parse(worksheet.Cells[row, 59].Value.ToString()),
+                            InvestmentRate1 = double.Parse(worksheet.Cells[row, 60].Value.ToString()),
+                            InvestmentType2 = int.Parse(worksheet.Cells[row, 61].Value.ToString()),
+                            InvestmentRate2 = double.Parse(worksheet.Cells[row, 62].Value.ToString()),
+                            InvestmentType3 = int.Parse(worksheet.Cells[row, 63].Value.ToString()),
+                            InvestmentRate3 = double.Parse(worksheet.Cells[row, 64].Value.ToString()),
+                            InvestmentType4 = int.Parse(worksheet.Cells[row, 65].Value.ToString()),
+                            InvestmentRate4 = double.Parse(worksheet.Cells[row, 66].Value.ToString()),
+                            InvestmentType5 = int.Parse(worksheet.Cells[row, 67].Value.ToString()),
+                            InvestmentRate5 = double.Parse(worksheet.Cells[row, 68].Value.ToString()),
+                            Hostname = worksheet.Cells[row, 69].Value.ToString(),
+                            OldCerNmbr = worksheet.Cells[row, 70].Value.ToString(),
+                            Branch = worksheet.Cells[row, 71].Value.ToString(),
+                            SalesName = worksheet.Cells[row, 72].Value.ToString(),
+                            Mail = worksheet.Cells[row, 73].Value.ToString()
+                        };
+
+
+                        _context.UploadNewParticipants.Add(participant);
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
+                ViewBag.Message = "File uploaded and data processed successfully.";
+            }
+            catch (System.Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Error: {ex.Message}");
+            }
+
+            return View();
+        }
 
     }
 }
+
+
 
 
 

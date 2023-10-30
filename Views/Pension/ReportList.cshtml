@@ -1,0 +1,26 @@
+﻿@model DPLK.Models.SpdReport
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> Pension / </span> Report - Report List</h4>
+<div class="row">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="mb-3 row">
+            <form asp-controller="Pension" asp-action="ShowReport" method="get">
+                <div class="mb-3 row">
+
+                    <label asp-for="Code" class="col-md-2 col-form-label">Select Report</label>
+                    <div class="col-md-4">
+                        <select asp-for="Code" asp-items="ViewBag.ReportList" class="form-control"></select>
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                        <button type="submit" class="btn btn-primary mt-2">Show</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

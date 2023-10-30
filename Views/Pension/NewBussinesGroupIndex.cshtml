@@ -73,17 +73,7 @@
                         Billing Status
                     </button>
                 </li>
-                @*    <li class="nav-item">
-                <button type="button"
-                class="nav-link"
-                role="tab"
-                data-bs-toggle="tab"
-                data-bs-target="#navs-pills-top-benefit"
-                aria-controls="navs-pills-top-benefit"
-                aria-selected="false">
-                Benefit
-                </button>
-                </li>*@
+      
                 <li class="nav-item">
                     <button type="button"
                             class="nav-link"
@@ -390,23 +380,5 @@
 
 </div>
 
-@*@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-                var target = $(e.target).attr("href");
 
-                if (target === "#navs-pills-top-benefit") {
-                    $.ajax({
-                        url: "/Pension/BenefitGroup",
-                        type: "GET",
-                        success: function (data) {
-                            $("#benefitContent").html(data);
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-}*@
 

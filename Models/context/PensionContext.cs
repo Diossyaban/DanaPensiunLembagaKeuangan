@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Data.SqlClient;
 using System.Linq;
-using DPLK.Models;
 using System.Collections.Generic;
 using DPLK.Models.dto;
 
 #nullable disable
 
-namespace DPLK.Models
+namespace DPLK.Models.context
 {
     public partial class PensionContext : DbContext
     {
@@ -24,6 +23,10 @@ namespace DPLK.Models
 
         //public virtual DbSet<CompanyOnScrPaycenterModel> CompanyOnScrPaycenterModels { get; set; }  //Ini SP
         //baru 
+        public DbSet<AccountListingModel> AccountListingModels { get; set; }
+        public virtual DbSet<JoinAccountCheckingResult> JoinAccountCheckingResults { get; set; }
+
+
         public virtual DbSet<GetKartuIndividu> GetKartuIndividus { get; set; }
 
         public virtual DbSet<GroupBenefit> GroupBenefits { get; set; }
@@ -498,6 +501,8 @@ namespace DPLK.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
             modelBuilder.Entity<GetKartuIndividu>().HasNoKey();
             modelBuilder.Entity<AccType>(entity =>
             {
@@ -2105,7 +2110,7 @@ namespace DPLK.Models
                 entity.ToTable("charge_type");
 
                 entity.HasIndex(e => new { e.ChargeTypeNmbr, e.ChargeTypeNm }, "xcharge_type")
-                    .HasFillFactor((byte)80);
+                    .HasFillFactor(80);
 
                 entity.Property(e => e.ChargeTypeNmbr)
                     .ValueGeneratedNever()
@@ -2745,19 +2750,19 @@ namespace DPLK.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("SIUP");
-/*
-                entity.HasMany(e => e.OptionTypeNm)
-               .WithMany()
-               .UsingEntity<Dictionary<string, object>>(
-                   "CompanyOptionTypes",
-                   j => j
-                       .HasOne<OptionType>()
-                       .WithMany()
-                       .HasForeignKey("OptionTypeNmbr"),
-                   j => j
-                       .HasOne<Company>()
-                       .WithMany()
-                       .HasForeignKey("ClientNmbr"));*/
+                /*
+                                entity.HasMany(e => e.OptionTypeNm)
+                               .WithMany()
+                               .UsingEntity<Dictionary<string, object>>(
+                                   "CompanyOptionTypes",
+                                   j => j
+                                       .HasOne<OptionType>()
+                                       .WithMany()
+                                       .HasForeignKey("OptionTypeNmbr"),
+                                   j => j
+                                       .HasOne<Company>()
+                                       .WithMany()
+                                       .HasForeignKey("ClientNmbr"));*/
             });
 
             modelBuilder.Entity<ContribDetail>(entity =>
@@ -5498,7 +5503,7 @@ namespace DPLK.Models
                 entity.ToTable("mbr_cls_plan");
 
                 entity.HasIndex(e => e.EfctvDt, "IX_mbr_cls_plan")
-                    .HasFillFactor((byte)80);
+                    .HasFillFactor(80);
 
                 entity.HasIndex(e => new { e.GroupNmbr, e.McpNmbr, e.MoneyTypeNmbr, e.EfctvDt }, "xmbr_cls_plan");
 

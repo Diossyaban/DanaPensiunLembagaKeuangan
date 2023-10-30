@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "DPLK_Layout";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> </span> Upload Data</h4>
+
+<!-- File input -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <h5 class="card-header">File input</h5>
+                <div class="card-body">
+                    <form asp-controller="Pension" asp-action="UploadParticipant" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Upload Excel File</label>
+                            <input class="form-control" type="file" name="file" id="formFile" accept=".xlsx" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <span asp-validation-summary="ModelOnly" class="text-danger"></span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

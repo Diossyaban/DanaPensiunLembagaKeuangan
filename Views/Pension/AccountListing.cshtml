@@ -1,0 +1,49 @@
+﻿@model List<AccountListingModel>
+
+
+<h2>Account Listing</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Transaction Sequence Number</th>
+                <th>Transaction History Effective Date</th>
+                <th>Source Certificate</th>
+                <th>Source Group</th>
+                <th>Source Name</th>
+                <th>Destination Certificate</th>
+                <th>Destination Group</th>
+                <th>Destination Name</th>
+                <th>Source Company</th>
+                <th>Destination Company</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.TrnsSeqNmbr</td>
+                        <td>@item.TrnsHstEfctvDt.ToShortDateString()</td>
+                        <td>@item.SourceCer</td>
+                        <td>@item.SourceGrp</td>
+                        <td>@item.SourceNm</td>
+                        <td>@item.DstCer</td>
+                        <td>@item.DstGrp</td>
+                        <td>@item.DstNm</td>
+                        <td>@item.SourceCompany</td>
+                        <td>@item.DstCompany</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10">No data available</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -2221,7 +2221,6 @@ namespace DPLK.ModelAcc
                     .IsUnicode(false)
                     .HasColumnName("coa");
             });
-
             modelBuilder.Entity<SpdInvestBank>(entity =>
             {
                 entity.HasNoKey();
@@ -2249,6 +2248,37 @@ namespace DPLK.ModelAcc
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
+            //modelBuilder.Entity<SpdInvestBank>(entity =>
+            //{
+            //    entity.HasKey(e => e.Id); 
+
+            //    entity.ToTable("SPD_INVEST_BANK");
+
+            //    entity.Property(e => e.Id)
+            //        .HasColumnName("Id"); 
+
+            //    entity.Property(e => e.AccNo)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false);
+
+            //    entity.Property(e => e.BankName)
+            //        .HasMaxLength(255)
+            //        .IsUnicode(false);
+
+            //    entity.Property(e => e.Branch)
+            //        .HasMaxLength(255)
+            //        .IsUnicode(false);
+
+            //    entity.Property(e => e.Code)
+            //        .HasMaxLength(10)
+            //        .IsUnicode(false)
+            //        .HasColumnName("code");
+
+            //    entity.Property(e => e.DestinationCode)
+            //        .HasMaxLength(100)
+            //        .IsUnicode(false);
+            //});
+
 
             modelBuilder.Entity<SpdJournalsetup>(entity =>
             {

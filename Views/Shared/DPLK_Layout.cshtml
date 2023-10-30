@@ -277,7 +277,7 @@
                                         </a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="app-user-view-notifications.html" class="menu-link">
+                                        <a class="menu-link" asp-area="" asp-controller="Pension" asp-action="JoinAccount">
                                             <div data-i18n="Join Account">Join Account</div>
                                         </a>
                                     </li>
@@ -392,6 +392,25 @@
                                 </ul>
                             </li>
                             <!--- Parameter --->
+                            <!--- Parameter --->
+                            <li class="menu-item">
+                                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                    <div data-i18n="Pension">Upload Data</div>
+                                </a>
+                                <ul class="menu-sub">
+                                    <li class="menu-item">
+                                        <a class="menu-link" asp-area="" asp-controller="Pension" asp-action="UploadParticipant">
+                                            <div data-i18n="Maker">Upload Participant </div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a class="menu-link" asp-area="" asp-controller="PensionParameter" asp-action="ParameterApproval">
+                                            <div data-i18n="Approval">Upload Participant By Money Type</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--- Parameter --->
 
                             <li class="menu-item">
                                 <a class="menu-link" asp-area="" asp-controller="Pension" asp-action="UploadIndex">
@@ -399,9 +418,21 @@
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="layouts-fluid.html" class="menu-link">
-                                    <div data-i18n="Reports">Reports</div>
+                                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                    <div data-i18n="Pension">Report </div>
                                 </a>
+                                <ul class="menu-sub">
+                                    <li class="menu-item">
+                                        <a class="menu-link" asp-area="" asp-controller="Pension" asp-action="ReportList">
+                                            <div data-i18n="Maker">Report </div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a class="menu-link" asp-area="" asp-controller="PensionParameter" asp-action="ParameterApproval">
+                                            <div data-i18n="Approval">Upload Participant By Money Type</div>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
 
                         </ul>

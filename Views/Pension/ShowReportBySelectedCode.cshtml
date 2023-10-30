@@ -1,0 +1,17 @@
+﻿@model DPLK.Models.SpdReport
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> Pension / </span> Show Report</h4>
+<div class="row">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="mb-3 row">
+            <div class="col-md-4">
+                <iframe id="iframe_disclaimer" src="@Model.Link"></iframe>
+            </div>
+        </div>
+    </div>
+</div>

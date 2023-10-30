@@ -63,47 +63,20 @@
                             <th>
                                 <a asp-action="NewBussinesCompany" asp-route-sortOrder="Email" asp-route-page="1">Email</a>
                             </th>
-                            @*     <th>
-                            <a asp-action="NewBussinesCompany" asp-route-sortOrder="BusinessLineNmbr" asp-route-page="1">Bussines Line</a>
-                            </th>*@
-                            @*<th>
-                            <a asp-action="NewBussinesCompany" asp-route-sortOrder="MnySrcType" asp-route-page="1">Money Source</a>
-                            </th>*@
+
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var company in Model)
                         {
                             <tr class="@((company.LastChangeDt != DateTime.MinValue) ? "new-company" : "")">
-                                @*                            <td>@company.ClientNmbr</td>
-                            *@
-@*                                <td class="company-name" data-isnew="@((company.LastChangeDt != DateTime.MinValue).ToString().ToLower())">@company.CompanyNm</td>
-*@                                <td>@company.CompanyNm</td>
 
+                                <td>@company.CompanyNm</td>
                                 <td>@company.ContactPerson</td>
                                 <td>@company.BankNm</td>
                                 <td>@company.AccountNmbr</td>
                                 <td>@company.Email</td>
-                                @*                            <td>@company.BusinessSctrNm</td>
-                            *@
-                                @*          <td>
-                            @if (company.MnySrcType == 0)
-                            {
-                            <span>Please Select</span>
-                            }
-                            else if (company.MnySrcType == 100)
-                            {
-                            <span>Employee</span>
-                            }
-                            else if (company.MnySrcType == 200)
-                            {
-                            <span>Employer</span>
-                            }
-                            else
-                            {
-                            <span>Unknown</span>
-                            }
-                            </td>*@
+
                                 <td>
 
                                     <div class="dropdown">
