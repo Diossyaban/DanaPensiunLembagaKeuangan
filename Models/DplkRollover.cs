@@ -8,6 +8,7 @@ namespace DPLK.Models
 {
     public class DplkRollover
     {
+        [Key]
         [Display(Name = "Institution Code")]
         public int? DplkNmbr { get; set; }
 

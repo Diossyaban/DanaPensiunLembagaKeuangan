@@ -79,7 +79,6 @@ namespace DPLK.Controllers.CashManagement
             return View(companyIndex.ToPagedList(pageIndex, defaultSize));
         }
 
-        //Modif|24-10-2023|DwiPrasetyo
 
         [HttpGet]
         public IActionResult BankListIndex()
@@ -101,46 +100,58 @@ namespace DPLK.Controllers.CashManagement
             return View(spdInvestBank);
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> DeleteBankConfirmation(int id)
+        public IActionResult BankEdit(string id)
         {
-            var bank = await _contextAcc.SpdInvestBanks.FindAsync(id);
+            var bank = _contextAcc.SpdInvestBanks.Find(id);
             if (bank == null)
             {
                 return NotFound();
             }
-
-            ViewBag.Code = id; // Gunakan ViewBag.Code
-
             return View(bank);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteBank(int id)
+        public async Task<IActionResult> BankEdit(SpdInvestBank spdInvestBank)
         {
-            try
+            if (ModelState.IsValid)
             {
-                var bankToDelete = await _contextAcc.SpdInvestBanks.FindAsync(id);
-                if (bankToDelete == null)
-                {
-                    return NotFound();
-                }
-
-                _contextAcc.SpdInvestBanks.Remove(bankToDelete);
+                _contextAcc.Update(spdInvestBank);
                 await _contextAcc.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = "Bank deleted successfully.";
-
-                return RedirectToAction("BankList");
+                return RedirectToAction(nameof(BankList));
             }
-            catch (System.Exception ex)
-            {
-                TempData["ErrorMessage"] = "An error occurred while deleting the bank.";
-                return RedirectToAction("BankList");
-            }
+            return View(spdInvestBank);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteBankConfirmation(int id)
+        {
+          
+            ViewBag.Code = id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBank(string id)
+        {
+            var model = await _contextAcc.SpdInvestBanks.FindAsync(id);
+            if (model != null)
+            {
+                _contextAcc.SpdInvestBanks.Remove(model);
+                await _contextAcc.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Data deleted successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Data not found.";
+            }
+
+            return RedirectToAction(nameof(BankList));
+        }
+
 
 
         public IActionResult FundSwitchingClaimReqFundApproval()
@@ -154,6 +165,8 @@ namespace DPLK.Controllers.CashManagement
             return View();
         }
     }
+
 }
 
-//End Modif|24-10-2023|DwiPrasetyo
+
+

@@ -28,6 +28,9 @@
             <table class="table table-bordered-sm">
                 <thead>
                     <tr>
+                    <th>
+                        <a asp-action="" asp-route-sortOrder="" asp-route-page="1"></a>
+                    </th>
                         <th>
                             <a asp-action="SetupPartner" asp-route-sortOrder="DplkNmbr" asp-route-page="1">DPLK Number</a>
                         </th>
@@ -61,21 +64,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var panther in Model)
-                    {
-                        <tr>
-                            <td>@panther.DplkNmbr</td>
-                            <td>@panther.DplkNm</td>
-                            <td>@panther.BankNm</td>
-                            <td>@panther.AcctNmbr</td>
-                            <td>@panther.DplkAddress1</td>
-                            <td>@panther.DplkAddress2</td>
-                            <td>@panther.DplkAddress3</td>
-                            <td>@panther.DplkCity</td>
-                            <td>@panther.DplkPostalCd</td>
-                            <td>@panther.DplkContactPerson</td>
-                        </tr>
-                    }
+                @foreach (var panther in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button"
+                                        class="btn p-0 dropdown-toggle hide-arrow"
+                                        data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-action="SetupPartnerEdit" asp-route-id="@panther.DplkNmbr"><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                                    <a class="dropdown-item" asp-action="DeleteSetupPartner" asp-route-id="@panther.DplkNmbr"><i class="bx bx-trash me-1"></i>Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>@panther.DplkNmbr</td>
+                        <td>@panther.DplkNm</td>
+                        <td>@panther.BankNm</td>
+                        <td>@panther.AcctNmbr</td>
+                        <td>@panther.DplkAddress1</td>
+                        <td>@panther.DplkAddress2</td>
+                        <td>@panther.DplkAddress3</td>
+                        <td>@panther.DplkCity</td>
+                        <td>@panther.DplkPostalCd</td>
+                        <td>@panther.DplkContactPerson</td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>

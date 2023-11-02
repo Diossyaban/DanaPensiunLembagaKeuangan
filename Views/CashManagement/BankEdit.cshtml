@@ -1,0 +1,61 @@
+﻿@model DPLK.ModelAcc.SpdInvestBank
+
+@{
+    ViewData["Title"] = "Create BankList";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Cash Management/</span> Edit BankList</h4>
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-action="BankEdit" method="post">
+            <div class="mb-3 row">
+                <label asp-for="Code" class="col-md-2 col-form-label">
+                    Code
+                </label>
+                <div class="col-md-4">
+                    <input asp-for="Code" class="form-control" />
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="BankName" class="col-md-2 col-form-label">
+                    Bank Name
+                </label>
+                <div class="col-md-4">
+                    <input asp-for="BankName" class="form-control" />
+                    <span asp-validation-for="BankName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Branch" class="col-md-2 col-form-label">
+                    Branch
+                </label>
+                <div class="col-md-4">
+                    <input asp-for="Branch" class="form-control" />
+                    <span asp-validation-for="Branch" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="AccNo" class="col-md-2 col-form-label">
+                    Acc.No
+                </label>
+                <div class="col-md-4">
+                    <input asp-for="AccNo" class="form-control" />
+                    <span asp-validation-for="AccNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="DestinationCode" class="col-md-2 col-form-label">
+                    Destination Code
+                </label>
+                <div class="col-md-4">
+                    <input asp-for="DestinationCode" class="form-control" />
+                    <span asp-validation-for="DestinationCode" class="text-danger"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="background-color: #0073fe">Submit</button>
+            <a asp-action="BankListIndex" style="background-color: #fd0017" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+</div>

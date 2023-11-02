@@ -1,4 +1,5 @@
 ﻿using System;
+using DPLK.ModelAcc.dto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -16,6 +17,7 @@ namespace DPLK.ModelAcc
             : base(options)
         {
         }
+        public DbSet<FundData> FundDatas { get; set; }
 
         public virtual DbSet<AlphabeticalListOfProduct> AlphabeticalListOfProducts { get; set; }
         public virtual DbSet<Cashcode> Cashcodes { get; set; }
@@ -143,18 +145,13 @@ namespace DPLK.ModelAcc
         public virtual DbSet<XspdJurnalKonsolidasiMapping> XspdJurnalKonsolidasiMappings { get; set; }
         public virtual DbSet<XspdJurnalTemp> XspdJurnalTemps { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=dplktest;Database=PensionAcc;User Id=dplk;Password=asdasd;");
-            }
-        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<FundData>().HasNoKey();
 
             modelBuilder.Entity<AlphabeticalListOfProduct>(entity =>
             {
@@ -2223,7 +2220,7 @@ namespace DPLK.ModelAcc
             });
             modelBuilder.Entity<SpdInvestBank>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Code);
 
                 entity.ToTable("SPD_INVEST_BANK");
 
@@ -2871,8 +2868,7 @@ namespace DPLK.ModelAcc
 
             modelBuilder.Entity<SpdJurnalTemp>(entity =>
             {
-                entity.HasNoKey();
-
+                entity.HasKey(e => e.TrnsId);
                 entity.ToTable("SPD_JURNAL_TEMP");
 
                 entity.HasIndex(e => e.TrnsId, "IX_SPD_JURNAL_TEMP");

@@ -1,0 +1,57 @@
+﻿@model X.PagedList.IPagedList<DPLK.ModelAcc.SpdJurnalTemp>
+@using X.PagedList.Mvc.Core
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+<div class="container-fluid px-4">
+    <div class="card my-4">
+        <div class="card-body">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>ID</th>
+                            <th>Description</th>
+                            <th>Jurnal Date</th>
+                            <th>Amount</th>
+                            <th>Fund</th>
+                            <th>Correction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+
+                                    <div class="dropdown">
+                                        <button type="button"
+                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-action="" asp-route-id="@item."><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                                            <a class="dropdown-item" asp-action="" asp-route-id="@item."><i class="bx bx-trash me-1"></i>Delete</a>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td>@item.TrnsId</td>
+                                <td>@item.Description</td>
+                                <td>@item.DateJurnal</td>
+                                <td>@item.Debet</td>
+                                <td>@item.</td>
+                                <td>@item.Correction</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

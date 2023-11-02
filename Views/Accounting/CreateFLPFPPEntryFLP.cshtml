@@ -33,6 +33,13 @@
 
             </div>
         </div>
+ @*       <div class="mb-3 row">
+            <label asp-for="BusinessLineNmbr" class="col-md-2 col-form-label">Business Line</label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.BusinessLineNmbr, (IEnumerable<SelectListItem>)ViewData["DdlParamsBusinessSctr"], new { @class = "form-select" })
+                <span asp-validation-for="BusinessLineNmbr" class="text-danger"></span>
+            </div>
+        </div>*@
         <div class="mb-3 row">
             <label for="html5-search-input" class="col-md-2 col-form-label">Correction</label>
             <div class="col-md-4">

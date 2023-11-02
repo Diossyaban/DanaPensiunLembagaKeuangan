@@ -48,7 +48,9 @@
             <div class="mb-3 row">
                 <label asp-for="MasterPaycenterNmbr" class="col-md-2 col-form-label">Master PayCenter</label>
                 <div class="col-md-4">
-                    <select asp-for="MasterPaycenterNmbr" asp-items="ViewBag.masterPayList" class="form-select"></select>
+@*                    <select asp-for="MasterPaycenterNmbr" asp-items="ViewBag.masterPayList" class="form-select"></select>
+                    *@                   
+                    <input asp-for="MasterPaycenterNmbr" class="form-control" />
                     <span asp-validation-for="MasterPaycenterNmbr" class="text-danger"></span>
                 </div>
             </div>

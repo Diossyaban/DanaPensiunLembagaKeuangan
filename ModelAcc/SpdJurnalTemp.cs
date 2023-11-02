@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -7,6 +8,7 @@ namespace DPLK.ModelAcc
 {
     public partial class SpdJurnalTemp
     {
+        [Key]
         public string TrnsId { get; set; }
         public string GlCode { get; set; }
         public string Slcode { get; set; }
@@ -23,5 +25,6 @@ namespace DPLK.ModelAcc
         public double? Credit { get; set; }
         public DateTime DateJurnal { get; set; }
         public bool? Correction { get; set; }
+
     }
 }

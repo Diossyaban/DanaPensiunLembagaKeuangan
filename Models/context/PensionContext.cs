@@ -4028,7 +4028,7 @@ namespace DPLK.Models.context
 
             modelBuilder.Entity<DplkRollover>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.DplkNmbr);
 
                 entity.ToTable("dplk_rollover");
 

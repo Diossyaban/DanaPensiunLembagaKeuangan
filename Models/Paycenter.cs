@@ -23,8 +23,7 @@ namespace DPLK.Models
 
         public virtual Company ClientNmbrNavigation { get; set; }
 
-/*        public virtual Company Company { get; set; }
-*/
+
 
 
     }

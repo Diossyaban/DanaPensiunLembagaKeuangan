@@ -203,7 +203,6 @@ namespace DPLK.Controllers.Pension
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<IActionResult> NewBussinesCompanyEdit(int id, Company updatedCompany)
 
         {
@@ -271,16 +270,7 @@ namespace DPLK.Controllers.Pension
                 }
             }
         }
-        /*   private void FillDDLInViewData()
-           {
-               ViewData["DdlParamsBusinessSctr"] = GetDDLParams("business_sctr");
-               ViewData["DdlParamsMnySrc"] = GetDDLParams("mny_src");
-               ViewData["DdlParamsOptionType"] = GetDDLParams("option_type");
-               ViewData["DdlParamsSuspenseType"] = GetDDLParams("suspense_type");
-
-
-
-           }*/
+   
         private List<SelectListItem> GetDDLParams(string ddlParamName)
         {
             var ddlParams = new List<SelectListItem>();
@@ -346,10 +336,6 @@ namespace DPLK.Controllers.Pension
                 }
             }
         }
-
-
-
-
         [HttpGet]
         public IActionResult DeleteConfirmation(int id)
         {
@@ -1359,22 +1345,22 @@ namespace DPLK.Controllers.Pension
             ViewData["DDLCompanyProcessClaimRequest"] = GetCompanyNamesFromDatabase();
             ViewData["TransactionTypes"] = GetTransactionTypes();
             ViewData["RekeningList"] = GetRekeningList();
-/*            ViewData["ReportList"] = GetShowReports();
-*/
+            /*            ViewData["ReportList"] = GetShowReports();
+            */
 
 
 
         }
 
-     /*   private List<SelectListItem> GetShowReports()
-        {
-            var reportList = _context.SpdReports
-                                    .OrderBy(r => r.Name)
-                                    .Select(r => new SelectListItem { Value = r.Code.ToString(), Text = r.Name })
-                                    .ToList();
+        /*   private List<SelectListItem> GetShowReports()
+           {
+               var reportList = _context.SpdReports
+                                       .OrderBy(r => r.Name)
+                                       .Select(r => new SelectListItem { Value = r.Code.ToString(), Text = r.Name })
+                                       .ToList();
 
-            return reportList;
-        }*/
+               return reportList;
+           }*/
 
         private List<SelectListItem> GetDDLParamsWD()
         {
@@ -1756,58 +1742,59 @@ namespace DPLK.Controllers.Pension
             return View();
         }
 
-        /* public IActionResult WithdrawEdit(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
-         {
-             int pageIndex = page ?? 1;
-             int defaultSize = pageSize ?? 5;
-             ViewBag.psize = defaultSize;
+        public IActionResult WithdrawEdit(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
+        {
+            int pageIndex = page ?? 1;
+            int defaultSize = pageSize ?? 5;
+            ViewBag.psize = defaultSize;
 
-             if (searchString != null)
-             {
-                 page = 1;
-             }
-             else
-             {
-                 searchString = currentFilter;
-             }
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
-             try
-             {
-                 var payments = _context.TferPayInfos.FromSqlRaw("EXEC DGR_ON_SCR_EDITING_CLAIM").ToList();
+            try
+            {
+                var payments = _context.TferPayInfos.FromSqlRaw("EXEC DGR_ON_SCR_EDITING_CLAIM").ToList();
+                //var payments = _context.TferPayInfos.ToList();
 
-                 ViewBag.currentFilter = searchString;
+                ViewBag.currentFilter = searchString;
 
-                 // Filtering
-                 if (!string.IsNullOrEmpty(searchString))
-                 {
-                     payments = payments.Where(payment =>
-                         payment.Note.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                     ).ToList();
-                 }
+                // Filtering
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    payments = payments.Where(payment =>
+                        payment.Note.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                    ).ToList();
+                }
 
-                 ViewBag.PageSize = new List<int> { 5, 10, 15, 20 };
-                 ViewBag.SortOrder = string.IsNullOrEmpty(sortOrder) ? "company_nm" : "";
-                 ViewBag.CurrentSort = sortOrder;
+                ViewBag.PageSize = new List<int> { 5, 10, 15, 20 };
+                ViewBag.SortOrder = string.IsNullOrEmpty(sortOrder) ? "company_nm" : "";
+                ViewBag.CurrentSort = sortOrder;
 
-                 switch (sortOrder)
-                 {
-                     case "company_nm":
-                         payments = payments.OrderByDescending(p => p.BankNm).ToList();
-                         break;
-                     default:
-                         payments = payments.OrderBy(p => p.BankNm).ToList();
-                         break;
-                 }
+                switch (sortOrder)
+                {
+                    case "company_nm":
+                        payments = payments.OrderByDescending(p => p.BankNm).ToList();
+                        break;
+                    default:
+                        payments = payments.OrderBy(p => p.BankNm).ToList();
+                        break;
+                }
 
-                 return View(payments.ToPagedList(pageIndex, defaultSize));
-             }
-             catch (System.Exception ex)
-             {
-                 ViewBag.ErrorMessage = "Error: " + ex.Message;
-                 return View(new List<TferPayInfo>());
-             }
-         }
- */
+                return View(payments.ToPagedList(pageIndex, defaultSize));
+            }
+            catch (System.Exception ex)
+            {
+                ViewBag.ErrorMessage = "Error: " + ex.Message;
+                return View(new List<TferPayInfo>());
+            }
+        }
+
         /*        public IActionResult WithdrawEdit(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
                 {
                     int pageIndex = page ?? 1;
@@ -2670,7 +2657,7 @@ namespace DPLK.Controllers.Pension
         public async Task<IActionResult> SetupPartner(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
         {
             int pageIndex = page ?? 1;
-            int defaultSize = pageSize ?? 5;
+            int defaultSize = pageSize ?? 20;
             ViewBag.psize = defaultSize;
 
             if (searchString != null)
@@ -2766,7 +2753,7 @@ namespace DPLK.Controllers.Pension
 
                     TempData["SuccessMessage"] = "Request data sent";
 
-                    return RedirectToAction(nameof(SetupPartnerCreate));
+                    return RedirectToAction(nameof(SetupPartner));
                 }
                 catch (System.Exception ex)
                 {
@@ -2777,6 +2764,106 @@ namespace DPLK.Controllers.Pension
             ViewBag.BankList = new SelectList(GetBankDataFromDatabase(), "Value", "Text");
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SetupPartnerEdit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var model = await _context.DplkRollovers.FirstOrDefaultAsync(item => item.DplkNmbr == id);
+
+            if (model != null)
+            {
+                ViewBag.BankList = new SelectList(GetBankDataFromDatabase(), "Value", "Text");
+                return View(model);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetupPartnerEdit(DplkRollover model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (model.DplkNmbr == null)
+                    {
+                        ModelState.AddModelError("DplkNmbr", "Institution Code is required");
+                        ViewBag.BankList = new SelectList(GetBankDataFromDatabase(), "Value", "Text");
+                        return View(model);
+                    }
+
+                    _context.DplkRollovers.Update(model);
+                    await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = "Request data updated";
+                    return RedirectToAction(nameof(SetupPartner), new { id = model.DplkNmbr });
+                }
+                catch (System.Exception ex)
+                {
+                    ModelState.AddModelError("", "An error occurred while processing your request.");
+                }
+            }
+
+            ViewBag.BankList = new SelectList(GetBankDataFromDatabase(), "Value", "Text");
+            return View(model);
+        }
+
+
+
+        [HttpGet]
+        public IActionResult DeleteSetupPartner(int id)
+        {
+            ViewBag.DplkNmbr = id;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteSetupPartnerAction(int id)
+        {
+            var model = await _context.DplkRollovers.FindAsync(id);
+            if (model != null)
+            {
+                _context.DplkRollovers.Remove(model);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Data deleted successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Data not found.";
+            }
+
+            return RedirectToAction(nameof(SetupPartner));
+        }
+
+
+
+        /*       [HttpPost]
+               public async Task<IActionResult> NewBussinesCompanyDelete(int id)
+               {
+
+                       var company = await _context.Companies.FindAsync(id);
+
+                       if (company == null)
+                       {
+                           return NotFound();
+                       }
+
+                       _context.Companies.Remove(company);
+                       await _context.SaveChangesAsync();
+
+                       TempData["SuccessMessage"] = "Company data deleted successfully";
+                       return RedirectToAction("NewBussinesCompany");
+
+
+               }*/
         public IActionResult ParameterMaker()
         {
             return View();
@@ -6123,33 +6210,56 @@ namespace DPLK.Controllers.Pension
 
             return View(agentMaster);
         }
-
         [HttpPost]
-        public IActionResult SetupAgentCreate(AgentMaster agentMaster)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetupAgentCreate(AgentMaster model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                try
                 {
-                    if (string.IsNullOrEmpty(agentMaster.AgentNmbr))
-                    {
-                        ModelState.AddModelError("", "Agent Number is required.");
-                    }
-                    else
-                    {
-                        SaveAgentData(agentMaster);
-                        TempData["SuccessMessage"] = "Agent data saved successfully";
-                        return RedirectToAction(nameof(SetupAgentCreate));
-                    }
+                    _context.AgentMasters.Add(model);
+                    await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = "Agent data created. Agent Code: " + model.AgentNmbr;
+                    return RedirectToAction(nameof(SetupAgentIndex));
+                }
+                catch (System.Exception ex)
+                {
+                    ModelState.AddModelError("", "An error occurred while processing your request.");
                 }
             }
-            catch (System.Exception ex)
-            {
-                ModelState.AddModelError("", "An error occurred while saving agent data: " + ex.Message);
-            }
 
-            return View(agentMaster);
+            return View(model);
         }
+
+        /*
+                [HttpPost]
+                public IActionResult SetupAgentCreate(AgentMaster agentMaster)
+                {
+                    try
+                    {
+                        if (ModelState.IsValid)
+                        {
+                            if (string.IsNullOrEmpty(agentMaster.AgentNmbr))
+                            {
+                                ModelState.AddModelError("", "Agent Number is required.");
+                            }
+                            else
+                            {
+                                SaveAgentData(agentMaster);
+                                TempData["SuccessMessage"] = "Agent data saved successfully";
+                                return RedirectToAction(nameof(SetupAgentCreate));
+                            }
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        ModelState.AddModelError("", "An error occurred while saving agent data: " + ex.Message);
+                    }
+
+                    return View(agentMaster);
+                }*/
         private AgentMaster LoadAgentData(int agentNumber)
         {
             AgentMaster agentMaster = new AgentMaster();
