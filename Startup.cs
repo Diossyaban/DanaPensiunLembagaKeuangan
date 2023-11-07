@@ -24,7 +24,7 @@ namespace Test1
             services.AddDbContext<PensionContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Pension")));
             services.AddDbContext<PensionAccContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("PesionAcc")));
+                options.UseSqlServer(Configuration.GetConnectionString("PensionAcc")));
 
             services.AddControllersWithViews();
 

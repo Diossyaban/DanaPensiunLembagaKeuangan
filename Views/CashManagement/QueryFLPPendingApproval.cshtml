@@ -1,88 +1,68 @@
-﻿@{
+﻿@*//Modif|DwiPrasetyo*@
+
+@model X.PagedList.IPagedList<DPLK.ModelAcc.SpdJurnalTemp>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common;
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
     ViewData["Title"] = "DPLK | Perta Life";
     Layout = "~/Views/Shared/DPLK_Layout.cshtml";
 }
 
-
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> Cash Management / </span> Create FLP/FPP - Query FLP Pending Approval</h4>
-
-<div class="card mb-4">
-    <div class="card-body">
-
-        <div class="mb-3 row">
-            <label for="html5-search-input" class="col-md-2 col-form-label">Pay Center Number</label>
-            <div class="col-md-4">
-                <div class="input-group">
-                    <input class="form-control" type="search" value="" id="html5-search-input" />
-                    <button class="btn btn-outline-primary" type="button" id="searchButton">Search</button>
-                </div>
-            </div>
+<div class="container-fluid px-4">
+    <div class="card my-4">
+        <div class="card-header">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> Cash Management / </span>Query FLP Pending Approval</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Jurnal Date</th>
+                        <th>Amount</th>
+                        <th>Fund</th>
+                        <th>Correction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var flp in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="dropdown">
+                                    <button type="button"
+                                            class="btn p-0 dropdown-toggle hide-arrow"
+                                            data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-action="" asp-route-id="@flp.TrnsId"><i class="bx bx-detail me-1"></i>Detail</a>
+                                        <a class="dropdown-item" asp-action="" asp-route-id="@flp.TrnsId"><i class="bx bx-purchase-tag-alt me-1"></i>Voucher</a>
+                                        <a class="dropdown-item" asp-action="" asp-route-id="@flp.TrnsId"><i class="bx bx-trash me-1"></i>Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@flp.TrnsId</td>
+                            <td>@flp.Description</td>
+                            <td>@flp.DateJurnal
+                            <td>
+                            <td>@flp.</td>
+                            <td>@flp.Correction</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-        <div class="mb-3 row">
-            <label for="html5-search-input" class="col-md-2 col-form-label">Pay Center Name</label>
-            <div class="col-md-4">
-                <input class="form-control" type="search" value="" id="html5-search-input" />
-            </div>
-            <label for="html5-search-input2" class="col-md-2 col-form-label">Contact Person </label>
-            <div class="col-md-4">
-                <input class="form-control" type="search" value="" id="html5-search-input2" />
-            </div>
-        </div>
-
-        <div class="mb-3 row">
-            <label for="html5-search-input" class="col-md-2 col-form-label">Company </label>
-            <div class="col-md-4">
-                <select class="form-select" asp-items="ViewBag.NewBussines"></select>
-
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="html5-search-input" class="col-md-2 col-form-label">Master Pay Center Number</label>
-            <div class="col-md-4">
-                <select class="form-select" asp-items="ViewBag.NewBussines"></select>
-
-            </div>
-        </div>
-
-        <div class="mb-5">
-            <h6 class="mt-2 mb-3 text-muted">Action</h6>
-            <nav class="navbar navbar-example navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                    <button class="navbar-toggler"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#navbar-ex-2"
-                            aria-controls="navbar-ex-2"
-                            aria-expanded="false"
-                            aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbar-ex-2">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-danger mx-2">Save</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-primary mx-2">New Company</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-success mx-2">Edit Phone</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-success mx-2">Edit Address</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+        <div class="text-center mt-4">
+            Page @(Model.PageNumber) of @Model.PageCount
+            @Html.PagedListPager(Model, page => Url.Action("QueryFLPPendingApproval", new { page, currentFilter = ViewBag.CurrentFilter }), PagedListRenderOptions.TwitterBootstrapPager)
         </div>
     </div>
 
-
-
-
-
-
-
 </div>
+
+@*//End Modif|DwiPrasetyo*@
 

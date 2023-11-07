@@ -1,0 +1,50 @@
+﻿@*//Modif|DwiPrasetyo*@
+
+@*@model X.PagedList.IPagedList<DPLK.ModelAcc.SpdJurnalTemp>
+    @using X.PagedList.Mvc.Core
+    @using X.PagedList.Web.Common;*@
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <div class="card my-4">
+        <div class="card-header">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> Cash Management / </span>VALIDATE Claim Request Amount </h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>FUND</th>
+                        <th>REQUESTED AMOUNT</th>
+                        <th>APPROVAL AMOUNT</th>
+                        <th>UNAPPROVED AMOUNT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @*@foreach (var flp in Model)
+                        {*@
+                    <tr>
+                        <td>
+                            @*</td>
+                                <td>@flp.TrnsId</td>
+                                <td>@flp.Description</td>
+                                <td>@flp.DateJurnal
+                                <td>
+                                <td>@flp.</td>
+                                <td>@flp.Correction</td>*@
+                            @*</tr>
+                                }*@
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+@*//End Modif|DwiPrasetyo*@
+

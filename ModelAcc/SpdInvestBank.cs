@@ -8,11 +8,15 @@ namespace DPLK.ModelAcc
 {
     public partial class SpdInvestBank
     {
-
+        [Key]    
         public string Code { get; set; }
+
         public string BankName { get; set; }
+
         public string Branch { get; set; }
+              
         public string AccNo { get; set; }
+               
         public string DestinationCode { get; set; }
     }
 }

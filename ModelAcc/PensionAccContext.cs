@@ -2223,8 +2223,7 @@ namespace DPLK.ModelAcc
             });
             modelBuilder.Entity<SpdInvestBank>(entity =>
             {
-                entity.HasNoKey();
-
+                entity.HasKey(e => e.Code);
                 entity.ToTable("SPD_INVEST_BANK");
 
                 entity.Property(e => e.AccNo)

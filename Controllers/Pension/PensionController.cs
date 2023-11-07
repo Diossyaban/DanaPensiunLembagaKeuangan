@@ -348,8 +348,6 @@ namespace DPLK.Controllers.Pension
         }
 
 
-
-
         [HttpGet]
         public IActionResult DeleteConfirmation(int id)
         {
@@ -2298,7 +2296,6 @@ namespace DPLK.Controllers.Pension
 
             return View(suratKeluarData);
         }
-
 
 
         public async Task<IActionResult> AdjustmentAccrueFee(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)

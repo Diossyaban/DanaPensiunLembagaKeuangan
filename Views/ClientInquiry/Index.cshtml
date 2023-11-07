@@ -8,7 +8,20 @@
 
 <div class="card mb-4">
     <div class="card-body">
-
+        <div class="dropdown">
+            <button type="button"
+                    class="btn p-0 dropdown-toggle hide-arrow"
+                    data-bs-toggle="dropdown">
+                <i class="bx bx-dots-vertical-rounded"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-action="Edit" asp-route-id=""><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                <a class="dropdown-item" asp-action="Details" asp-route-id=""><i class="bx bx-detail me-1"></i>Details</a>
+                <a class="dropdown-item" asp-action="Delete" asp-route-id=""><i class="bx bx-trash me-1"></i>Delete</a>
+            </div>
+        </div>
+        </td>
+        </tr>
 
         <div class="mb-3 row">
             <label for="html5-search-input" class="col-md-2 col-form-label">Participant No.</label>
@@ -18,7 +31,7 @@
                     <button class="btn btn-outline-success" type="button" id="searchButton">Search</button>
                 </div>
             </div>
-           
+
         </div>
         <div class="mb-3 row">
             <label for="html5-search-input" class="col-md-2 col-form-label">Participant Name</label>
@@ -154,12 +167,12 @@
                 <input class="form-control" type="search" value="" id="html5-search-input2" />
             </div>
         </div>
-       s
+        s
 
 
     </div>
 
-</div>
+    </div>
 <div class="card">
     <div class="card-header">
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">  </span> Balance Info</h4>
@@ -280,20 +293,10 @@
             *@
         </td>
         <td>
-            <div class="dropdown">
-                <button type="button"
-                        class="btn p-0 dropdown-toggle hide-arrow"
-                        data-bs-toggle="dropdown">
-                    <i class="bx bx-dots-vertical-rounded"></i>
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" asp-action="Edit" asp-route-id=""><i class="bx bx-edit-alt me-1"></i>Edit</a>
-                    <a class="dropdown-item" asp-action="Details" asp-route-id=""><i class="bx bx-detail me-1"></i>Details</a>
-                    <a class="dropdown-item" asp-action="Delete" asp-route-id=""><i class="bx bx-trash me-1"></i>Delete</a>
-                </div>
-            </div>
-        </td>
-    </tr>
+            
+
+
+             
 
 
 </tbody> </table>

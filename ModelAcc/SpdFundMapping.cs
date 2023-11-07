@@ -13,5 +13,6 @@ namespace DPLK.ModelAcc
         public string DescrFund { get; set; }
         public string Descr { get; set; }
         public string GlCode { get; set; }
+        public string Coll { get; set; }
     }
 }
