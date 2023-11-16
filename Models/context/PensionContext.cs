@@ -23,6 +23,11 @@ namespace DPLK.Models.context
 
         //public virtual DbSet<CompanyOnScrPaycenterModel> CompanyOnScrPaycenterModels { get; set; }  //Ini SP
         //baru 
+        public DbSet<PayMentAfterCancel> payMentAfterCancels { get; set; }
+        public DbSet<EditingDto> EditingDtos { get; set; }
+        public DbSet<SuspenseApprovedDto> SuspenseApprovedDtos { get; set; }
+        public DbSet<GetPaymentForApproval> GetPaymentForApprovals { get; set; }
+
         public DbSet<AccountListingModel> AccountListingModels { get; set; }
         public virtual DbSet<JoinAccountCheckingResult> JoinAccountCheckingResults { get; set; }
 
@@ -501,7 +506,6 @@ namespace DPLK.Models.context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
 
             modelBuilder.Entity<GetKartuIndividu>().HasNoKey();
             modelBuilder.Entity<AccType>(entity =>

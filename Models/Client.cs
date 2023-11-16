@@ -20,6 +20,5 @@ namespace DPLK.Models
         public string DobPlace { get; set; }
         public int? ClientNmbrOpf { get; set; }
         public string Path { get; set; }
-/*        public virtual IdType IdType { get; set; }
-*/    }
+   }
 }

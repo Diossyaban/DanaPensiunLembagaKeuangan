@@ -125,10 +125,7 @@ namespace DPLK.Controllers.Accounting
             return View();
         }
 
-        public IActionResult UnapprovedJurnalMemorial()
-        {
-            return View();
-        }
+       
         public IActionResult PostedMemorialJurnal()
         {
             return View();
@@ -201,15 +198,39 @@ namespace DPLK.Controllers.Accounting
                 searchString = currentFilter;
             }
 
-            var jobLevelTypes = _contextAcc.SpdJurnalTemps.ToList();
+            //var jobLevelTypes = _contextAcc.SpdJurnalTemps.Where(jt => jt.TrnsId.Contains("ACCIDR"));
+
+
+            var jobLevelTypes = _contextAcc.SpdJurnalTemps
+            .Where(flp =>
+            flp.TrnsId.Contains("ACCIDR") &&
+            flp.TrnsTypeNmbr.HasValue && flp.TrnsTypeNmbr.ToString().StartsWith("22222") &&
+            flp.SubTrnsNmbr.HasValue && flp.SubTrnsNmbr == 0 &&
+            flp.TrnsId.Contains("ACCIDR") &&
+            _contextAcc.SpdJurnalKonsolidasiMappings.Any(mapping => mapping.Status == 5 && mapping.NewTrnsId == flp.TrnsId)
+            )
+            .OrderBy(flp => flp.DateJurnal).ToList();
+            //.Select(jt => new
+            //{
+            //    ID = jt.TrnsId,
+            //    Description = jt.Description,
+            //    JurnalDate = jt.DateJurnal.ToString("dd MMMM yyyy"),
+            //    Amount = (jt.Debet > 0) ? jt.Debet : jt.Credit,
+            //    Fund = jt.FundMappings.FirstOrDefault(mapping => mapping.Owner == jt.Inv)?.Descr,
+            //    Correction = (jt.Correction == true) ? "Correction" : string.Empty
+            //})
+            //.ToList();
+
+
+
             ViewBag.curruentfilter = searchString;
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                jobLevelTypes = jobLevelTypes.Where(jobLevelType =>
-                    jobLevelType.TrnsId.ToString().ToLower().Contains(searchString.ToLower())
-                ).ToList();
-            }
+            //if (!string.IsNullOrEmpty(searchString))
+            //{
+            //    jobLevelTypes = jobLevelTypes.Where(jobLevelType =>
+            //        jobLevelType.TrnsId.ToString().ToLower().Contains(searchString.ToLower())
+            //    );
+            //}
 
             ViewBag.PageSize = new List<SelectListItem>
             {
@@ -222,19 +243,97 @@ namespace DPLK.Controllers.Accounting
             ViewBag.SortOrder = sortOrder == "TrnsId" ? "" : "TrnsId";
             ViewBag.CurrentSort = sortOrder;
 
-            switch (sortOrder)
-            {
-                case "TrnsId":
-                    jobLevelTypes = jobLevelTypes.OrderBy(jobLevelType => jobLevelType.TrnsId).ToList();
-                    break;
-                default:
-                    jobLevelTypes = jobLevelTypes.OrderByDescending(jobLevelType => jobLevelType.TrnsId).ToList();
-                    break;
-            }
+
 
             return View(jobLevelTypes.ToPagedList(pageIndex, defaultSize));
         }
 
+    
+        public IActionResult UnapprovedJurnalMemorial(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
+        {
+            int pageIndex = page ?? 1;
+            int defaultSize = pageSize ?? 100;
+            ViewBag.psize = defaultSize;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            var jobLevelTypes = _contextAcc.SpdJurnalTemps
+            .Where(flp =>
+            flp.TrnsId.Contains("ACCIDR") &&
+            flp.TrnsTypeNmbr.HasValue && flp.TrnsTypeNmbr.ToString().StartsWith("111111") &&
+            flp.SubTrnsNmbr.HasValue && flp.SubTrnsNmbr == 1 &&
+            flp.TrnsId.Contains("ACCIDR") &&
+            _contextAcc.SpdJurnalKonsolidasiMappings.Any(mapping => mapping.Status == 5 && mapping.NewTrnsId == flp.TrnsId)
+            )
+            .OrderBy(flp => flp.DateJurnal).ToList();
+
+
+            ViewBag.curruentfilter = searchString;
+
+            //if (!string.IsNullOrEmpty(searchString))
+            //{
+            //    jobLevelTypes = jobLevelTypes.Where(jobLevelType =>
+            //        jobLevelType.TrnsId.ToString().ToLower().Contains(searchString.ToLower())
+            //    );
+            //}     
+
+            ViewBag.SortOrder = sortOrder == "TrnsId" ? "" : "TrnsId";
+            ViewBag.CurrentSort = sortOrder;
+
+
+
+            return View(jobLevelTypes.ToPagedList(pageIndex, defaultSize));
+        }
+
+        public IActionResult QueryFPPPendingApproval(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
+        {
+            int pageIndex = page ?? 1;
+            int defaultSize = pageSize ?? 100;
+            ViewBag.psize = defaultSize;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            var jobLevelTypes = _contextAcc.SpdJurnalTemps
+            .Where(fpp =>
+            fpp.TrnsId.Contains("ACCIDR") &&
+            fpp.TrnsTypeNmbr.HasValue && fpp.TrnsTypeNmbr.ToString().StartsWith("222220") &&
+            fpp.SubTrnsNmbr.HasValue && fpp.SubTrnsNmbr == 1 &&
+            fpp.TrnsId.Contains("ACCIDR") &&
+            _contextAcc.SpdJurnalKonsolidasiMappings.Any(mapping => mapping.Status == 5 && mapping.NewTrnsId == fpp.TrnsId)
+            )
+            .OrderBy(fpp => fpp.DateJurnal).ToList();
+            //.Select(jt => new
+            //{
+            //    ID = jt.TrnsId,
+            //    Description = jt.Description,
+            //    JurnalDate = jt.DateJurnal.ToString("dd MMMM yyyy"),
+            //    Amount = (jt.Debet > 0) ? jt.Debet : jt.Credit,
+            //    Fund = jt.FundMappings.FirstOrDefault(mapping => mapping.Owner == jt.Inv)?.Descr,
+            //    Correction = (jt.Correction == true) ? "Correction" : string.Empty
+            //})
+            //.ToList();
+            ViewBag.curruentfilter = searchString;
+
+            //if (!string.IsNullOrEmpty(searchString))
+            //{
+            //    jobLevelTypes = jobLevelTypes.Where(jobLevelType =>
+            //        jobLevelType.TrnsId.ToString().ToLower().Contains(searchString.ToLower())
+            //    );
+            //}
+            return View(jobLevelTypes.ToPagedList(pageIndex, defaultSize));
+        }
         [HttpPost]
         public IActionResult CreateJurnal(string trnsId, string description, DateTime dateJurnal, string owner, int type, int correction)
         {
@@ -262,5 +361,165 @@ namespace DPLK.Controllers.Accounting
             }
 
         }
+
+        public IActionResult RequestDeleteJurnal(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
+        {
+            int pageIndex = page ?? 1;
+            int defaultSize = pageSize ?? 100;
+            ViewBag.psize = defaultSize;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            //var jobLevelTypes = _contextAcc.SpdJurnalTemps.Where(jt => jt.TrnsId.Contains("ACCIDR"));
+
+
+            var jobLevelTypes = _contextAcc.SpdJurnalTemps
+            .Where(jt =>
+            jt.TrnsId.Contains("ACCIDR") &&
+            jt.TrnsTypeNmbr.HasValue && jt.TrnsTypeNmbr.ToString().StartsWith("22222") &&
+            jt.SubTrnsNmbr.HasValue && jt.SubTrnsNmbr == 0 &&
+            jt.TrnsId.Contains("ACCIDR") &&
+            _contextAcc.SpdJurnalKonsolidasiMappings.Any(mapping => mapping.Status == 5 && mapping.NewTrnsId == jt.TrnsId)
+            )
+            .OrderBy(jt => jt.DateJurnal).ToList();
+            //.Select(jt => new
+            //{
+            //    ID = jt.TrnsId,
+            //    Description = jt.Description,
+            //    JurnalDate = jt.DateJurnal.ToString("dd MMMM yyyy"),
+            //    Amount = (jt.Debet > 0) ? jt.Debet : jt.Credit,
+            //    Fund = jt.FundMappings.FirstOrDefault(mapping => mapping.Owner == jt.Inv)?.Descr,
+            //    Correction = (jt.Correction == true) ? "Correction" : string.Empty
+            //})
+            //.ToList();
+
+
+
+            ViewBag.curruentfilter = searchString;
+
+            //if (!string.IsNullOrEmpty(searchString))
+            //{
+            //    jobLevelTypes = jobLevelTypes.Where(jobLevelType =>
+            //        jobLevelType.TrnsId.ToString().ToLower().Contains(searchString.ToLower())
+            //    );
+            //}
+
+            ViewBag.PageSize = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "5", Text = "5" },
+                new SelectListItem { Value = "10", Text = "10" },
+                new SelectListItem { Value = "15", Text = "15" },
+                new SelectListItem { Value = "20", Text = "20" }
+            };
+
+            ViewBag.SortOrder = sortOrder == "TrnsId" ? "" : "TrnsId";
+            ViewBag.CurrentSort = sortOrder;
+
+      
+
+            return View(jobLevelTypes.ToPagedList(pageIndex, defaultSize));
+        }
+        public IActionResult ApproveDeleteJurnal(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
+        {
+            int pageIndex = page ?? 1;
+            int defaultSize = pageSize ?? 100;
+            ViewBag.psize = defaultSize;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            //var jobLevelTypes = _contextAcc.SpdJurnalTemps
+            //.Where(dltjurnal =>
+            //dltjurnal.TrnsId.Contains("ACCIDR") &&
+            //dltjurnal.TrnsTypeNmbr.HasValue && dltjurnal.TrnsTypeNmbr.ToString().StartsWith("1") &&
+            //dltjurnal.SubTrnsNmbr.HasValue && dltjurnal.SubTrnsNmbr == 1 &&
+            //dltjurnal.TrnsId.Contains("ACCIDR") &&
+            //_contextAcc.SpdJurnalKonsolidasiMappings.Any(mapping => mapping.Status == 5 && mapping.NewTrnsId == dltjurnal.TrnsId)
+            //)
+            //.OrderBy(fpp => fpp.DateJurnal).ToList();
+
+            var jobLevelTypes = _contextAcc.SpdJurnalTemps
+            .Where(approveDeleteJurnal =>
+            approveDeleteJurnal.TrnsId.Contains("ACCIDR") &&
+            approveDeleteJurnal.TrnsTypeNmbr.HasValue && approveDeleteJurnal.TrnsTypeNmbr.ToString().StartsWith("111111") &&
+            approveDeleteJurnal.SubTrnsNmbr.HasValue && approveDeleteJurnal.SubTrnsNmbr == 1 &&
+            approveDeleteJurnal.TrnsId.Contains("ACCIDR") &&
+            _contextAcc.SpdJurnalKonsolidasiMappings.Any(mapping => mapping.Status == 5 && mapping.NewTrnsId == approveDeleteJurnal.TrnsId)
+            )
+            .OrderBy(fpp => fpp.DateJurnal).ToList();
+            //.Select(jt => new
+            //{
+            //    ID = jt.TrnsId,
+            //    Description = jt.Description,
+            //    JurnalDate = jt.DateJurnal.ToString("dd MMMM yyyy"),
+            //    Amount = (jt.Debet > 0) ? jt.Debet : jt.Credit,
+            //    Fund = jt.FundMappings.FirstOrDefault(mapping => mapping.Owner == jt.Inv)?.Descr,
+            //    Correction = (jt.Correction == true) ? "Correction" : string.Empty
+            //})
+            //.ToList();
+            ViewBag.curruentfilter = searchString;
+
+            //if (!string.IsNullOrEmpty(searchString))
+            //{
+            //    jobLevelTypes = jobLevelTypes.Where(jobLevelType =>
+            //        jobLevelType.TrnsId.ToString().ToLower().Contains(searchString.ToLower())
+            //    );
+            //}
+            return View(jobLevelTypes.ToPagedList(pageIndex, defaultSize));
+        }
+
+        public IActionResult DeletedJurnal(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize, DateTime? startDate, DateTime? endDate)
+        {
+            int pageIndex = page ?? 1;
+            int defaultSize = pageSize ?? 100;
+            ViewBag.psize = defaultSize;
+
+            var query = _contextAcc.SpdJurnalTemps.AsQueryable();
+           // var query = _contextAcc.SpdJurnalTemps.Where(jt => jt.TrnsId.Contains("ACCIDR"));
+           // var query = _contextAcc.SpdJurnalTemps
+           //.Where(delete =>
+           //    delete.TrnsId.Contains("ACCIDR") &&
+           //    delete.TrnsTypeNmbr.HasValue && delete.TrnsTypeNmbr.ToString().StartsWith("22222") &&
+           //    delete.SubTrnsNmbr.HasValue && delete.SubTrnsNmbr == 0 &&
+           //    delete.TrnsId.Contains("ACCIDR") &&
+           //    _contextAcc.SpdJurnalKonsolidasiMappings.Any(mapping => mapping.Status == 5 && mapping.NewTrnsId == delete.TrnsId)
+           //);
+
+            if (startDate != null && endDate != null)
+            {
+                query = query.Where(x => x.DateJurnal >= startDate && x.DateJurnal <= endDate);
+            }
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+            }
+
+            var model = query.ToPagedList(pageIndex, defaultSize);
+
+            ViewBag.curruentfilter = searchString;
+            ViewBag.StartDate = startDate;
+            ViewBag.EndDate = endDate;
+            ViewBag.SortOrder = sortOrder == "TrnsId" ? "" : "TrnsId";
+            ViewBag.CurrentSort = sortOrder;
+
+            return View(model);
+        }
+
+
+
+
+
     }
 }

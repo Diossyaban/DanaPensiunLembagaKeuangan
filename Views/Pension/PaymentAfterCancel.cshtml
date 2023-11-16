@@ -1,0 +1,29 @@
+﻿@model List<DPLK.Models.dto.PayMentAfterCancel>
+
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Company</th>
+            <th>Group Number</th>
+            <th>Paycenter Number</th>
+            <th>Effective Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.company_nm</td>
+                <td>@item.group_nmbr</td>
+                <td>@item.paycenter_nmbr</td>
+                <td>@item.efctv_dt.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>

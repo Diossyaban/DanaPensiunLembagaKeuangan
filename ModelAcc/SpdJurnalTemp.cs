@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DPLK.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -26,5 +27,9 @@ namespace DPLK.ModelAcc
         public DateTime DateJurnal { get; set; }
         public bool? Correction { get; set; }
 
+        //public virtual ICollection<SpdFundMapping> Fund { get; set; } //public string Fund { get; set; } menampilkan ini 
+        //public virtual ICollection<SpdJurnalKonsolidasiMapping> JurnalKonsolidasiMappings { get; set; }
     }
+
 }
+

@@ -270,7 +270,7 @@ namespace DPLK.Controllers.Pension
                 }
             }
         }
-   
+
         private List<SelectListItem> GetDDLParams(string ddlParamName)
         {
             var ddlParams = new List<SelectListItem>();
@@ -429,40 +429,37 @@ namespace DPLK.Controllers.Pension
         {
             Paycenter paycenter = new Paycenter();
 
-            try
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = new SqlCommand("sp_paycenter_r", connection))
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                using (SqlCommand command = new SqlCommand("sp_paycenter_r", connection))
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@client_nmbr", code);
+
+                await connection.OpenAsync();
+
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@client_nmbr", code);
-
-                    await connection.OpenAsync();
-
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    if (await reader.ReadAsync())
                     {
-                        if (await reader.ReadAsync())
+                        paycenter.ClientNmbr = reader.GetInt32(reader.GetOrdinal("client_nmbr"));
+                        paycenter.PaycenterNm = reader.GetString(reader.GetOrdinal("paycenter_nm"));
+                        paycenter.PaycenterNmbr = reader.GetInt32(reader.GetOrdinal("paycenter_nmbr"));
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("master_paycenter_nmbr")))
                         {
-                            paycenter.ClientNmbr = reader.GetInt32(reader.GetOrdinal("client_nmbr"));
-                            paycenter.PaycenterNm = reader.GetString(reader.GetOrdinal("paycenter_nm"));
-                            paycenter.PaycenterNmbr = reader.GetInt32(reader.GetOrdinal("paycenter_nmbr"));
+                            paycenter.MasterPaycenterNmbr = reader.GetInt32(reader.GetOrdinal("master_paycenter_nmbr"));
+                        }
 
-                            if (!reader.IsDBNull(reader.GetOrdinal("master_paycenter_nmbr")))
-                            {
-                                paycenter.MasterPaycenterNmbr = reader.GetInt32(reader.GetOrdinal("master_paycenter_nmbr"));
-                            }
-
-                            if (!reader.IsDBNull(reader.GetOrdinal("contact_person")))
-                            {
-                                paycenter.ContactPerson = reader.GetString(reader.GetOrdinal("contact_person"));
-                            }
+                        if (!reader.IsDBNull(reader.GetOrdinal("contact_person")))
+                        {
+                            paycenter.ContactPerson = reader.GetString(reader.GetOrdinal("contact_person"));
                         }
                     }
                 }
             }
-            catch (System.Exception ex)
-            {
-            }
+
+
 
             return paycenter;
         }
@@ -1590,24 +1587,39 @@ namespace DPLK.Controllers.Pension
         }
 
         [HttpPost]
-        public async Task<IActionResult> NewBussinesClientIndex(int id, [Bind("ClientNmbr,ClientNm,IdentityType,IdentityNmbr,Gender,BirthDt,MaritalStatusNmbr,MaidenNm,EmailAddr,DobPlace,ClientNmbrOpf,Path")] Client client)
+        public async Task<IActionResult> NewBussinesClientIndex([Bind("ClientNmbr,ClientNm,IdentityType,IdentityNmbr,Gender,BirthDt,MaritalStatusNmbr,MaidenNm,EmailAddr,DobPlace,ClientNmbrOpf,Path")] Client client)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    try
+                    var result = await _context.Database.ExecuteSqlInterpolatedAsync(
+                        $@"EXEC sp_client_i 
+                @clientnbr = {client.ClientNmbr}, 
+                @clientname = {client.ClientNm}, 
+                @identitytype = {client.IdentityType}, 
+                @identitynbr = {client.IdentityNmbr}, 
+                @gender = {client.Gender}, 
+                @birthdate = {client.BirthDt}, 
+                @dob_place = {client.DobPlace}, 
+                @maritalstatus = {client.MaritalStatusNmbr}, 
+                @maidenname = {client.MaidenNm}, 
+                @emailaddress = {client.EmailAddr}, 
+                @path = null")
+                        ;
+
+                    if (result != -1)
                     {
-                        await InsertClient(client);
-                        TempData["SuccessMessage"] = "Client information created successfully";
-                        return RedirectToAction("NewBussinesClientIndex");
+                        TempData["SuccessMessage"] = "Client information created or updated successfully";
+                        return RedirectToAction(nameof(Index));
                     }
-                    catch (System.Exception ex)
+                    else
                     {
-                        ModelState.AddModelError("", $"Error while executing database operation: {ex.Message}");
+                        ModelState.AddModelError("", "Error while executing stored procedure");
                     }
                 }
             }
+
             catch (System.Exception ex)
             {
                 ModelState.AddModelError("", $"Error while processing client information: {ex.Message}");
@@ -1621,6 +1633,7 @@ namespace DPLK.Controllers.Pension
             DDL();
             return View(client);
         }
+
 
         private void ExecuteUspSumInsured(int cerNmbr, DateTime efctvDt, float sumInsured, string beneTypeNm)
         {
@@ -1759,16 +1772,14 @@ namespace DPLK.Controllers.Pension
 
             try
             {
-                var payments = _context.TferPayInfos.FromSqlRaw("EXEC DGR_ON_SCR_EDITING_CLAIM").ToList();
-                //var payments = _context.TferPayInfos.ToList();
+                var payments = _context.EditingDtos.FromSqlRaw("EXEC DGR_ON_SCR_EDITING_CLAIM").ToList();
 
                 ViewBag.currentFilter = searchString;
 
-                // Filtering
                 if (!string.IsNullOrEmpty(searchString))
                 {
                     payments = payments.Where(payment =>
-                        payment.Note.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                        payment.company_nm.Contains(searchString, StringComparison.OrdinalIgnoreCase)
                     ).ToList();
                 }
 
@@ -1779,103 +1790,24 @@ namespace DPLK.Controllers.Pension
                 switch (sortOrder)
                 {
                     case "company_nm":
-                        payments = payments.OrderByDescending(p => p.BankNm).ToList();
+                        payments = payments.OrderByDescending(p => p.company_nm).ToList();
                         break;
                     default:
-                        payments = payments.OrderBy(p => p.BankNm).ToList();
+                        payments = payments.OrderBy(p => p.company_nm).ToList();
                         break;
                 }
 
-                return View(payments.ToPagedList(pageIndex, defaultSize));
+                var pagedList = payments.ToPagedList(pageIndex, defaultSize);
+                return View(pagedList);
             }
             catch (System.Exception ex)
             {
                 ViewBag.ErrorMessage = "Error: " + ex.Message;
-                return View(new List<TferPayInfo>());
+                return View(new List<EditingDto>().ToPagedList(pageIndex, defaultSize)); // Pass an empty list of EditingDto as IPagedList
             }
         }
 
-        /*        public IActionResult WithdrawEdit(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
-                {
-                    int pageIndex = page ?? 1;
-                    int defaultSize = pageSize ?? 5;
-                    ViewBag.psize = defaultSize;
 
-                    if (searchString != null)
-                    {
-                        page = 1;
-                    }
-                    else
-                    {
-                        searchString = currentFilter;
-                    }
-
-                    try
-                    {
-                        var payments = (from p in _context.TferPayInfos
-                                        join w in _context.TrnsHstWds on new { p.cer_nmbr, p.trns_seq_nmbr } equals new { w.cer_nmbr, w.trns_seq_nmbr }
-                                        join c in _context.Certificates on p.cer_nmbr equals c.cer_nmbr
-                                        join cl in _context.Clients on c.client_nmbr equals cl.client_nmbr
-                                        join g in _context.GroupInfos on c.group_nmbr equals g.group_nmbr
-                                        join co in _context.Companies on g.client_nmbr equals co.client_nmbr
-                                        join tt in _context.TferTypes on p.tfer_type_nmbr equals tt.tfer_type_nmbr
-                                        where !(_context.ClaimRegisterTracks
-                                                .Where(track => track.track_type_nmbr > 9)
-                                                .Select(track => track.cr_id)
-                                                .Contains(dbo.fnclaimregissearch(p.note))
-                                              )
-                                        orderby co.company_nm
-                                        select new
-                                        {
-                                            register = dbo.fnclaimregissearch(p.note),
-                                            p.tfer_type_nmbr,
-                                            p.trns_seq_nmbr,
-                                            p.cer_nmbr,
-                                            cl.client_nm,
-                                            co.company_nm,
-                                            tt.tfer_type_nm,
-                                            p.tfer_amt,
-                                            p.bank_central_nm,
-                                            p.bank_addr,
-                                            p.acct_nmbr,
-                                            p.acct_nm,
-                                            kode_bank = p.bank_bi_nmbr,
-                                            BATCH_ID = w.BATCH_ID
-                                        }).ToList();
-
-                        ViewBag.currentFilter = searchString;
-
-                        // Filtering
-                        if (!string.IsNullOrEmpty(searchString))
-                        {
-                            payments = payments.Where(payment =>
-                                payment.note.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                            ).ToList();
-                        }
-
-                        ViewBag.PageSize = new List<int> { 5, 10, 15, 20 };
-                        ViewBag.SortOrder = string.IsNullOrEmpty(sortOrder) ? "company_nm" : "";
-                        ViewBag.CurrentSort = sortOrder;
-
-                        switch (sortOrder)
-                        {
-                            case "company_nm":
-                                payments = payments.OrderByDescending(p => p.company_nm).ToList();
-                                break;
-                            default:
-                                payments = payments.OrderBy(p => p.company_nm).ToList();
-                                break;
-                        }
-
-                        return View(payments.ToPagedList(pageIndex, defaultSize));
-                    }
-                    catch (System.Exception ex)
-                    {
-                        ViewBag.ErrorMessage = "Error: " + ex.Message;
-                        return View(new List<TferPayInfo>());
-                    }
-                }
-        */
         [HttpGet]
         public IActionResult WithdrawEditing()
         {
@@ -6570,7 +6502,7 @@ namespace DPLK.Controllers.Pension
                 searchString = currentFilter;
             }
 
-            var payments = _context.PaymentForApprovals.FromSqlRaw("EXEC sp_get_payment_forApproval").ToList();
+            var payments = _context.GetPaymentForApprovals.FromSqlRaw("EXEC sp_get_payment_forApproval").ToList();
 
             ViewBag.currentFilter = searchString;
 
@@ -6598,10 +6530,38 @@ namespace DPLK.Controllers.Pension
             return View(payments.ToPagedList(pageIndex, defaultSize));
         }
 
-        public IActionResult PayoutSuspense(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
+        public async Task<IActionResult> PayoutSuspense(string searchString, string sortOrder, int? page, int pageSize = 5)
         {
-            int pageIndex = page ?? 5;
-            int defaultSize = pageSize ?? 5;
+            int pageIndex = page ?? 1;
+            ViewBag.psize = pageSize;
+
+            var payments = await _context.SuspenseApprovedDtos.FromSqlRaw("EXEC GRID_SUSPNREST_ON_SCR_SUSPENSEAPPROVED").ToListAsync();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                payments = payments.Where(payment => payment.suspn_nmbr.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            ViewBag.currentFilter = searchString;
+
+            ViewBag.PageSize = new List<int> { 5, 10, 15, 20 };
+            ViewBag.SortOrder = string.IsNullOrEmpty(sortOrder) ? "received_dt" : "";
+            ViewBag.CurrentSort = sortOrder;
+
+            payments = sortOrder switch
+            {
+                "group_nmbr" => payments.OrderByDescending(p => p.suspn_nmbr).ToList(),
+                "received_dt" => payments.OrderByDescending(p => p.RECEIVED_DATE).ToList(),
+                _ => payments.OrderBy(p => p.RECEIVED_DATE).ToList(),
+            };
+
+            var pagedList = payments.ToPagedList(pageIndex, pageSize);
+            return View(pagedList);
+        }
+        public IActionResult ProcessClaimRequest(string searchString, string currentFilter, string sortOrder, string transType, string companyName, int? page, int? pageSize)
+        {
+            int pageIndex = page ?? 1;
+            int defaultSize = pageSize ?? 1000;
             ViewBag.psize = defaultSize;
 
             if (searchString != null)
@@ -6613,46 +6573,57 @@ namespace DPLK.Controllers.Pension
                 searchString = currentFilter;
             }
 
-            var payments = _context.SuspenseRecords.FromSqlRaw("EXEC GRID_SUSPNREST_ON_SCR_SUSPENSEAPPROVED").ToList();
+            var claim = _context.VClaimRequest2s.AsQueryable();
 
             ViewBag.currentFilter = searchString;
+            ViewBag.SelectedTransType = transType;
+            ViewBag.SelectedCompanyName = companyName;
+            if (transType != "ALL" && companyName != "ALL")
+            {
+                claim = claim.Where(payment =>
+                    payment.TransType == transType &&
+                    payment.CompanyName == companyName
+                );
+            }
+            else if (companyName != "ALL")
+            {
+                claim = claim.Where(payment =>
+                    payment.CompanyName == companyName
+                );
+            }
+            else if (transType != "ALL")
+            {
+                claim = claim.Where(payment =>
+                    payment.TransType == transType
+                );
+            }
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                payments = payments.Where(payment =>
-                    payment.company_nm.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                ).ToList();
+                claim = claim.Where(payment =>
+                    payment.RegId.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                );
             }
 
-            ViewBag.PageSize = new List<int> { 5, 10, 15, 20 };
-            ViewBag.SortOrder = string.IsNullOrEmpty(sortOrder) ? "company_nm" : "";
+            ViewBag.SortOrder = string.IsNullOrEmpty(sortOrder) ? "RegId" : "";
             ViewBag.CurrentSort = sortOrder;
 
             switch (sortOrder)
             {
-                case "company_nm":
-                    payments = payments.OrderByDescending(p => p.company_nm).ToList();
+                case "RegId":
+                    claim = claim.OrderByDescending(p => p.RegId);
                     break;
                 default:
-                    payments = payments.OrderBy(p => p.company_nm).ToList();
+                    claim = claim.OrderBy(p => p.RegId);
                     break;
             }
 
-            return View(payments.ToPagedList(pageIndex, defaultSize));
-        }
-        [HttpGet]
-        public IActionResult ProcessClaimRequest()
-        {
-            DDL();
-            return View();
+            ViewBag.TransTypes = GetTransactionTypes();
+            ViewBag.CompanyNames = GetCompanyNamesFromDatabase();
+
+            return View(claim.ToPagedList(pageIndex, defaultSize));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ProcessClaimRequest(VClaimRequest2 claimRequest)
-        {
-            DDL();
-            return View();
-        }
         private List<SelectListItem> GetCompanyNamesFromDatabase()
         {
             List<SelectListItem> companyNames = new List<SelectListItem>();
@@ -6674,6 +6645,7 @@ namespace DPLK.Controllers.Pension
 
             return companyNames;
         }
+
         private List<SelectListItem> GetTransactionTypes()
         {
             List<SelectListItem> transactionTypes = new List<SelectListItem>();
@@ -6738,7 +6710,8 @@ namespace DPLK.Controllers.Pension
         [HttpPost]
         public IActionResult EntryNota(TNotaHeader nota)
         {
-
+            string hostname = "Dios";
+            string userID = "diosudev";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -6766,10 +6739,8 @@ namespace DPLK.Controllers.Pension
                     command.Parameters.AddWithValue("@No_Rekening", nota.NoRekening);
                     command.Parameters.AddWithValue("@Atas_Nama", nota.AtasNama);
                     command.Parameters.AddWithValue("@Penyetuju", nota.Penyetuju);
-                    command.Parameters.AddWithValue("@hostname", "your_hostname");
-                    command.Parameters.AddWithValue("@UserID", "your_user_id");
-
-                    command.ExecuteNonQuery();
+                    command.Parameters.AddWithValue("@hostname", hostname);
+                    command.Parameters.AddWithValue("@UserID", userID);
                 }
             }
 
@@ -6863,22 +6834,67 @@ namespace DPLK.Controllers.Pension
                     return View(suratKeluarList);
                 }
         */
-        public async Task<JsonResult> KartuIndividu(string name)
-        {
-            var kartuIndivu = await _context.GetKartuIndividus
-                .FromSqlRaw("SELECT DISTINCT sk.no_surat, sk.ditujukan, sk.tgl_surat, cl.client_nm, pk.cer_nmbr " +
-                            "FROM svrapp.dbhr.dbo.t_admsrt_surat_keluar sk " +
-                            "INNER JOIN pengantar_kartu pk ON pk.no_surat = sk.no_surat " +
-                            "INNER JOIN certificate cer ON cer.cer_nmbr = pk.cer_nmbr " +
-                            "INNER JOIN client cl ON cl.client_nmbr = cer.client_nmbr " +
-                            "WHERE cer.group_nmbr IN (10078, 10341, 10343, 10344, 10345, 10346) " +
-                            "AND status_surat = 0 " +
-                            "ORDER BY sk.tgl_surat DESC")
-                .ToListAsync();
 
-            return Json(kartuIndivu);
+        public IActionResult PaymentAfterCancel()
+        {
+            var query = _context.payMentAfterCancels.FromSqlRaw(@"
+                        SELECT company_nm, b.group_nmbr AS group_nmbr, paycenter_nmbr, bill_efctv_dt AS efctv_dt,
+                        bill_seq_nmbr AS seq_nmbr, 0 AS type, 'FEE' AS type_description, bill_amt as amt,
+                        (SELECT cycle_dt FROM cycle) as approval_dt 
+                        FROM bill b 
+                        INNER JOIN group_info gi ON b.group_nmbr = gi.group_nmbr
+                        INNER JOIN company co ON gi.client_nmbr = co.client_nmbr
+                        WHERE paid_dt IS NULL AND paid_amt = 0 
+                        AND reversal_dt IS NOT NULL AND incl_contrib_flg = 0
+                        UNION
+                        SELECT company_nm, cr.group_nmbr, paycenter_nmbr, cntrb_efctv_Dt AS efctv_dt,
+                        cntrb_seq_nmbr AS seq_nmbr, 1 AS type, 'CONTRIBUTION' AS type_description, cntrb_amt AS amt,
+                        (SELECT cycle_dt FROM cycle) as approval_dt
+                        FROM contrib_req cr 
+                        INNER JOIN group_info gi ON cr.group_nmbr = gi.group_nmbr
+                        INNER JOIN company co ON gi.client_nmbr = co.client_nmbr
+                        WHERE paid_dt IS NULL AND paid_amt = 0 
+                        AND reversal_dt IS NOT NULL
+                        UNION
+                        SELECT company_nm, sa.group_nmbr, paycenter_nmbr, sa.create_dt as efctv_dt,
+                        seq_nmbr, 2 AS type, 'ROLLOVER' AS type_description, paid_amt AS amt,
+                        (SELECT cycle_dt FROM cycle) as approval_dt 
+                        FROM sporadic_pmt sa 
+                        INNER JOIN group_info gi ON sa.group_nmbr = gi.group_nmbr
+                        INNER JOIN company co ON gi.client_nmbr = co.client_nmbr 
+                        WHERE paid_dt IS NULL AND paid_amt = 0 
+                        AND reversal_dt IS NOT NULL
+                        ORDER BY group_nmbr, type, efctv_dt
+                    ");
+
+            var result = query.ToList();
+            return Json(result);
         }
 
+
+
+
+        //public IActionResult KartuIndivu()
+        //{
+        //    var query = from sk in _context.TAdmsrtSuratKeluar
+        //                join pk in _context.PengantarKartus on sk.NoSurat equals pk.NoSurat
+        //                join cer in _context.Certificates on pk.CerNmbr equals cer.CerNmbr
+        //                join cl in _context.Clients on cer.ClientNmbr equals cl.ClientNmbr
+        //                where cer.GroupNmbr.In(10078, 10341, 10343, 10344, 10345, 10346)
+        //                where sk.StatusSurat == 0
+        //                orderby sk.TglSurat descending
+        //                select new
+        //                {
+        //                    sk.NoSurat,
+        //                    sk.Ditujukan,
+        //                    sk.TglSurat,
+        //                    cl.ClientNm,
+        //                    pk.CerNmbr
+        //                };
+
+        //    var result = query.ToList();
+        //    return Json(result);
+        //}
         public IActionResult JoinAccount()
         {
             return View();
@@ -7022,122 +7038,157 @@ namespace DPLK.Controllers.Pension
             return View();
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> UploadParticipant(IFormFile file)
+        //{
+        //    try
+        //    {
+        //        if (file == null)
+        //        {
+        //            ViewBag.Message = "File is empty or not provided. No data to process.";
+        //            return View();
+        //        }
+
+        //        if (file.Length == 0)
+        //        {
+        //            ViewBag.Message = "File is empty. No data to process.";
+        //            return View();
+        //        }
+
+        //        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+        //        var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", fileName);
+
+        //        using (var stream = new FileStream(filePath, FileMode.Create))
+        //        {
+        //            await file.CopyToAsync(stream);
+        //        }
+
+        //        using (var package = new ExcelPackage(new FileInfo(filePath)))
+        //        {
+        //            var worksheet = package.Workbook.Worksheets[0];
+        //            int rowCount = worksheet.Dimension.Rows;
+
+        //            for (int row = 2; row <= rowCount; row++)
+        //            {
+        //                var participant = new UploadNewParticipant
+        //                {
+        //                    GroupNumber = int.Parse(worksheet.Cells[row, 1].Value.ToString()),
+        //                    Gender = worksheet.Cells[row, 2].Value.ToString(),
+        //                    Nip = worksheet.Cells[row, 3].Value.ToString(),
+        //                    ClientName = worksheet.Cells[row, 4].Value.ToString(),
+        //                    MaidenName = worksheet.Cells[row, 5].Value.ToString(),
+        //                    Dob = DateTime.Parse(worksheet.Cells[row, 6].Value.ToString()),
+        //                    DobLocation = worksheet.Cells[row, 7].Value.ToString(),
+        //                    CoverageDate = DateTime.Parse(worksheet.Cells[row, 8].Value.ToString()),
+        //                    EmploymentDate = DateTime.Parse(worksheet.Cells[row, 9].Value.ToString()),
+        //                    EmploymentLevel = int.Parse(worksheet.Cells[row, 10].Value.ToString()),
+
+        //                    RetirementAge = int.Parse(worksheet.Cells[row, 11].Value.ToString()),
+        //                    IdentityType = int.Parse(worksheet.Cells[row, 12].Value.ToString()),
+        //                    IdentityNumber = worksheet.Cells[row, 13].Value.ToString(),
+        //                    MaritalStatus = int.Parse(worksheet.Cells[row, 14].Value.ToString()),
+        //                    TaxIdNumber = worksheet.Cells[row, 15].Value.ToString(),
+        //                    Citizenship = int.Parse(worksheet.Cells[row, 16].Value.ToString()),
+        //                    ApplicationReceivedDate = DateTime.Parse(worksheet.Cells[row, 17].Value.ToString()),
+        //                    CompletedFlag = int.Parse(worksheet.Cells[row, 18].Value.ToString()),
+        //                    JobType = int.Parse(worksheet.Cells[row, 19].Value.ToString()),
+        //                    FundSource = int.Parse(worksheet.Cells[row, 20].Value.ToString()),
+        //                    AddressType = int.Parse(worksheet.Cells[row, 21].Value.ToString()),
+        //                    Address1 = worksheet.Cells[row, 22].Value.ToString(),
+        //                    Address2 = worksheet.Cells[row, 23].Value.ToString(),
+        //                    Address3 = worksheet.Cells[row, 24].Value.ToString(),
+        //                    City = worksheet.Cells[row, 25].Value.ToString(),
+        //                    Province = int.Parse(worksheet.Cells[row, 26].Value.ToString()),
+        //                    PostalCode = worksheet.Cells[row, 27].Value.ToString(),
+        //                    HomePhone = worksheet.Cells[row, 28].Value.ToString(),
+        //                    MobilePhone = worksheet.Cells[row, 29].Value.ToString(),
+        //                    Fax = worksheet.Cells[row, 30].Value.ToString(),
+        //                    OfficePhone = worksheet.Cells[row, 31].Value.ToString(),
+        //                    Paycenter = int.Parse(worksheet.Cells[row, 32].Value.ToString()),
+        //                    SalaryAmount = double.Parse(worksheet.Cells[row, 33].Value.ToString()),
+        //                    BeneTypeNmbr = int.Parse(worksheet.Cells[row, 34].Value.ToString()),
+        //                    SumInsured = double.Parse(worksheet.Cells[row, 35].Value.ToString()),
+        //                    BeneficiaryName1 = worksheet.Cells[row, 36].Value.ToString(),
+        //                    BeneficiaryDob1 = DateTime.Parse(worksheet.Cells[row, 37].Value.ToString()),
+        //                    BeneficiaryRelation1 = int.Parse(worksheet.Cells[row, 38].Value.ToString()),
+        //                    BeneficiaryName2 = worksheet.Cells[row, 39].Value.ToString(),
+        //                    BeneficiaryDob2 = DateTime.Parse(worksheet.Cells[row, 40].Value.ToString()),
+        //                    BeneficiaryRelation2 = int.Parse(worksheet.Cells[row, 41].Value.ToString()),
+        //                    BeneficiaryName3 = worksheet.Cells[row, 42].Value.ToString(),
+        //                    BeneficiaryDob3 = DateTime.Parse(worksheet.Cells[row, 43].Value.ToString()),
+        //                    BeneficiaryRelation3 = int.Parse(worksheet.Cells[row, 44].Value.ToString()),
+        //                    BeneficiaryName4 = worksheet.Cells[row, 45].Value.ToString(),
+        //                    BeneficiaryDob4 = DateTime.Parse(worksheet.Cells[row, 46].Value.ToString()),
+        //                    BeneficiaryRelation4 = int.Parse(worksheet.Cells[row, 47].Value.ToString()),
+        //                    BeneficiaryName5 = worksheet.Cells[row, 48].Value.ToString(),
+        //                    BeneficiaryDob5 = DateTime.Parse(worksheet.Cells[row, 49].Value.ToString()),
+        //                    BeneficiaryRelation5 = int.Parse(worksheet.Cells[row, 50].Value.ToString()),
+        //                    ContributionRateEr = double.Parse(worksheet.Cells[row, 51].Value.ToString()),
+        //                    ContributionAmountEr = double.Parse(worksheet.Cells[row, 52].Value.ToString()),
+        //                    ContributionRateMbr = double.Parse(worksheet.Cells[row, 53].Value.ToString()),
+        //                    ContributionAmountMbr = double.Parse(worksheet.Cells[row, 54].Value.ToString()),
+        //                    ContributionRateTu = double.Parse(worksheet.Cells[row, 55].Value.ToString()),
+        //                    ContributionAmountTu = double.Parse(worksheet.Cells[row, 56].Value.ToString()),
+        //                    ContributionRateFt = double.Parse(worksheet.Cells[row, 57].Value.ToString()),
+        //                    ContributionAmountFt = double.Parse(worksheet.Cells[row, 58].Value.ToString()),
+        //                    InvestmentType1 = int.Parse(worksheet.Cells[row, 59].Value.ToString()),
+        //                    InvestmentRate1 = double.Parse(worksheet.Cells[row, 60].Value.ToString()),
+        //                    InvestmentType2 = int.Parse(worksheet.Cells[row, 61].Value.ToString()),
+        //                    InvestmentRate2 = double.Parse(worksheet.Cells[row, 62].Value.ToString()),
+        //                    InvestmentType3 = int.Parse(worksheet.Cells[row, 63].Value.ToString()),
+        //                    InvestmentRate3 = double.Parse(worksheet.Cells[row, 64].Value.ToString()),
+        //                    InvestmentType4 = int.Parse(worksheet.Cells[row, 65].Value.ToString()),
+        //                    InvestmentRate4 = double.Parse(worksheet.Cells[row, 66].Value.ToString()),
+        //                    InvestmentType5 = int.Parse(worksheet.Cells[row, 67].Value.ToString()),
+        //                    InvestmentRate5 = double.Parse(worksheet.Cells[row, 68].Value.ToString()),
+        //                    Hostname = worksheet.Cells[row, 69].Value.ToString(),
+        //                    OldCerNmbr = worksheet.Cells[row, 70].Value.ToString(),
+        //                    Branch = worksheet.Cells[row, 71].Value.ToString(),
+        //                    SalesName = worksheet.Cells[row, 72].Value.ToString(),
+        //                    Mail = worksheet.Cells[row, 73].Value.ToString()
+        //                };
+
+
+        //                _context.UploadNewParticipants.Add(participant);
+        //            }
+
+        //            await _context.SaveChangesAsync();
+        //        }
+
+        //        ViewBag.Message = "File uploaded and data processed successfully.";
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        ModelState.AddModelError(string.Empty, $"Error: {ex.Message}");
+        //    }
+
+        //    return View();
+        //}
+
+
+
+       
+
         [HttpPost]
-        public async Task<IActionResult> UploadParticipant(IFormFile file)
+        public IActionResult UploadParticipant(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-            {
-                ModelState.AddModelError(string.Empty, "Please select a file to upload.");
-                return View();
-            }
-
-            if (Path.GetExtension(file.FileName).ToLower() != ".xlsx")
-            {
-                ModelState.AddModelError(string.Empty, "Please upload a valid Excel file (.xlsx).");
-                return View();
-            }
-
             try
             {
+                if (file == null || file.Length == 0)
+                {
+                    ViewBag.Message = "File is empty or not provided. No data to process.";
+                    return View();
+                }
+
                 var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                 var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await file.CopyToAsync(stream);
+                    file.CopyTo(stream);
                 }
 
-                // Proses file Excel dan simpan data ke database
-                using (var package = new ExcelPackage(new FileInfo(filePath)))
-                {
-                    var worksheet = package.Workbook.Worksheets[0];
-                    int rowCount = worksheet.Dimension.Rows;
-
-                    for (int row = 2; row <= rowCount; row++)
-                    {
-                        var participant = new UploadNewParticipant
-                        {
-                            GroupNumber = int.Parse(worksheet.Cells[row, 1].Value.ToString()),
-                            Gender = worksheet.Cells[row, 2].Value.ToString(),
-                            Nip = worksheet.Cells[row, 3].Value.ToString(),
-                            ClientName = worksheet.Cells[row, 4].Value.ToString(),
-                            MaidenName = worksheet.Cells[row, 5].Value.ToString(),
-                            Dob = DateTime.Parse(worksheet.Cells[row, 6].Value.ToString()),
-                            DobLocation = worksheet.Cells[row, 7].Value.ToString(),
-                            CoverageDate = DateTime.Parse(worksheet.Cells[row, 8].Value.ToString()),
-                            EmploymentDate = DateTime.Parse(worksheet.Cells[row, 9].Value.ToString()),
-                            EmploymentLevel = int.Parse(worksheet.Cells[row, 10].Value.ToString()),
-                            RetirementAge = int.Parse(worksheet.Cells[row, 11].Value.ToString()),
-                            IdentityType = int.Parse(worksheet.Cells[row, 12].Value.ToString()),
-                            IdentityNumber = worksheet.Cells[row, 13].Value.ToString(),
-                            MaritalStatus = int.Parse(worksheet.Cells[row, 14].Value.ToString()),
-                            TaxIdNumber = worksheet.Cells[row, 15].Value.ToString(),
-                            Citizenship = int.Parse(worksheet.Cells[row, 16].Value.ToString()),
-                            ApplicationReceivedDate = DateTime.Parse(worksheet.Cells[row, 17].Value.ToString()),
-                            CompletedFlag = int.Parse(worksheet.Cells[row, 18].Value.ToString()),
-                            JobType = int.Parse(worksheet.Cells[row, 19].Value.ToString()),
-                            FundSource = int.Parse(worksheet.Cells[row, 20].Value.ToString()),
-                            AddressType = int.Parse(worksheet.Cells[row, 21].Value.ToString()),
-                            Address1 = worksheet.Cells[row, 22].Value.ToString(),
-                            Address2 = worksheet.Cells[row, 23].Value.ToString(),
-                            Address3 = worksheet.Cells[row, 24].Value.ToString(),
-                            City = worksheet.Cells[row, 25].Value.ToString(),
-                            Province = int.Parse(worksheet.Cells[row, 26].Value.ToString()),
-                            PostalCode = worksheet.Cells[row, 27].Value.ToString(),
-                            HomePhone = worksheet.Cells[row, 28].Value.ToString(),
-                            MobilePhone = worksheet.Cells[row, 29].Value.ToString(),
-                            Fax = worksheet.Cells[row, 30].Value.ToString(),
-                            OfficePhone = worksheet.Cells[row, 31].Value.ToString(),
-                            Paycenter = int.Parse(worksheet.Cells[row, 32].Value.ToString()),
-                            SalaryAmount = double.Parse(worksheet.Cells[row, 33].Value.ToString()),
-                            BeneTypeNmbr = int.Parse(worksheet.Cells[row, 34].Value.ToString()),
-                            SumInsured = double.Parse(worksheet.Cells[row, 35].Value.ToString()),
-                            BeneficiaryName1 = worksheet.Cells[row, 36].Value.ToString(),
-                            BeneficiaryDob1 = DateTime.Parse(worksheet.Cells[row, 37].Value.ToString()),
-                            BeneficiaryRelation1 = int.Parse(worksheet.Cells[row, 38].Value.ToString()),
-                            BeneficiaryName2 = worksheet.Cells[row, 39].Value.ToString(),
-                            BeneficiaryDob2 = DateTime.Parse(worksheet.Cells[row, 40].Value.ToString()),
-                            BeneficiaryRelation2 = int.Parse(worksheet.Cells[row, 41].Value.ToString()),
-                            BeneficiaryName3 = worksheet.Cells[row, 42].Value.ToString(),
-                            BeneficiaryDob3 = DateTime.Parse(worksheet.Cells[row, 43].Value.ToString()),
-                            BeneficiaryRelation3 = int.Parse(worksheet.Cells[row, 44].Value.ToString()),
-                            BeneficiaryName4 = worksheet.Cells[row, 45].Value.ToString(),
-                            BeneficiaryDob4 = DateTime.Parse(worksheet.Cells[row, 46].Value.ToString()),
-                            BeneficiaryRelation4 = int.Parse(worksheet.Cells[row, 47].Value.ToString()),
-                            BeneficiaryName5 = worksheet.Cells[row, 48].Value.ToString(),
-                            BeneficiaryDob5 = DateTime.Parse(worksheet.Cells[row, 49].Value.ToString()),
-                            BeneficiaryRelation5 = int.Parse(worksheet.Cells[row, 50].Value.ToString()),
-                            ContributionRateEr = double.Parse(worksheet.Cells[row, 51].Value.ToString()),
-                            ContributionAmountEr = double.Parse(worksheet.Cells[row, 52].Value.ToString()),
-                            ContributionRateMbr = double.Parse(worksheet.Cells[row, 53].Value.ToString()),
-                            ContributionAmountMbr = double.Parse(worksheet.Cells[row, 54].Value.ToString()),
-                            ContributionRateTu = double.Parse(worksheet.Cells[row, 55].Value.ToString()),
-                            ContributionAmountTu = double.Parse(worksheet.Cells[row, 56].Value.ToString()),
-                            ContributionRateFt = double.Parse(worksheet.Cells[row, 57].Value.ToString()),
-                            ContributionAmountFt = double.Parse(worksheet.Cells[row, 58].Value.ToString()),
-                            InvestmentType1 = int.Parse(worksheet.Cells[row, 59].Value.ToString()),
-                            InvestmentRate1 = double.Parse(worksheet.Cells[row, 60].Value.ToString()),
-                            InvestmentType2 = int.Parse(worksheet.Cells[row, 61].Value.ToString()),
-                            InvestmentRate2 = double.Parse(worksheet.Cells[row, 62].Value.ToString()),
-                            InvestmentType3 = int.Parse(worksheet.Cells[row, 63].Value.ToString()),
-                            InvestmentRate3 = double.Parse(worksheet.Cells[row, 64].Value.ToString()),
-                            InvestmentType4 = int.Parse(worksheet.Cells[row, 65].Value.ToString()),
-                            InvestmentRate4 = double.Parse(worksheet.Cells[row, 66].Value.ToString()),
-                            InvestmentType5 = int.Parse(worksheet.Cells[row, 67].Value.ToString()),
-                            InvestmentRate5 = double.Parse(worksheet.Cells[row, 68].Value.ToString()),
-                            Hostname = worksheet.Cells[row, 69].Value.ToString(),
-                            OldCerNmbr = worksheet.Cells[row, 70].Value.ToString(),
-                            Branch = worksheet.Cells[row, 71].Value.ToString(),
-                            SalesName = worksheet.Cells[row, 72].Value.ToString(),
-                            Mail = worksheet.Cells[row, 73].Value.ToString()
-                        };
-
-
-                        _context.UploadNewParticipants.Add(participant);
-                    }
-
-                    await _context.SaveChangesAsync();
-                }
+                ProcessExcelFile(filePath);
 
                 ViewBag.Message = "File uploaded and data processed successfully.";
             }
@@ -7149,6 +7200,104 @@ namespace DPLK.Controllers.Pension
             return View();
         }
 
+        private void ProcessExcelFile(string filePath)
+        {
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                var worksheet = package.Workbook.Worksheets[0];
+                int rowCount = worksheet.Dimension.Rows;
+
+                for (int row = 2; row <= rowCount; row++)
+                {
+                    var participant = CreateParticipantFromExcelRow(worksheet, row);
+                    _context.UploadNewParticipants.Add(participant);
+                }
+
+                _context.SaveChanges();
+            }
+
+        }
+        private UploadNewParticipant CreateParticipantFromExcelRow(ExcelWorksheet worksheet, int row)
+        {
+            var participant = new UploadNewParticipant
+            {
+                GroupNumber = int.Parse(worksheet.Cells[row, 1].Value.ToString()),
+                Gender = worksheet.Cells[row, 2].Value.ToString(),
+                Nip = worksheet.Cells[row, 3].Value.ToString(),
+                ClientName = worksheet.Cells[row, 4].Value.ToString(),
+                MaidenName = worksheet.Cells[row, 5].Value.ToString(),
+                Dob = DateTime.Parse(worksheet.Cells[row, 6].Value.ToString()),
+                DobLocation = worksheet.Cells[row, 7].Value.ToString(),
+                CoverageDate = DateTime.Parse(worksheet.Cells[row, 8].Value.ToString()),
+                EmploymentDate = DateTime.Parse(worksheet.Cells[row, 9].Value.ToString()),
+                EmploymentLevel = int.Parse(worksheet.Cells[row, 10].Value.ToString()),
+                RetirementAge = int.Parse(worksheet.Cells[row, 11].Value.ToString()),
+                IdentityType = int.Parse(worksheet.Cells[row, 12].Value.ToString()),
+                IdentityNumber = worksheet.Cells[row, 13].Value.ToString(),
+                MaritalStatus = int.Parse(worksheet.Cells[row, 14].Value.ToString()),
+                TaxIdNumber = worksheet.Cells[row, 15].Value.ToString(),
+                Citizenship = int.Parse(worksheet.Cells[row, 16].Value.ToString()),
+                ApplicationReceivedDate = DateTime.Parse(worksheet.Cells[row, 17].Value.ToString()),
+                CompletedFlag = int.Parse(worksheet.Cells[row, 18].Value.ToString()),
+                JobType = int.Parse(worksheet.Cells[row, 19].Value.ToString()),
+                FundSource = int.Parse(worksheet.Cells[row, 20].Value.ToString()),
+                AddressType = int.Parse(worksheet.Cells[row, 21].Value.ToString()),
+                Address1 = worksheet.Cells[row, 22].Value.ToString(),
+                Address2 = worksheet.Cells[row, 23].Value.ToString(),
+                Address3 = worksheet.Cells[row, 24].Value.ToString(),
+                City = worksheet.Cells[row, 25].Value.ToString(),
+                Province = int.Parse(worksheet.Cells[row, 26].Value.ToString()),
+                PostalCode = worksheet.Cells[row, 27].Value.ToString(),
+                HomePhone = worksheet.Cells[row, 28].Value.ToString(),
+                MobilePhone = worksheet.Cells[row, 29].Value.ToString(),
+                Fax = worksheet.Cells[row, 30].Value.ToString(),
+                OfficePhone = worksheet.Cells[row, 31].Value.ToString(),
+                Paycenter = int.Parse(worksheet.Cells[row, 32].Value.ToString()),
+                SalaryAmount = double.Parse(worksheet.Cells[row, 33].Value.ToString()),
+                BeneTypeNmbr = int.Parse(worksheet.Cells[row, 34].Value.ToString()),
+                SumInsured = double.Parse(worksheet.Cells[row, 35].Value.ToString()),
+                BeneficiaryName1 = worksheet.Cells[row, 36].Value.ToString(),
+                BeneficiaryDob1 = DateTime.Parse(worksheet.Cells[row, 37].Value.ToString()),
+                BeneficiaryRelation1 = int.Parse(worksheet.Cells[row, 38].Value.ToString()),
+                BeneficiaryName2 = worksheet.Cells[row, 39].Value.ToString(),
+                BeneficiaryDob2 = DateTime.Parse(worksheet.Cells[row, 40].Value.ToString()),
+                BeneficiaryRelation2 = int.Parse(worksheet.Cells[row, 41].Value.ToString()),
+                BeneficiaryName3 = worksheet.Cells[row, 42].Value.ToString(),
+                BeneficiaryDob3 = DateTime.Parse(worksheet.Cells[row, 43].Value.ToString()),
+                BeneficiaryRelation3 = int.Parse(worksheet.Cells[row, 44].Value.ToString()),
+                BeneficiaryName4 = worksheet.Cells[row, 45].Value.ToString(),
+                BeneficiaryDob4 = DateTime.Parse(worksheet.Cells[row, 46].Value.ToString()),
+                BeneficiaryRelation4 = int.Parse(worksheet.Cells[row, 47].Value.ToString()),
+                BeneficiaryName5 = worksheet.Cells[row, 48].Value.ToString(),
+                BeneficiaryDob5 = DateTime.Parse(worksheet.Cells[row, 49].Value.ToString()),
+                BeneficiaryRelation5 = int.Parse(worksheet.Cells[row, 50].Value.ToString()),
+                ContributionRateEr = double.Parse(worksheet.Cells[row, 51].Value.ToString()),
+                ContributionAmountEr = double.Parse(worksheet.Cells[row, 52].Value.ToString()),
+                ContributionRateMbr = double.Parse(worksheet.Cells[row, 53].Value.ToString()),
+                ContributionAmountMbr = double.Parse(worksheet.Cells[row, 54].Value.ToString()),
+                ContributionRateTu = double.Parse(worksheet.Cells[row, 55].Value.ToString()),
+                ContributionAmountTu = double.Parse(worksheet.Cells[row, 56].Value.ToString()),
+                ContributionRateFt = double.Parse(worksheet.Cells[row, 57].Value.ToString()),
+                ContributionAmountFt = double.Parse(worksheet.Cells[row, 58].Value.ToString()),
+                InvestmentType1 = int.Parse(worksheet.Cells[row, 59].Value.ToString()),
+                InvestmentRate1 = double.Parse(worksheet.Cells[row, 60].Value.ToString()),
+                InvestmentType2 = int.Parse(worksheet.Cells[row, 61].Value.ToString()),
+                InvestmentRate2 = double.Parse(worksheet.Cells[row, 62].Value.ToString()),
+                InvestmentType3 = int.Parse(worksheet.Cells[row, 63].Value.ToString()),
+                InvestmentRate3 = double.Parse(worksheet.Cells[row, 64].Value.ToString()),
+                InvestmentType4 = int.Parse(worksheet.Cells[row, 65].Value.ToString()),
+                InvestmentRate4 = double.Parse(worksheet.Cells[row, 66].Value.ToString()),
+                InvestmentType5 = int.Parse(worksheet.Cells[row, 67].Value.ToString()),
+                InvestmentRate5 = double.Parse(worksheet.Cells[row, 68].Value.ToString()),
+                Hostname = worksheet.Cells[row, 69].Value.ToString(),
+                OldCerNmbr = worksheet.Cells[row, 70].Value.ToString(),
+                Branch = worksheet.Cells[row, 71].Value.ToString(),
+                SalesName = worksheet.Cells[row, 72].Value.ToString(),
+                Mail = worksheet.Cells[row, 73].Value.ToString()
+            };
+
+            return participant;
+        }
     }
 }
 

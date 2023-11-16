@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DPLK.Models.TferPayInfo>
+﻿@model X.PagedList.IPagedList<DPLK.Models.dto.EditingDto>
 
 @{
     ViewData["Title"] = "Withdraw Edit";
@@ -43,20 +43,20 @@
                             <i class="bx bx-dots-vertical-rounded"></i>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" asp-action="SetupPartnerEdit" asp-route-id="@payment.AcctNmbr"><i class="bx bx-edit-alt me-1"></i>Edit</a>
-                            <a class="dropdown-item" asp-action="DeleteSetupPartner" asp-route-id="@payment.AcctNmbr"><i class="bx bx-trash me-1"></i>Delete</a>
+                            <a class="dropdown-item" asp-action="SetupPartnerEdit" asp-route-id="@payment."><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                            <a class="dropdown-item" asp-action="DeleteSetupPartner" asp-route-id="@payment."><i class="bx bx-trash me-1"></i>Delete</a>
                         </div>
                     </div>
                 </td>
-                <td>@payment.CerNmbr</td>
-                <td>@payment.</td>
-                <td>@payment.</td>
-                <td>@payment.</td>
-                <td>@payment.</td>
-                <td>@payment.</td>
-                <td>@payment.</td>
-                <td>@payment.</td>
-                <td>@payment.</td>
+                <td>@payment.cer_nmbr</td>
+                <td>@payment.tfer_type_nm</td>
+                <td>@payment.company_nm</td>
+                <td>@payment.tfer_type_nmbr</td>
+                <td>@payment.bank_central_nm</td>
+                <td>@payment.bank_addr</td>
+                <td>@payment.acct_nmbr</td>
+                <td>@payment.acct_nm</td>
+                <td>@payment.tfer_amt</td>
 
 
 

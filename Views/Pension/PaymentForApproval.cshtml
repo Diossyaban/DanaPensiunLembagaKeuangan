@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DPLK.Models.PaymentForApproval>
+﻿@model IEnumerable<DPLK.Models.dto.GetPaymentForApproval>
 
 @{
     ViewData["Title"] = "DPLK | Perta Life";
@@ -19,9 +19,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.GroupNumber)
             </th>
-            <th>
+         @*   <th>
                 @Html.DisplayNameFor(model => model.PaycenterNumber)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.EffectiveDate)
             </th>
@@ -47,9 +47,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.GroupNumber)
                 </td>
-                <td>
+              @*  <td>
                     @Html.DisplayFor(modelItem => item.PaycenterNumber)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.EffectiveDate)
                 </td>

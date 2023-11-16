@@ -2868,6 +2868,8 @@ namespace DPLK.ModelAcc
 
             modelBuilder.Entity<SpdJurnalTemp>(entity =>
             {
+
+
                 entity.HasKey(e => e.TrnsId);
                 entity.ToTable("SPD_JURNAL_TEMP");
 

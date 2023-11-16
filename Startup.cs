@@ -2,11 +2,16 @@ using DPLK.ModelAcc;
 using DPLK.Models.context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using DPLK.Service;
+using DPLK.Controllers;
 
 namespace Test1
 {
@@ -25,7 +30,25 @@ namespace Test1
                 options.UseSqlServer(Configuration.GetConnectionString("Pension")));
             services.AddDbContext<PensionAccContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("PensionAcc")));
+
+            services.AddHttpClient();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/account/login";
+                    options.AccessDeniedPath = "/account/accessdenied";
+                });
+
+            //services.AddMvc(options =>
+            //{
+            //    options.Filters.Add(new AuthorizeFilter());
+            //    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            //}).SetCompatibilityVersion(CompatibilityVersion.Latest);
+
             services.AddControllersWithViews();
+
+            services.AddScoped<IAccountService, AccountService>();
 
         }
 
@@ -44,8 +67,9 @@ namespace Test1
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseAuthorization();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -54,7 +78,17 @@ namespace Test1
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-
+            //app.Use(async (context, next) =>
+            //{
+            //    if (!context.User.Identity.IsAuthenticated)
+            //    {
+            //        context.Response.Redirect("/account/login");
+            //    }
+            //    else
+            //    {
+            //        await next();
+            //    }
+            //});
         }
     }
 }

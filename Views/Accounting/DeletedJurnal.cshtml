@@ -7,14 +7,14 @@
     ViewData["Title"] = "DPLK | Perta Life";
     Layout = "~/Views/Shared/DPLK_Layout.cshtml";
 }
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Accounting /</span>   Un-approved Jurnal Memorial </h4>
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Accounting /</span> Deleted Jurnal</h4>
 
 <div class="container-fluid px-4">
     <div class="card my-4">
 
         <div class="card-header">
             <div class="col-md-6">
-                <form asp-action="UnapprovedJurnalMemorial" method="get">
+                <form asp-action="DeletedJurnal" method="get">
                     <div class="input-group mb-3">
                         <input type="text" name="searchString" class="form-control" placeholder="Search...">
                         <button class="btn btn-outline-secondary" type="submit">Search</button>
@@ -22,16 +22,37 @@
                 </form>
             </div>
         </div>
+        @using (Html.BeginForm("DeletedJurnal", "CashManagement", FormMethod.Get, new { @class = "form-horizontal" }))
+        {
+            <div class="card-body">
+                <div class="mb-3 row">
+                    <label class="col-md-2 col-form-label">Start Date:</label>
+                    <div class="col-md-2">
+                        <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate" />
+                    </div>
+                    <label class="col-md-2 col-form-label">End Date:</label>
+                    <div class="col-md-2">
+                        <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate" />
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+
         <div class="card-body">
             <div class="table-responsive text-nowrap">
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th></th>
-                            <th>ID</th>
-                            <th>Description</th>
+                            <th>Jurnal ID </th>
                             <th>Jurnal Date</th>
-                            <th>Amount</th>
+                            <th>Description</th>
                             <th>Fund</th>
                             <th>Correction</th>
                         </tr>
@@ -56,10 +77,10 @@
 
                                 </td>
                                 <td>@item.TrnsId</td>
-                                <td>@item.Description</td>
                                 <td>@item.DateJurnal.ToShortDateString()</td>
-                                <td>@item.Debet</td>
+                                <td>@item.Description</td>
                                 <td>@item.Credit</td>
+
                                 <td>
                                     @if (item.Correction.HasValue)
                                     {
@@ -94,5 +115,5 @@
 
 <div class="text-center mt-4">
     Page @(Model.PageNumber) of @Model.PageCount
-    @Html.PagedListPager(Model, page => Url.Action("UnapprovedJurnalMemorial", new { page, currentFilter = ViewBag.CurrentFilter }), PagedListRenderOptions.TwitterBootstrapPager)
+    @Html.PagedListPager(Model, page => Url.Action("DeletedJurnal", new { page, currentFilter = ViewBag.CurrentFilter }), PagedListRenderOptions.TwitterBootstrapPager)
 </div>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DPLK.Models.SuspenseRecord>
+﻿@model X.PagedList.IPagedList<DPLK.Models.dto.SuspenseApprovedDto>
 
 @{
     ViewData["Title"] = "DPLK | Perta Life";
@@ -52,7 +52,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.suspn_nmbr)
                 </td>
-
+@*
                 <td>
                     @Html.DisplayFor(modelItem => item.REST_AMT)
                 </td>
@@ -70,35 +70,44 @@
                     }
                 </td>
 
-        @*
                 <td>
                     @{
-                        if (item.RECEIVED_DATE is DateTime receivedDate)
+                        if (item.RECEIVED_DATE.HasValue)
                         {
-                            @receivedDate.ToString("dd/MM/yyyy")
+                            @item.RECEIVED_DATE.Value.ToString("dd/MM/yyyy")
                         }
                         else
                         {
                             <span class="text-danger">Invalid Date</span>
                         }
                     }
-                </td>*@
+                </td>
 
                 <td>
                     @Html.DisplayFor(modelItem => item.group_nmbr)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.company_nm)
+                    @Html.DisplayFor(modelItem => item.company)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PAYCENTER_nm)
+                    @Html.DisplayFor(modelItem => item.paycenter)
                 </td>
-            @*    <td>
-                    @item.datesorting.ToString("dd/MM/yyyy")
-                </td>*@
+
+                <td>
+                    @if (item.datesorting != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.datesorting.Value.ToString("dd/MM/yyyy"))
+                    }
+                    else
+                    {
+                        <span class="text-danger">Invalid Date</span>
+                    }
+                </td>
+
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Ref_Bank)
-                </td>
+                </td>*@
             </tr>
         }
     </tbody>

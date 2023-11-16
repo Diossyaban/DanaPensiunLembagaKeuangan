@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using DPLK.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DPLK.Controllers.Home
 {
@@ -17,7 +18,7 @@ namespace DPLK.Controllers.Home
         {
             _logger = logger;
         }
-
+        //[Authorize]
         public IActionResult Index()
         {
             return View();

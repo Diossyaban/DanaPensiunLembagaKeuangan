@@ -1,13 +1,27 @@
 ﻿@model X.PagedList.IPagedList<DPLK.ModelAcc.SpdJurnalTemp>
 @using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common;
 
 <link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
 @{
     ViewData["Title"] = "DPLK | Perta Life";
     Layout = "~/Views/Shared/DPLK_Layout.cshtml";
 }
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Accounting /</span> Query FLP Pending Approval</h4>
+
 <div class="container-fluid px-4">
     <div class="card my-4">
+
+        <div class="card-header">
+            <div class="col-md-6">
+                <form asp-action="QueryFLPPendingApproval" method="get">
+                    <div class="input-group mb-3">
+                        <input type="text" name="searchString" class="form-control" placeholder="Search...">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="card-body">
             <div class="table-responsive text-nowrap">
                 <table class="table table-striped">
@@ -43,10 +57,33 @@
                                 </td>
                                 <td>@item.TrnsId</td>
                                 <td>@item.Description</td>
-                                <td>@item.DateJurnal</td>
+                                <td>@item.DateJurnal.ToShortDateString()</td>
                                 <td>@item.Debet</td>
-                                <td>@item.</td>
-                                <td>@item.Correction</td>
+                                <td>@item.Credit</td>
+
+                                <td>
+                                    @if (item.Correction.HasValue)
+                                    {
+                                        if (item.Correction == false)  
+                                        {
+                                            <span class="badge bg-label-secondary me-1 hover">Not Specified</span>
+                                        }
+                                        else if (item.Correction == true)  
+                                        {
+                                            <span class="badge bg-label-success me-1 hover"> Correction</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-label-warning me-1 hover">Undefined</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-secondary me-1 hover">Not Specified</span>
+                                    }
+                                </td>
+
+
                             </tr>
                         }
                     </tbody>
@@ -54,4 +91,9 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="text-center mt-4">
+    Page @(Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("QueryFLPPendingApproval", new { page, currentFilter = ViewBag.CurrentFilter }), PagedListRenderOptions.TwitterBootstrapPager)
 </div>
