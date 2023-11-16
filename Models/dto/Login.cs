@@ -8,7 +8,8 @@ namespace DPLK.Models.Dto
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         [JsonProperty("email")] 
-        public string Email { get; set; }
+        public string Email { 
+            get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [JsonProperty("password")]

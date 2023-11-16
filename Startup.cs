@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DPLK.Service;
 using DPLK.Controllers;
+using System;
 
 namespace Test1
 {
@@ -26,19 +27,62 @@ namespace Test1
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<PensionContext>(options =>
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(20);
+            }); services.AddDbContext<PensionContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Pension")));
             services.AddDbContext<PensionAccContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("PensionAcc")));
 
             services.AddHttpClient();
+            services.AddControllersWithViews();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/account/login";
-                    options.AccessDeniedPath = "/account/accessdenied";
-                });
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            //    //.AddCookie(x => x.LoginPath = "/account/login");
+            //    .AddCookie(options =>
+            //    {
+            //        options.Cookie.Name = "mysession";
+            //        options.LoginPath = "/account/login";
+            //        //options.AccessDeniedPath = "/account/accessdenied";
+            //    });
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "JWT_OR_COOKIE";
+                options.DefaultChallengeScheme = "JWT_OR_COOKIE";
+            })
+                    .AddCookie(options =>
+                    {
+                        options.LoginPath = "/login";
+                        options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                    })
+                    .AddPolicyScheme("JWT_OR_COOKIE", "JWT_OR_COOKIE", options =>
+                    {
+                        options.ForwardDefaultSelector = context =>
+                        {
+                  
+
+                            return CookieAuthenticationDefaults.AuthenticationScheme;
+                        };
+                    });
+
+
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+            //});
+            services.AddMvc().AddMvcOptions(MvcOptions => { MvcOptions.EnableEndpointRouting = false; });
+
+
+            //.AddCookie(options =>
+            //{
+            //    options.LoginPath = "/account/login";
+            //    options.AccessDeniedPath = "/account/accessdenied";
+            //});
 
             //services.AddMvc(options =>
             //{
@@ -67,10 +111,23 @@ namespace Test1
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-
+            var cookiePolicyOptions = new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+                HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.None,
+            };
+            app.UseCookiePolicy(cookiePolicyOptions);
             app.UseAuthentication();
             app.UseAuthorization();
-
+            //app.UseAuthentication();
+            //app.UseAuthorization();
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}/{id?}");
+            //});
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -78,17 +135,17 @@ namespace Test1
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            //app.Use(async (context, next) =>
-            //{
-            //    if (!context.User.Identity.IsAuthenticated)
-            //    {
-            //        context.Response.Redirect("/account/login");
-            //    }
-            //    else
-            //    {
-            //        await next();
-            //    }
-            //});
+            app.Use(async (context, next) =>
+            {
+                if (!context.User.Identity.IsAuthenticated)
+                {
+                    context.Response.Redirect("/account/login");
+                }
+                else
+                {
+                    await next();
+                }
+            });
         }
     }
 }

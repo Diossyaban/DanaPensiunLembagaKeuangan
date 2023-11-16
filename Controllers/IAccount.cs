@@ -20,7 +20,11 @@ namespace DPLK.Controllers
         public async Task<bool> LoginAsync(string email, string password)
         {
             var apiUrl = "http://192.168.38.181:8011/api/logindetaildev";
-
+            var requestBody = new
+            {
+                email,
+                password
+            };
             var content = new StringContent(
                 JsonConvert.SerializeObject(new { email, password }),
                 Encoding.UTF8,
@@ -35,6 +39,7 @@ namespace DPLK.Controllers
 
                 return responseObject.success;
             }
+          
 
             return false;
         }
