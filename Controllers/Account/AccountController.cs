@@ -1,40 +1,30 @@
-﻿using DPLK.Controllers.Home;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using DPLK.Models.Dto;
 using DPLK.Service;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Newtonsoft.Json;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Graph.Models;
-using System.Security.Claims;
-using System;
-using System.Collections.Generic;
 
 namespace DPLK.Controllers.Account
 {
-
     [Route("account")]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
-        private const string SessionName = "_Name";
 
         public AccountController(IAccountService accountService)
         {
-
             _accountService = accountService;
         }
 
         [HttpGet("login")]
-/*        [AllowAnonymous]
-*/        public IActionResult Login()
+        [AllowAnonymous]
+        public IActionResult Login()
         {
             return View();
         }
@@ -44,50 +34,21 @@ namespace DPLK.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                var loginResult = await _accountService.LoginAsync(model.Email, model.Password);
-                //if (loginResult == null)
-
-                //    throw new System.Exception();
-                //var login = new Login(); 
-                //login.Email = model.Email;
-
-                //var claims = new List<Claim>
-                //{
-                //    new Claim(ClaimTypes.Name, model.Email),
-                //    // Add additional claims as needed
-                //};
-
-                //var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                //var authProperties = new AuthenticationProperties
-                //{
-                //    // Set additional authentication properties if needed
-                //};
-
-                //await HttpContext.SignInAsync(
-                //    CookieAuthenticationDefaults.AuthenticationScheme,
-                //    new ClaimsPrincipal(claimsIdentity),
-                //    authProperties);
-
-
                 try
                 {
-                    var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, result.Principal);
+                    var loginResult = await _accountService.LoginAsync(model.Email, model.Password);
 
-                if (loginResult)
-                         {
+                    if (loginResult)
+                    {
                         var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, model.Email),
-                    // Add additional claims as needed
                 };
 
                         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                         var authProperties = new AuthenticationProperties
                         {
-                            // Set additional authentication properties if needed
                         };
 
                         await HttpContext.SignInAsync(
@@ -95,60 +56,45 @@ namespace DPLK.Controllers.Account
                             new ClaimsPrincipal(claimsIdentity),
                             authProperties);
 
+                        Response.Cookies.Append("LoginSuccessMessage", $"Login successful! Welcome, {model.Email}.", new CookieOptions
+
+                        {
+                            HttpOnly = true,
+                            SameSite = SameSiteMode.Strict
+                        });
+
+                        TempData.Remove("SuccessMessage");
+
                         return RedirectToAction("Index", "Home");
                     }
                     else
                     {
                         TempData["ErrorMessage"] = "Email atau kata sandi tidak valid. Silakan coba lagi.";
-                        return RedirectToAction("Login");
                     }
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-
-                    TempData["ErrorMessage"] = "Email atau kata sandi tidak valid. Silakan coba lagi.";
-                    return RedirectToAction("Login");
+                    TempData["ErrorMessage"] = "Terjadi kesalahan. Silakan coba lagi.";
                 }
-
-
-                //try
-                //{
-                //    //var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-                //    //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, result.Principal);
-                //    if (loginResult)
-                //    {
-                //        if(User.Identity.IsAuthenticated){
-                //            Response.Redirect("/Home/Index");
-
-                //        }
-
-                //        //HttpContext.Session.SetString(SessionName,"ABCD");
-                //        //return RedirectToAction("Index", "Home");
-                //        return RedirectToAction(nameof(HomeController.Index), "Home");
-                //    }
-                //    else
-                //    {
-                //        TempData["ErrorMessage"] = "Email atau kata sandi tidak valid. Silakan coba lagi.";
-                //        return RedirectToAction("Login");
-                //    }
-                //}
-                //catch (System.Exception ex)
-                //{
-
-                //    TempData["ErrorMessage"] = "Email atau kata sandi tidak valid. Silakan coba lagi.";
-                //    return RedirectToAction("Login");
-                //}
-
             }
-            return View(model);
-   
-        }
-    
-        [HttpGet("logout")]
-        public IActionResult Logout()
-        {
+
             return RedirectToAction("Login");
         }
+
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userEmail = User.Identity.Name; 
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            Response.Cookies.Append("LogoutMessage", $"Goodbye, {userEmail}. You have been successfully logged out.", new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict
+            });
+
+            return RedirectToAction("Login");
+        }
+
     }
 }

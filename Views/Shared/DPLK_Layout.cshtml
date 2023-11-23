@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@*@inject UserManager<DPLK.Models.dto.User> UserManager
+@inject SignInManager<DPLK.Models.dto.User> SignInManager
+*@
+
+<!DOCTYPE html>
 
 <html lang="en"
       class="light-style layout-menu-fixed"
@@ -286,7 +291,7 @@
                                             <div data-i18n="Entry Nota Billing">Entry Nota Billing</div>
                                         </a>
                                     </li>
-                             
+
                                     <li class="menu-item">
                                         <a href="app-user-view-notifications.html" class="menu-link">
                                             <div data-i18n="Datar Notifikasi Claim Transfer">Datar Notifikasi Claim Transfer</div>
@@ -297,7 +302,7 @@
                                             <div data-i18n="DPLK + Rider">DPLK + Rider</div>
                                         </a>
                                     </li>
-                                    <li class="menu-item">                                      
+                                    <li class="menu-item">
                                         <a class="menu-link" asp-area="" asp-controller="Pension" asp-action="SuratPengantarKartu">
                                             <div data-i18n="Surat Pengantar Kartu">Surat Pengantar Kartu</div>
                                         </a>
@@ -440,7 +445,6 @@
                         </span>
                     </li>
                     <!-- Accounting -->
-
                     <li class="menu-item">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class='menu-icon tf-icons bx bx-food-menu'></i>
@@ -647,9 +651,7 @@
 
                         </ul>
                     </li>
-
                     <!-- Cash Management -->
-
                     <li class="menu-item">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-user"></i>
@@ -756,9 +758,6 @@
                             </li>*@
                         </ul>
                     </li>
-
-
-
                     <!-- Investment Management -->
                     <li class="menu-item">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -911,7 +910,7 @@
                             <div data-i18n="Client Inquiry">Client Inquiry</div>
                         </a>
                 </ul>
-                <ul>
+       @*         <ul>
                     <li class="menu-item">
                         <a class="menu-link" asp-area="" asp-controller="Account" asp-action="Logout">
                             <i class="menu-icon tf-icons bx bx-log-out-circle"></i>
@@ -919,217 +918,107 @@
                         </a>
                     </li>
                 </ul>
-
+*@
 
 
             </aside>
             <!-- / Menu -->
             <!-- Layout container -->
             <div class="layout-page">
+                <!-- Navbar -->
 
-
-               @* <nav class=" layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme rainbow-border" id="layout-navbar">
+                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+                     id="layout-navbar">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
                         <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
                     </div>
 
-                    <!-- Investment Management menu item with dropdown -->
-                    <ul class="navbar-nav ">
-                        <li class="nav-item dropdown">
-
-                            <a class="nav-link dropdown-toggle" href="#" id="investmentManagementDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-                                Investment Management
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="investmentManagementDropdown">
-                                <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="UnapprovedReceiptIndex">
-                                    <div data-i18n="UnapprovedReceiptIndex">Unapproved Receipt </div>
-                                </a>
-                                <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="UnapprovedPaymentsIndex">
-                                    <div data-i18n="Unapproved Payments">Unapproved Payments </div>
-                                </a>
-                                <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="UnapprovedPaymentsIndex">
-                                    <div data-i18n="Posted Journals">Posted Journals </div>
-                                </a>
-   
-                                <a class="dropdown-item dropdown-toggle" href="#" role="button" id="requestAmountDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Request Amount
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="requestAmountDropdown">
-                                    <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="ClaimRequestAmount">Claim Request Amount</a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="FundSwitchingReqFundApproval">Fund Switching Requested Fund Approval</a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="CreateDBDirectFromFLPFPP">Create DB Direct From FLP/FPP</a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="CreateDBDirectBIT">Create DB Direct BIT</a>
-                                </div>
-                                <!-- End of nested dropdown -->
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-
-                            <a class="nav-link dropdown-toggle" href="#" id="investmentManagementDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-                                Transaction
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="investmentManagementDropdown">
-                                <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="ProcessClaimRequest">
-                                    Prosses Claim Request
-                                </a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="ProcessClaimRequest">
-                                    Prosses Claim Request Report
-                                </a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="ProcessClaimRequest">
-                                    <div data-i18n="Withdrawal Estimation">Withdrawal Estimation</div>
-                                </a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="ProcessClaimRequest">
-                                    <div data-i18n="Withdrawal Estimation PPUKP">Withdrawal Estimation PPUKP</div>
-                                </a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="WithdrawalApproval">
-                                    <div data-i18n="Withdrawal Requested Fund Approval">Withdrawal Requested Fund Approval</div>
-                                </a>
-                                <a class="dropdown-item dropdown-toggle" href="#" role="button" id="moreDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    More
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-start" aria-labelledby="moreDropdown" id="moreDropdownMenu">
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="WithdrawalEstimationApproval">
-                                        <div data-i18n="Withdrawal Estimation Approval">Withdrawal Estimation Approval</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="TransactionEditingClaim">
-                                        <div data-i18n="Editing Claim">Editing Claim</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="TransactionDeletingClaim">
-                                        <div data-i18n="Delete Claim">Delete Claim</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="TransactionDeletingClaim">
-                                        <div data-i18n="Delete Switching">Delete Switching</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="EntryPayrollContribution">
-                                        <div data-i18n="Entry Payroll Contribution">Entry Payroll Contribution</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="BillContribution">
-                                        <div data-i18n="Bill Contribution">Bill Contribution</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="FundSwitching">
-                                        <div data-i18n="Fund Switching">Fund Switching</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="FundSwitchingByMoneyType">
-                                        <div data-i18n="Fund Switching by Money Type">Fund Switching by Money Type</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="FundSwitchingRequestFundApproval">
-                                        <div data-i18n="Fund Switching Requested Fund Approval">Fund Switching Requested Fund Approval</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="CertificateMovement">
-                                        <div data-i18n="Certificate Movement">Certificate Movement</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="CertificateMovementByMoneyType">
-                                        <div data-i18n="Certificate Movement By Money Type">Certificate Movement By Money Type</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="CertificateChange">
-                                        <div data-i18n="Certificate Change">Certificate Change</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="AdminSuspense">
-                                        <div data-i18n="Admin Suspense">Admin Suspense</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PaymentForApproval">
-                                        <div data-i18n="Payment Approval">Payment Approval</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
-                                        <div data-i18n="Payout Suspense">Payout Suspense</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
-                                        <div data-i18n="Payout Suspense Approval">Payout Suspense Approval</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
-                                        <div data-i18n="Mutations Funds">Mutations Funds</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
-                                        <div data-i18n="Join Account">Join Account</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
-                                        <div data-i18n="Emtry Nota Billing">Emtry Nota Billing</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
-                                        <div data-i18n="Datar Notifikasi Claim Transfer">Datar Notifikasi Claim Transfer</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
-                                        <div data-i18n="DPLK + Rider">DPLK + Rider</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
-                                        <div data-i18n="Surat Pengantar Kartu">Surat Pengantar Kartu</div>
-                                    </a>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
-                                        <div data-i18n="Pengantar Kartu Approval">Pengantar Kartu Approval</div>
-                                    </a>
+                    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                
+                        <ul class="navbar-nav flex-row align-items-center ms-auto">
 
 
-                                </div>
-                            </div>
-                        </li>
+                            <!-- User -->
+                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                    <i class="bx bx-user me-4"></i>
+                                  
+                                        <span class="user-email"></span>
+                                    
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar avatar-online">
+
+                                                    </div>
+                                                </div>
+                                
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                    </li>
+
+                                    <li>
+                                         
+                                        <a class="dropdown-item menu-link " asp-controller="Home" asp-action="MyProfile" asp-route-email="">
+                                        <i class="bx bx-user me-2"></i>
+                                        <span class="align-middle">My Profile</span>
+                                        </a>
+                                       
+                                    </li>
+                                    <li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bx bx-cog me-2"></i>
+                                            <span class="align-middle">Account Settings</span>
+                                        </a>
+                                    </li>
+
+              
+
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">
+                                            <div class="d-flex align-items-center align-middle">
+                                            <i class="menu-icon tf-icons bx bx-log-out-circle"></i>
+                                                <span class="flex-grow-1 align-middle">Logout</span>
+                                            </div>
+                                        </a>
+                                    </li>
 
 
 
-                    </ul>
-
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </nav>
-             *@
-
-                <script>
-                    const moreDropdown = document.getElementById("moreDropdown");
-                    const moreDropdownMenu = document.querySelector("#moreDropdown + .dropdown-menu");
-
-                    moreDropdown.addEventListener("mouseenter", () => {
-                        const rect = moreDropdown.getBoundingClientRect();
-                        const parentRect = moreDropdown.closest('.dropdown-menu').getBoundingClientRect();
-                        moreDropdownMenu.style.top = `${rect.top - parentRect.top}px`;
-                        moreDropdownMenu.style.left = `${rect.right - parentRect.left}px`;
-                        moreDropdownMenu.classList.add("show");
-                    });
-
-                    moreDropdown.addEventListener("mouseleave", () => {
-                        moreDropdownMenu.classList.remove("show");
-                    });
-
-                    moreDropdownMenu.addEventListener("mouseenter", () => {
-                        moreDropdownMenu.classList.add("show");
-                    });
-
-                    moreDropdownMenu.addEventListener("mouseleave", () => {
-                        moreDropdownMenu.classList.remove("show");
-                    });
-                </script>
-
-
-
-                <script>
-                    const requestAmountDropdown = document.getElementById("requestAmountDropdown");
-                    const requestAmountMenu = document.querySelector("#requestAmountDropdown + .dropdown-menu");
-                    requestAmountDropdown.addEventListener("mouseenter", () => {
-                        const rect = requestAmountDropdown.getBoundingClientRect();
-                        const parentRect = requestAmountDropdown.closest('.dropdown-menu').getBoundingClientRect();
-                        requestAmountMenu.style.top = `${rect.top - parentRect.top}px`;
-                        requestAmountMenu.style.left = `${rect.right - parentRect.left}px`;
-                        requestAmountMenu.classList.add("show");
-                    });
-                    requestAmountDropdown.addEventListener("mouseleave", () => {
-                        requestAmountMenu.classList.remove("show");
-                    });
-                    requestAmountMenu.addEventListener("mouseenter", () => {
-                        requestAmountMenu.classList.add("show");
-                    });
-                    requestAmountMenu.addEventListener("mouseleave", () => {
-                        requestAmountMenu.classList.remove("show");
-                    });
-                </script>
-
-
-
-
-
-
 
                 <!-- / Navbar -->
                 <!-- Content wrapper -->
+                <div class="content-wrapper">
+                    <!-- Content -->
+
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="row">
+                            @RenderBody()
+                        </div>
+
+                    </div>
+
+                    <div class="content-backdrop fade"></div>
+                </div>
                 <div class="content-wrapper">
 
                     <!-- Content -->
@@ -1188,8 +1077,213 @@
 
                     <div class="content-backdrop fade"></div>
                 </div>
-                <!-- Content wrapper -->
             </div>
+
+
+            @* <nav class=" layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme rainbow-border" id="layout-navbar">
+            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+            <i class="bx bx-menu bx-sm"></i>
+            </a>
+            </div>
+
+            <!-- Investment Management menu item with dropdown -->
+            <ul class="navbar-nav ">
+            <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle" href="#" id="investmentManagementDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+            Investment Management
+            </a>
+            <div class="dropdown-menu" aria-labelledby="investmentManagementDropdown">
+            <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="UnapprovedReceiptIndex">
+            <div data-i18n="UnapprovedReceiptIndex">Unapproved Receipt </div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="UnapprovedPaymentsIndex">
+            <div data-i18n="Unapproved Payments">Unapproved Payments </div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="UnapprovedPaymentsIndex">
+            <div data-i18n="Posted Journals">Posted Journals </div>
+            </a>
+
+            <a class="dropdown-item dropdown-toggle" href="#" role="button" id="requestAmountDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Request Amount
+            </a>
+            <div class="dropdown-menu" aria-labelledby="requestAmountDropdown">
+            <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="ClaimRequestAmount">Claim Request Amount</a>
+            <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="FundSwitchingReqFundApproval">Fund Switching Requested Fund Approval</a>
+            <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="CreateDBDirectFromFLPFPP">Create DB Direct From FLP/FPP</a>
+            <a class="dropdown-item" asp-area="" asp-controller="InvestmentManagement" asp-action="CreateDBDirectBIT">Create DB Direct BIT</a>
+            </div>
+            <!-- End of nested dropdown -->
+            </div>
+            </li>
+            <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle" href="#" id="investmentManagementDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+            Transaction
+            </a>
+            <div class="dropdown-menu" aria-labelledby="investmentManagementDropdown">
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="ProcessClaimRequest">
+            Prosses Claim Request
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="ProcessClaimRequest">
+            Prosses Claim Request Report
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="ProcessClaimRequest">
+            <div data-i18n="Withdrawal Estimation">Withdrawal Estimation</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="ProcessClaimRequest">
+            <div data-i18n="Withdrawal Estimation PPUKP">Withdrawal Estimation PPUKP</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="WithdrawalApproval">
+            <div data-i18n="Withdrawal Requested Fund Approval">Withdrawal Requested Fund Approval</div>
+            </a>
+            <a class="dropdown-item dropdown-toggle" href="#" role="button" id="moreDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            More
+            </a>
+            <div class="dropdown-menu dropdown-menu-start" aria-labelledby="moreDropdown" id="moreDropdownMenu">
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="WithdrawalEstimationApproval">
+            <div data-i18n="Withdrawal Estimation Approval">Withdrawal Estimation Approval</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="TransactionEditingClaim">
+            <div data-i18n="Editing Claim">Editing Claim</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="TransactionDeletingClaim">
+            <div data-i18n="Delete Claim">Delete Claim</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="TransactionDeletingClaim">
+            <div data-i18n="Delete Switching">Delete Switching</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="EntryPayrollContribution">
+            <div data-i18n="Entry Payroll Contribution">Entry Payroll Contribution</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="BillContribution">
+            <div data-i18n="Bill Contribution">Bill Contribution</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="FundSwitching">
+            <div data-i18n="Fund Switching">Fund Switching</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="FundSwitchingByMoneyType">
+            <div data-i18n="Fund Switching by Money Type">Fund Switching by Money Type</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="FundSwitchingRequestFundApproval">
+            <div data-i18n="Fund Switching Requested Fund Approval">Fund Switching Requested Fund Approval</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="CertificateMovement">
+            <div data-i18n="Certificate Movement">Certificate Movement</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="CertificateMovementByMoneyType">
+            <div data-i18n="Certificate Movement By Money Type">Certificate Movement By Money Type</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="CertificateChange">
+            <div data-i18n="Certificate Change">Certificate Change</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="AdminSuspense">
+            <div data-i18n="Admin Suspense">Admin Suspense</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PaymentForApproval">
+            <div data-i18n="Payment Approval">Payment Approval</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
+            <div data-i18n="Payout Suspense">Payout Suspense</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
+            <div data-i18n="Payout Suspense Approval">Payout Suspense Approval</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
+            <div data-i18n="Mutations Funds">Mutations Funds</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
+            <div data-i18n="Join Account">Join Account</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
+            <div data-i18n="Emtry Nota Billing">Emtry Nota Billing</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
+            <div data-i18n="Datar Notifikasi Claim Transfer">Datar Notifikasi Claim Transfer</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
+            <div data-i18n="DPLK + Rider">DPLK + Rider</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
+            <div data-i18n="Surat Pengantar Kartu">Surat Pengantar Kartu</div>
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Pension" asp-action="PayoutSuspense">
+            <div data-i18n="Pengantar Kartu Approval">Pengantar Kartu Approval</div>
+            </a>
+
+
+            </div>
+            </div>
+            </li>
+
+
+
+            </ul>
+
+            </nav>
+            *@
+
+            <script>
+                const moreDropdown = document.getElementById("moreDropdown");
+                const moreDropdownMenu = document.querySelector("#moreDropdown + .dropdown-menu");
+
+                moreDropdown.addEventListener("mouseenter", () => {
+                    const rect = moreDropdown.getBoundingClientRect();
+                    const parentRect = moreDropdown.closest('.dropdown-menu').getBoundingClientRect();
+                    moreDropdownMenu.style.top = `${rect.top - parentRect.top}px`;
+                    moreDropdownMenu.style.left = `${rect.right - parentRect.left}px`;
+                    moreDropdownMenu.classList.add("show");
+                });
+
+                moreDropdown.addEventListener("mouseleave", () => {
+                    moreDropdownMenu.classList.remove("show");
+                });
+
+                moreDropdownMenu.addEventListener("mouseenter", () => {
+                    moreDropdownMenu.classList.add("show");
+                });
+
+                moreDropdownMenu.addEventListener("mouseleave", () => {
+                    moreDropdownMenu.classList.remove("show");
+                });
+            </script>
+
+
+
+            <script>
+                const requestAmountDropdown = document.getElementById("requestAmountDropdown");
+                const requestAmountMenu = document.querySelector("#requestAmountDropdown + .dropdown-menu");
+                requestAmountDropdown.addEventListener("mouseenter", () => {
+                    const rect = requestAmountDropdown.getBoundingClientRect();
+                    const parentRect = requestAmountDropdown.closest('.dropdown-menu').getBoundingClientRect();
+                    requestAmountMenu.style.top = `${rect.top - parentRect.top}px`;
+                    requestAmountMenu.style.left = `${rect.right - parentRect.left}px`;
+                    requestAmountMenu.classList.add("show");
+                });
+                requestAmountDropdown.addEventListener("mouseleave", () => {
+                    requestAmountMenu.classList.remove("show");
+                });
+                requestAmountMenu.addEventListener("mouseenter", () => {
+                    requestAmountMenu.classList.add("show");
+                });
+                requestAmountMenu.addEventListener("mouseleave", () => {
+                    requestAmountMenu.classList.remove("show");
+                });
+            </script>
+
+
+
+
+
+
+
+            <!-- / Navbar -->
+            <!-- Content wrapper -->
+            <!-- Content wrapper -->
+
         </div>
 
         <!-- Overlay -->

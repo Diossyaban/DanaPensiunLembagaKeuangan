@@ -299,15 +299,15 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label asp-for="GroupNmbr" class="col-md-2 col-form-label">
+                                <label asp-for="IndGrpCd" class="col-md-2 col-form-label">
                                     Group Type
                                 </label>
                                 <div class="col-md-4">
-                                    <select asp-for="GroupNmbr" class="form-select">
+                                    <select asp-for="IndGrpCd" class="form-select">
                                         <option value="1">Organization</option>
                                         <option value="0">Individu</option>
                                     </select>
-                                    <span asp-validation-for="GroupNmbr" class="text-danger"></span>
+                                    <span asp-validation-for="IndGrpCd" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -315,11 +315,11 @@
                                     Fee include on Contribution
                                 </label>
                                 <div class="col-md-4">
-                                    <select asp-for="GroupNmbr" class="form-select">
+                                    <select asp-for="InclContribFlg" class="form-select">
                                         <option value="1">Exclude</option>
                                         <option value="0">Include</option>
                                     </select>
-                                    <span asp-validation-for="GroupNmbr" class="text-danger"></span>
+                                    <span asp-validation-for="InclContribFlg" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -355,22 +355,22 @@
 @*                    @await Html.PartialAsync("MemberClassPlan")
 *@                </div>
                 <div class="tab-pane fade" id="navs-pills-top-messages" role="tabpanel">
-                    @await Html.PartialAsync("GroupChange")
-
+@*                    @await Html.PartialAsync("GroupChange")
+*@
                 </div>
                 <div class="tab-pane fade" id="navs-pills-top-direction" role="tabpanel">
-                    @await Html.PartialAsync("InvestmentDirection")
-                </div>
+@*                    @await Html.PartialAsync("InvestmentDirection")
+*@                </div>
                 <div class="tab-pane fade" id="navs-pills-top-status" role="tabpanel">
-                    @await Html.PartialAsync("BillingStatus")
-
+@*                    @await Html.PartialAsync("BillingStatus")
+*@
                 </div>
                 <div class="tab-pane fade" id="navs-pills-top-benefit" role="tabpanel">
-                    @await Html.PartialAsync("BenefitGroup")
-                </div>
+@*                    @await Html.PartialAsync("BenefitGroup")
+*@                </div>
                 <div class="tab-pane fade" id="navs-pills-top-pic" role="tabpanel">
-                    @await Html.PartialAsync("GroupPic")
-
+@*                    @await Html.PartialAsync("GroupPic")
+*@
                 </div>
 
             </div>

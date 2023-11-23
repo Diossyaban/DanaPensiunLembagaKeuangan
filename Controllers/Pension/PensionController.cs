@@ -1803,7 +1803,7 @@ namespace DPLK.Controllers.Pension
             catch (System.Exception ex)
             {
                 ViewBag.ErrorMessage = "Error: " + ex.Message;
-                return View(new List<EditingDto>().ToPagedList(pageIndex, defaultSize)); // Pass an empty list of EditingDto as IPagedList
+                return View(new List<EditingDto>().ToPagedList(pageIndex, defaultSize)); 
             }
         }
 

@@ -8,10 +8,27 @@
     <p class="text-center mb-4">
         Dana Pensiun Lembaga Keuangan
     </p>
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    @{
+        var loginSuccessMessage = Context.Request.Cookies["LoginSuccessMessage"];
+        if (!string.IsNullOrEmpty(loginSuccessMessage))
+        {
+            <div class="alert alert-success">@loginSuccessMessage</div>
+            Context.Response.Cookies.Delete("LoginSuccessMessage");
+        }
+        else if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        }
+
+        var logoutMessage = Context.Request.Cookies["LogoutMessage"];
+        if (!string.IsNullOrEmpty(logoutMessage))
+        {
+            <div class="alert alert-info">@logoutMessage</div>
+            Context.Response.Cookies.Delete("LogoutMessage");
+        }
     }
+
+  
     <form  class="mb-3" asp-action="Login" method="post" >
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="mb-3">

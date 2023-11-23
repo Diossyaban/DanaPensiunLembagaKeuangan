@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Withdraw Edit";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form class="mb-3" asp-action="MyProfile">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="mb-3">
+                <label class="col-md-2 col-form-label">
+                    USER ID 
+                    </label>
+                <input value="usertestone@pertalife.com" class="form-control" readonly autofocus>
+                <span class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-password-toggle">
+                <div class="d-flex justify-content-between">
+                    <label class="col-md-2 col-form-label">
+                        Password
+                    </label>
+                </div>
+                <div class="input-group input-group-merge">
+                    <input type="password" id="Password" value="testing123" class="form-control" name="Password" readonly aria-describedby="password" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <label class="col-md-2 col-form-label">
+                        Nama User
+                    </label>
+                </div>
+                <div class="input-group input-group-merge">
+                    <input   value="diossyaban " class="form-control" name="Password" readonly aria-describedby="password" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <label class="col-md-2 col-form-label">
+                        Email
+                    </label>
+                </div>
+                <div class="input-group input-group-merge">
+                    <input  value="diossyaban@gmail.com" class="form-control" name="Password" readonly aria-describedby="password" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <label class="col-md-2 col-form-label">
+                        Jabatan
+                    </label>
+                </div>
+                <div class="input-group input-group-merge">
+                    <input  value="...." class="form-control" name="Password" readonly aria-describedby="password" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <label class="col-md-2 col-form-label">
+                        Status
+                    </label>
+                </div>
+                <div class="input-group input-group-merge">
+                    <input value="Active" class="form-control" name="Password" readonly aria-describedby="password" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
