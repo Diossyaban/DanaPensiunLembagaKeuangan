@@ -23,6 +23,12 @@ namespace DPLK.Models.context
 
         //public virtual DbSet<CompanyOnScrPaycenterModel> CompanyOnScrPaycenterModels { get; set; }  //Ini SP
         //baru 
+        public virtual DbSet<TGroupMenu> TGroupMenus { get; set; }
+        public virtual DbSet<TLogActivity> TLogActivities { get; set; }
+        public virtual DbSet<TMenu> TMenus { get; set; }
+        public virtual DbSet<TUser> TUsers { get; set; }
+
+
         public DbSet<PayMentAfterCancel> payMentAfterCancels { get; set; }
         public DbSet<EditingDto> EditingDtos { get; set; }
         public DbSet<SuspenseApprovedDto> SuspenseApprovedDtos { get; set; }
@@ -20012,8 +20018,50 @@ namespace DPLK.Models.context
 
                 entity.Property(e => e.TahunKe).HasColumnName("tahun_ke");
             });
+            modelBuilder.Entity<TGroupMenu>(entity =>
+            {
+                entity.Property(e => e.IdGroup).IsUnicode(false);
+
+                entity.Property(e => e.NamaGroup).IsUnicode(false);
+
+                entity.Property(e => e.Prefix).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TLogActivity>(entity =>
+            {
+                entity.HasKey(e => e.Email);
+
+/*                entity.Property(e => e.Email).IsUnicode(false);
+*/
+                entity.Property(e => e.Ipaddress).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TMenu>(entity =>
+            {
+                entity.HasKey(e => e.IdGroup);
+
+                entity.Property(e => e.IdMenu).IsUnicode(false);
+
+                entity.Property(e => e.IdParent).IsUnicode(false);
+
+                entity.Property(e => e.NamaMenu).IsUnicode(false);
+
+                entity.Property(e => e.Url).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TUser>(entity =>
+            {
+                entity.HasKey(e => e.IdUser); 
+
+                entity.Property(e => e.Bagian).IsUnicode(false);
+                entity.Property(e => e.Email).IsUnicode(false);
+                entity.Property(e => e.IdUser).IsUnicode(false);
+                entity.Property(e => e.Jabatan).IsUnicode(false);
+                entity.Property(e => e.NamaLengkap).IsUnicode(false);
+            });
 
             OnModelCreatingPartial(modelBuilder);
+
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

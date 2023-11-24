@@ -1,0 +1,85 @@
+﻿@model X.PagedList.IPagedList<DPLK.Models.TUser>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common;
+
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewData["Title"] = "DPLK | Perta Life";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="container-fluid px-4">
+    <div class="card my-4">
+        <div class="card-header">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">User  /</span>  List</h4>
+            <a class="btn btn-primary" asp-action="CreateUser" style="background-color: #0073fe;">
+                <span class="tf-icons bx bx-book-add"></span>&nbsp; Create New
+            </a>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <form asp-action="UserList" method="get">
+                        <div class="input-group mb-3">
+                            <input type="text" name="searchString" class="form-control" placeholder="Search...">
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>ID User</th>
+                            <th>Nama Lengkap</th>
+                            <th>Bagian</th>
+                            <th>Jabatan</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>
+
+                                    <div class="dropdown">
+                                        <button type="button"
+                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-action="EditUser" asp-route-id="@user.IdUser"><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                                            <a class="dropdown-item" asp-action="DeleteUser" asp-route-id="@user.IdUser"><i class="bx bx-trash me-1"></i>Delete</a>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td>@user.IdUser</td>
+                                <td>@user.NamaLengkap</td>
+                                <td>@user.Bagian</td>
+                                <td>@user.Jabatan</td>
+                                <td>@user.Email</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center">
+                Page @(Model.PageNumber) of @Model.PageCount
+                @Html.PagedListPager(Model, page => Url.Action("UserList", new { page, currentFilter = ViewBag.CurrentFilter }), PagedListRenderOptions.TwitterBootstrapPager)
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,20 +1,19 @@
 ﻿using DPLK.Models.Dto;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Graph.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using DPLK.Service;
 
-namespace DPLK.Controllers
+namespace DPLK.Service
 {
     public class AccountService : IAccountService
     {
         private readonly HttpClient _httpClient;
 
-        public AccountService(IHttpClientFactory httpClientFactory)
+        public AccountService(HttpClient httpClient)
         {
-            _httpClient = httpClientFactory.CreateClient();
+            _httpClient = httpClient;
         }
 
         public async Task<bool> LoginAsync(string email, string password)
@@ -39,9 +38,25 @@ namespace DPLK.Controllers
 
                 return responseObject.success;
             }
-          
 
             return false;
+        }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            var apiUrl = $"http://192.168.38.181:8011/api/users?email={email}";
+
+            var response = await _httpClient.GetAsync(apiUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var user = JsonConvert.DeserializeObject<User>(responseContent);
+
+                return user;
+            }
+
+            return null;
         }
     }
 }

@@ -909,16 +909,48 @@
                             <i class="menu-icon tf-icons bx bx-support"></i>
                             <div data-i18n="Client Inquiry">Client Inquiry</div>
                         </a>
-                </ul>
-       @*         <ul>
+
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text"></span></li>
+
                     <li class="menu-item">
-                        <a class="menu-link" asp-area="" asp-controller="Account" asp-action="Logout">
-                            <i class="menu-icon tf-icons bx bx-log-out-circle"></i>
-                            <div data-i18n="Logout">Logout</div>
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-user"></i>
+                            <div data-i18n="Cash Management">User Management</div>
                         </a>
+                        <ul class="menu-sub">
+
+
+                            <li class="menu-item">
+                                <a class="menu-link" asp-area="" asp-controller="UserManagement" asp-action="UserList">
+                                    <div data-i18n="Entry FLP">User List</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" asp-area="" asp-controller="UserManagement" asp-action="Menu">
+                                    <div data-i18n="Entry FLP">Menu List</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" asp-area="" asp-controller="UserManagement" asp-action="GroupMenu">
+                                    <div data-i18n="Entry FLP">Group Menu List</div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+
                 </ul>
-*@
+
+
+
+                @*         <ul>
+                <li class="menu-item">
+                <a class="menu-link" asp-area="" asp-controller="Account" asp-action="Logout">
+                <i class="menu-icon tf-icons bx bx-log-out-circle"></i>
+                <div data-i18n="Logout">Logout</div>
+                </a>
+                </li>
+                </ul>
+                *@
 
 
             </aside>
@@ -936,7 +968,7 @@
                     </div>
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-                
+
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
 
 
@@ -944,9 +976,9 @@
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                     <i class="bx bx-user me-4"></i>
-                                  
-                                        <span class="user-email"></span>
-                                    
+
+                                    <span class="user-email"></span>
+
                                 </a>
 
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -955,10 +987,9 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
-
                                                     </div>
                                                 </div>
-                                
+
                                             </div>
                                         </a>
                                     </li>
@@ -967,12 +998,12 @@
                                     </li>
 
                                     <li>
-                                         
+
                                         <a class="dropdown-item menu-link " asp-controller="Home" asp-action="MyProfile" asp-route-email="">
-                                        <i class="bx bx-user me-2"></i>
-                                        <span class="align-middle">My Profile</span>
+                                            <i class="bx bx-user me-2"></i>
+                                            <span class="align-middle">My Profile</span>
                                         </a>
-                                       
+
                                     </li>
                                     <li>
                                     <li>
@@ -982,7 +1013,7 @@
                                         </a>
                                     </li>
 
-              
+
 
                                     <li>
                                         <div class="dropdown-divider"></div>
@@ -991,7 +1022,7 @@
                                     <li>
                                         <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">
                                             <div class="d-flex align-items-center align-middle">
-                                            <i class="menu-icon tf-icons bx bx-log-out-circle"></i>
+                                                <i class="menu-icon tf-icons bx bx-log-out-circle"></i>
                                                 <span class="flex-grow-1 align-middle">Logout</span>
                                             </div>
                                         </a>

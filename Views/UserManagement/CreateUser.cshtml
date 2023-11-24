@@ -1,0 +1,53 @@
+﻿@model DPLK.Models.TUser
+
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">User/</span> Create User</h4>
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-action="CreateUser" method="post">
+
+            <div class="mb-3 row">
+                <label asp-for="IdUser" class="col-md-2 col-form-label">User ID</label>
+                <div class="col-md-4">
+                    <input asp-for="IdUser" class="form-control" />
+                    <span asp-validation-for="IdUser" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="NamaLengkap" class="col-md-2 col-form-label">Full Name</label>
+                <div class="col-md-4">
+                    <input asp-for="NamaLengkap" class="form-control" />
+                    <span asp-validation-for="NamaLengkap" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Bagian" class="col-md-2 col-form-label">Department</label>
+                <div class="col-md-4">
+                    <input asp-for="Bagian" class="form-control" />
+                    <span asp-validation-for="Bagian" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Jabatan" class="col-md-2 col-form-label">Job Title</label>
+                <div class="col-md-4">
+                    <input asp-for="Jabatan" class="form-control" />
+                    <span asp-validation-for="Jabatan" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Email" class="col-md-2 col-form-label">Email</label>
+                <div class="col-md-4">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="background-color: #0073fe">Submit</button>
+            <a asp-action="UserList" style="background-color: #fd0017" class="btn btn-secondary">Back</a>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+﻿@model DPLK.Models.TMenu
+
+@{
+    ViewData["Title"] = "Edit Menu";
+    Layout = "~/Views/Shared/DPLK_Layout.cshtml";
+}
+
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Menu /</span> Edit</h4>
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-action="EditMenu" method="post">
+            <input type="hidden" asp-for="IdMenu" />
+
+            <div class="mb-3 row">
+                <label asp-for="IdGroup" class="col-md-2 col-form-label">ID Group</label>
+                <div class="col-md-4">
+                    <input asp-for="IdGroup" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label asp-for="IdParent" class="col-md-2 col-form-label">Id Parent</label>
+                <div class="col-md-4">
+                    <input asp-for="IdParent" class="form-control" />
+                    <span asp-validation-for="IdParent" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label asp-for="NamaMenu" class="col-md-2 col-form-label">Nama Menu</label>
+                <div class="col-md-4">
+                    <input asp-for="NamaMenu" class="form-control" />
+                    <span asp-validation-for="NamaMenu" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label asp-for="Url" class="col-md-2 col-form-label">URL</label>
+                <div class="col-md-4">
+                    <input asp-for="Url" class="form-control" />
+                    <span asp-validation-for="Url" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label asp-for="Level" class="col-md-2 col-form-label">Level</label>
+                <div class="col-md-4">
+                    <input asp-for="Level" class="form-control" />
+                    <span asp-validation-for="Level" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label asp-for="StatusMenu" class="col-md-2 col-form-label">Status Menu</label>
+                <div class="col-md-4">
+                    <input asp-for="StatusMenu" class="form-control" />
+                    <span asp-validation-for="StatusMenu" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="background-color: #0073fe">Submit</button>
+            <a asp-action="Menu" style="background-color: #fd0017" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+</div>
