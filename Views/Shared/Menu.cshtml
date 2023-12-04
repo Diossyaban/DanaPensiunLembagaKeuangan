@@ -1,0 +1,41 @@
+﻿@*@model IEnumerable<DPLK.Models.TMenu>
+
+<div>
+    <ul>
+        @foreach (var item in Model.Where(s => s.IdParent == null))
+        {
+            <li>
+                <a href="#">
+                    @item.NamaMenu
+                </a>
+                @if (Model.Any(s => s.IdParent == item.IdMenu))
+                {
+                    <ul>
+                        @foreach (var subItem in Model.Where(s => s.IdParent == item.IdMenu))
+                        {
+                            <li>
+                                <a href="#">
+                                    @subItem.NamaMenu
+                                </a>
+                                @if (Model.Any(s => s.IdParent == subItem.IdMenu))
+                                {
+                                    <ul>
+                                        @foreach (var subSubItem in Model.Where(s => s.IdParent == subItem.IdMenu))
+                                        {
+                                            <li>
+                                                <a href="/@subSubItem.NamaMenu/@subSubItem.Url">
+                                                    @subSubItem.NamaMenu
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+</div>
+*@

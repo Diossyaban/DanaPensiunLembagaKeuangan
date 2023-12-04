@@ -215,18 +215,7 @@ namespace DPLK.Controllers.UserManagement
             }
 
 
-            ViewBag.CurrentSort = currentFilter;
-            ViewBag.SortOrder = sortOrder == "NamaMenu" ? "" : "NamaMenu";
-
-            switch (sortOrder)
-            {
-                case "NamaMenu":
-                    x = x.OrderBy(address => address.NamaMenu).ToList();
-                    break;
-                default:
-                    x = x.OrderByDescending(address => address.NamaMenu).ToList();
-                    break;
-            }
+         
 
 
 

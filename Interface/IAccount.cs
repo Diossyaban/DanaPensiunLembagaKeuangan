@@ -1,11 +1,12 @@
 ﻿using DPLK.Models.Dto;
+using DPLK.Service;
 using Microsoft.Graph.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DPLK.Service
+namespace DPLK.Interface
 {
     public class AccountService : IAccountService
     {

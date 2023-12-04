@@ -84,7 +84,7 @@ namespace DPLK.Controllers.Pension
             return reportList;
         }
 
-
+        
         public async Task<IActionResult> NewBussinesCompany(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
         {
             int pageIndex = page ?? 1;
@@ -482,15 +482,15 @@ namespace DPLK.Controllers.Pension
                     TempData["SuccessMessage"] = "Request data sent";
 
                     using (SqlConnection connection = new SqlConnection(_connectionString))
-                    using (SqlCommand command = new SqlCommand("sp_paycenter_i", connection))
+                    using (SqlCommand x = new SqlCommand("sp_paycenter_i", connection))
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@client_nmbr", clientNumber);
-                        command.Parameters.AddWithValue("@paycenter_nm", paycenter.PaycenterNm);
-                        command.Parameters.AddWithValue("@master_paycenter_nmbr", paycenter.MasterPaycenterNmbr ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@contact_person", paycenter.ContactPerson ?? (object)DBNull.Value);
+                        x.CommandType = CommandType.StoredProcedure;
+                        x.Parameters.AddWithValue("@client_nmbr", clientNumber);
+                        x.Parameters.AddWithValue("@paycenter_nm", paycenter.PaycenterNm);
+                        x.Parameters.AddWithValue("@master_paycenter_nmbr", paycenter.MasterPaycenterNmbr ?? (object)DBNull.Value);
+                        x.Parameters.AddWithValue("@contact_person", paycenter.ContactPerson ?? (object)DBNull.Value);
                         await connection.OpenAsync();
-                        await command.ExecuteNonQueryAsync();
+                        await x.ExecuteNonQueryAsync();
                     }
 
                     return RedirectToAction("NewBussinesPayCenter");
@@ -599,17 +599,17 @@ namespace DPLK.Controllers.Pension
             {
                 await connection.OpenAsync();
 
-                using (SqlCommand command = new SqlCommand("sp_paycenter_u", connection))
+                using (SqlCommand x = new SqlCommand("sp_paycenter_u", connection))
                 {
-                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    x.CommandType = System.Data.CommandType.StoredProcedure;
 
-                    command.Parameters.AddWithValue("@client_nmbr", paycenter.ClientNmbr);
-                    command.Parameters.AddWithValue("@paycenter_nmbr", paycenter.PaycenterNmbr);
-                    command.Parameters.AddWithValue("@paycenter_nm", paycenter.PaycenterNm);
-                    command.Parameters.AddWithValue("@master_paycenter_nmbr", paycenter.MasterPaycenterNmbr == 0 ? (object)DBNull.Value : paycenter.MasterPaycenterNmbr);
-                    command.Parameters.AddWithValue("@contact_person", paycenter.ContactPerson);
+                    x.Parameters.AddWithValue("@client_nmbr", paycenter.ClientNmbr);
+                    x.Parameters.AddWithValue("@paycenter_nmbr", paycenter.PaycenterNmbr);
+                    x.Parameters.AddWithValue("@paycenter_nm", paycenter.PaycenterNm);
+                    x.Parameters.AddWithValue("@master_paycenter_nmbr", paycenter.MasterPaycenterNmbr == 0 ? (object)DBNull.Value : paycenter.MasterPaycenterNmbr);
+                    x.Parameters.AddWithValue("@contact_person", paycenter.ContactPerson);
 
-                    await command.ExecuteNonQueryAsync();
+                    await x.ExecuteNonQueryAsync();
                 }
             }
         }
@@ -619,14 +619,14 @@ namespace DPLK.Controllers.Pension
             List<SelectListItem> masterPayList = new List<SelectListItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
-            using (SqlCommand command = new SqlCommand("DDL_MASTER_PAYCENTER_ON_SCR_PAYCENTER", connection))
+            using (SqlCommand x = new SqlCommand("DDL_MASTER_PAYCENTER_ON_SCR_PAYCENTER", connection))
             {
-                command.CommandType = System.Data.CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@client_nmbr", clientNumber);
+                x.CommandType = System.Data.CommandType.StoredProcedure;
+                x.Parameters.AddWithValue("@client_nmbr", clientNumber);
 
                 connection.Open();
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlDataReader reader = x.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -645,13 +645,13 @@ namespace DPLK.Controllers.Pension
             List<SelectListItem> companyList = new List<SelectListItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
-            using (SqlCommand command = new SqlCommand("DDL_COMPANY_ON_SCR_PAYCENTER", connection))
+            using (SqlCommand x = new SqlCommand("DDL_COMPANY_ON_SCR_PAYCENTER", connection))
             {
-                command.CommandType = System.Data.CommandType.StoredProcedure;
+                x.CommandType = System.Data.CommandType.StoredProcedure;
 
                 connection.Open();
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlDataReader reader = x.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -678,13 +678,13 @@ namespace DPLK.Controllers.Pension
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand("sp_paycenter_r", connection))
+                    using (SqlCommand x = new SqlCommand("sp_paycenter_r", connection))
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@client_nmbr", clientNmbr);
-                        command.Parameters.AddWithValue("@paycenter_nmbr", paycenterNmbr);
+                        x.CommandType = CommandType.StoredProcedure;
+                        x.Parameters.AddWithValue("@client_nmbr", clientNmbr);
+                        x.Parameters.AddWithValue("@paycenter_nmbr", paycenterNmbr);
 
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = x.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -719,26 +719,179 @@ namespace DPLK.Controllers.Pension
             DDL();
             return View();
         }
+
         [HttpPost]
-        public IActionResult NewBussinesGroupIndex(GroupInfo group)
+        public async Task<IActionResult> NewBussinesGroupIndex(GroupInfo group)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    TempData["SuccessMessage"] = "Group information created successfully";
-                    InsertGroup(group);
-                    return RedirectToAction("NewBussinesGroupIndex");
+                    TempData["SuccessMessage"] = " data has been saved successfully";
+                    await InsertGroupAsync(group);
+                    return RedirectToAction("Index");
                 }
                 catch (System.Exception ex)
                 {
-                    ModelState.AddModelError("", $"Error while creating group information: {ex.Message}");
+                    ModelState.AddModelError("", $"Error while saving Group Infos data: {ex.Message}");
                 }
             }
 
             DDL();
             return View(group);
         }
+        private async Task InsertGroupAsync(GroupInfo group)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (var value = new SqlCommand("sp_group_info_i", connection))
+                    {
+                        value.CommandType = CommandType.StoredProcedure;
+
+                        AddSqlParameter(value, "@product_type", SqlDbType.Int, group.ProductType);
+                        AddSqlParameter(value, "@termination_dt", SqlDbType.DateTime, group.TerminationDt);
+                        AddSqlParameter(value, "@case_close_dt", SqlDbType.DateTime, group.CaseCloseDt);
+                        AddSqlParameter(value, "@efctv_dt", SqlDbType.DateTime, group.EfctvDt);
+                        AddSqlParameter(value, "@client_nmbr", SqlDbType.Int, group.ClientNmbr);
+                        AddSqlParameter(value, "@ind_grp_cd", SqlDbType.SmallInt, group.IndGrpCd);
+                        AddSqlParameter(value, "@allow_with_nmbr", SqlDbType.Int, group.AllowWithNmbr);
+                        AddSqlParameter(value, "@with_year", SqlDbType.Int, group.WithYear);
+                        AddSqlParameter(value, "@min_annuity_prct", SqlDbType.Float, group.MinAnnuityPrct);
+                        AddSqlParameter(value, "@min_annuity_amt", SqlDbType.Float, group.MinAnnuityAmt);
+                        AddSqlParameter(value, "@anl_max_with_freq", SqlDbType.Int, group.AnlMaxWithFreq);
+                        AddSqlParameter(value, "@min_with_amt", SqlDbType.Float, group.MinWithAmt);
+                        AddSqlParameter(value, "@max_with_prct", SqlDbType.Float, group.MaxWithPrct);
+                        AddSqlParameter(value, "@min_yr_for_with", SqlDbType.Int, group.MinYrForWith);
+                        AddSqlParameter(value, "@early_retire_age", SqlDbType.Int, group.EarlyRetireAge);
+                        AddSqlParameter(value, "@normal_retire_age", SqlDbType.Int, group.NormalRetireAge);
+                        AddSqlParameter(value, "@min_cntrb_amt", SqlDbType.Float, group.MinCntrbAmt);
+                        AddSqlParameter(value, "@max_cntrb_amt", SqlDbType.Float, group.MaxCntrbAmt);
+                        AddSqlParameter(value, "@with_src_type_nmbr", SqlDbType.SmallInt, group.WithSrcTypeNmbr);
+                        AddSqlParameter(value, "@incl_contrib_flg", SqlDbType.SmallInt, group.InclContribFlg);
+                        AddSqlParameter(value, "@last_change_dt", SqlDbType.DateTime, DateTime.Now);
+                        AddSqlParameter(value, "@affiliatedTo", SqlDbType.Int, group.AffiliatedTo);
+                        AddSqlParameter(value, "@premium_mtd_type", SqlDbType.SmallInt, group.PremiumMtdType);
+                        AddSqlParameter(value, "@maturity_type_nmbr", SqlDbType.SmallInt, group.MaturityTypeNmbr);
+                        AddSqlParameter(value, "@maturity_val", SqlDbType.VarChar, group.MaturityVal);
+                        AddSqlParameter(value, "@create_dt", SqlDbType.DateTime, DateTime.Now);
+                        AddSqlParameter(value, "@mail_addr_opt", SqlDbType.Int, group.MailAddrOpt);
+                        AddSqlParameter(value, "@bill_payctr_opt", SqlDbType.Int, group.BillPayctrOpt);
+                        AddSqlParameter(value, "@psl_payment_freq", SqlDbType.Int, group.PslPaymentFreq);
+                        AddSqlParameter(value, "@backdated_efctv_dt", SqlDbType.DateTime, group.BackdatedEfctvDt);
+                        AddSqlParameter(value, "@accbal_freq_nmbr", SqlDbType.SmallInt, group.AccbalFreqNmbr);
+                        AddSqlParameter(value, "@Support_UU1992", SqlDbType.SmallInt, group.SupportUu1992);
+                        AddSqlParameter(value, "@completed_dt", SqlDbType.DateTime, group.CompletedDt);
+                        AddSqlParameter(value, "@accbal_lstprn_dt", SqlDbType.DateTime, group.AccbalLstprnDt);
+                        AddSqlParameter(value, "@prorate_fee_flg", SqlDbType.Int, group.ProrateFeeFlg);
+                        AddSqlParameter(value, "@mpp_termination_dt", SqlDbType.DateTime, group.MppTerminationDt);
+                        AddSqlParameter(value, "@SPAK_recv_dt", SqlDbType.DateTime, group.SpakRecvDt);
+                        AddSqlParameter(value, "@have_psl", SqlDbType.SmallInt, group.HavePsl);
+                        AddSqlParameter(value, "@psl_type", SqlDbType.SmallInt, group.PslType);
+                        AddSqlParameter(value, "@pooled_flg", SqlDbType.Int, group.PooledFlg);
+                        AddSqlParameter(value, "@old_grp_nmbr", SqlDbType.VarChar, group.OldGrpNmbr);
+                        AddSqlParameter(value, "@claim_process_day", SqlDbType.Int, group.ClaimProcessDay);
+                        AddSqlParameter(value, "@va_currency", SqlDbType.VarChar, group.VaCurrencyNmbr);
+                        AddSqlParameter(value, "@va_partner", SqlDbType.VarChar, group.VaDplkNmbr);
+                        AddSqlParameter(value, "@commision_type", SqlDbType.Int, group.CommisionType);
+                        AddSqlParameter(value, "@commision_flg", SqlDbType.Int, group.CommisionFlg);
+                        AddSqlParameter(value, "@agent_nmbr", SqlDbType.Int, group.AgentNmbr);
+
+                        await value.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw new System.Exception("Error saat memasukkan informasi grup", ex);
+            }
+        }
+        private static void AddSqlParameter(SqlCommand command, string parameterName, SqlDbType dbType, object value)
+        {
+            SqlParameter parameter = new SqlParameter(parameterName, dbType);
+
+            if (value == null || (value is string && string.IsNullOrEmpty((string)value)))
+            {
+                parameter.Value = DBNull.Value;
+            }
+            else
+            {
+                parameter.Value = value;
+            }
+
+            command.Parameters.Add(parameter);
+        }
+
+        private void InsertGroup(GroupInfo group)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("sp_group_info_i", connection))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@product_type", group.ProductType);
+                    command.Parameters.AddWithValue("@termination_dt", group.TerminationDt);
+                    command.Parameters.AddWithValue("@case_close_dt", group.CaseCloseDt);
+                    command.Parameters.AddWithValue("@efctv_dt", group.EfctvDt);
+                    command.Parameters.AddWithValue("@client_nmbr", group.ClientNmbr);
+                    command.Parameters.AddWithValue("@ind_grp_cd", group.IndGrpCd);
+                    command.Parameters.AddWithValue("@allow_with_nmbr", group.AllowWithNmbr);
+                    command.Parameters.AddWithValue("@with_year", group.WithYear);
+                    command.Parameters.AddWithValue("@min_annuity_prct", group.MinAnnuityPrct);
+                    command.Parameters.AddWithValue("@min_annuity_amt", group.MinAnnuityAmt);
+                    command.Parameters.AddWithValue("@anl_max_with_freq", group.AnlMaxWithFreq);
+                    command.Parameters.AddWithValue("@min_with_amt", group.MinWithAmt);
+                    command.Parameters.AddWithValue("@max_with_prct", group.MaxWithPrct);
+                    command.Parameters.AddWithValue("@min_yr_for_with", group.MinYrForWith);
+                    command.Parameters.AddWithValue("@early_retire_age", group.EarlyRetireAge);
+                    command.Parameters.AddWithValue("@normal_retire_age", group.NormalRetireAge);
+                    command.Parameters.AddWithValue("@min_cntrb_amt", group.MinCntrbAmt);
+                    command.Parameters.AddWithValue("@max_cntrb_amt", group.MaxCntrbAmt);
+                    command.Parameters.AddWithValue("@with_src_type_nmbr", group.WithSrcTypeNmbr);
+                    command.Parameters.AddWithValue("@incl_contrib_flg", group.InclContribFlg);
+                    command.Parameters.AddWithValue("@last_change_dt", DateTime.Now);
+                    command.Parameters.AddWithValue("@affiliatedTo", group.AffiliatedTo);
+                    command.Parameters.AddWithValue("@premium_mtd_type", group.PremiumMtdType);
+                    command.Parameters.AddWithValue("@maturity_type_nmbr", group.MaturityTypeNmbr);
+                    command.Parameters.AddWithValue("@maturity_val", group.MaturityVal);
+                    command.Parameters.AddWithValue("@create_dt", DateTime.Now);
+                    command.Parameters.AddWithValue("@mail_addr_opt", group.MailAddrOpt);
+                    command.Parameters.AddWithValue("@bill_payctr_opt", group.BillPayctrOpt);
+                    command.Parameters.AddWithValue("@psl_payment_freq", group.PslPaymentFreq);
+                    command.Parameters.AddWithValue("@backdated_efctv_dt", group.BackdatedEfctvDt);
+                    command.Parameters.AddWithValue("@accbal_freq_nmbr", group.AccbalFreqNmbr);
+                    command.Parameters.AddWithValue("@Support_UU1992", group.SupportUu1992);
+                    command.Parameters.AddWithValue("@completed_dt", group.CompletedDt);
+                    command.Parameters.AddWithValue("@accbal_lstprn_dt", group.AccbalLstprnDt);
+                    command.Parameters.AddWithValue("@prorate_fee_flg", group.ProrateFeeFlg);
+                    command.Parameters.AddWithValue("@mpp_termination_dt", group.MppTerminationDt);
+                    command.Parameters.AddWithValue("@SPAK_recv_dt", group.SpakRecvDt);
+                    command.Parameters.AddWithValue("@have_psl", group.HavePsl);
+                    command.Parameters.AddWithValue("@psl_type", group.PslType);
+                    command.Parameters.AddWithValue("@pooled_flg", group.PooledFlg);
+                    command.Parameters.AddWithValue("@old_grp_nmbr", group.OldGrpNmbr);
+                    command.Parameters.AddWithValue("@claim_process_day", group.ClaimProcessDay);
+                    command.Parameters.AddWithValue("@va_currency_nmbr", group.VaCurrencyNmbr);
+                    command.Parameters.AddWithValue("@va_dplk_nmbr", group.VaDplkNmbr);
+                    command.Parameters.AddWithValue("@commision_type", group.CommisionType);
+                    command.Parameters.AddWithValue("@commision_flg", group.CommisionFlg);
+                    command.Parameters.AddWithValue("@agent_nmbr", group.AgentNmbr);
+
+                    command.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+
+      /*  private static void AddSqlParameter(SqlCommand command, string parameterName, SqlDbType dbType, object value)
+        {
+            command.Parameters.Add(new SqlParameter(parameterName, dbType) { Value = value ?? DBNull.Value });
+        }*/
         [HttpGet]
         public IActionResult GroupChange()
         {
@@ -1235,67 +1388,6 @@ namespace DPLK.Controllers.Pension
         }
 
 
-        private void InsertGroup(GroupInfo group)
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new SqlCommand("sp_group_info_i", connection))
-                {
-                    command.CommandType = System.Data.CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@product_type", group.ProductType);
-                    command.Parameters.AddWithValue("@termination_dt", group.TerminationDt);
-                    command.Parameters.AddWithValue("@case_close_dt", group.CaseCloseDt);
-                    command.Parameters.AddWithValue("@efctv_dt", group.EfctvDt);
-                    command.Parameters.AddWithValue("@client_nmbr", group.ClientNmbr);
-                    command.Parameters.AddWithValue("@ind_grp_cd", group.IndGrpCd);
-                    command.Parameters.AddWithValue("@allow_with_nmbr", group.AllowWithNmbr);
-                    command.Parameters.AddWithValue("@with_year", group.WithYear);
-                    command.Parameters.AddWithValue("@min_annuity_prct", group.MinAnnuityPrct);
-                    command.Parameters.AddWithValue("@min_annuity_amt", group.MinAnnuityAmt);
-                    command.Parameters.AddWithValue("@anl_max_with_freq", group.AnlMaxWithFreq);
-                    command.Parameters.AddWithValue("@min_with_amt", group.MinWithAmt);
-                    command.Parameters.AddWithValue("@max_with_prct", group.MaxWithPrct);
-                    command.Parameters.AddWithValue("@min_yr_for_with", group.MinYrForWith);
-                    command.Parameters.AddWithValue("@early_retire_age", group.EarlyRetireAge);
-                    command.Parameters.AddWithValue("@normal_retire_age", group.NormalRetireAge);
-                    command.Parameters.AddWithValue("@min_cntrb_amt", group.MinCntrbAmt);
-                    command.Parameters.AddWithValue("@max_cntrb_amt", group.MaxCntrbAmt);
-                    command.Parameters.AddWithValue("@with_src_type_nmbr", group.WithSrcTypeNmbr);
-                    command.Parameters.AddWithValue("@incl_contrib_flg", group.InclContribFlg);
-                    command.Parameters.AddWithValue("@last_change_dt", DateTime.Now);
-                    command.Parameters.AddWithValue("@affiliatedTo", group.AffiliatedTo);
-                    command.Parameters.AddWithValue("@premium_mtd_type", group.PremiumMtdType);
-                    command.Parameters.AddWithValue("@maturity_type_nmbr", group.MaturityTypeNmbr);
-                    command.Parameters.AddWithValue("@maturity_val", group.MaturityVal);
-                    command.Parameters.AddWithValue("@create_dt", DateTime.Now);
-                    command.Parameters.AddWithValue("@mail_addr_opt", group.MailAddrOpt);
-                    command.Parameters.AddWithValue("@bill_payctr_opt", group.BillPayctrOpt);
-                    command.Parameters.AddWithValue("@psl_payment_freq", group.PslPaymentFreq);
-                    command.Parameters.AddWithValue("@backdated_efctv_dt", group.BackdatedEfctvDt);
-                    command.Parameters.AddWithValue("@accbal_freq_nmbr", group.AccbalFreqNmbr);
-                    command.Parameters.AddWithValue("@Support_UU1992", group.SupportUu1992);
-                    command.Parameters.AddWithValue("@completed_dt", group.CompletedDt);
-                    command.Parameters.AddWithValue("@accbal_lstprn_dt", group.AccbalLstprnDt);
-                    command.Parameters.AddWithValue("@prorate_fee_flg", group.ProrateFeeFlg);
-                    command.Parameters.AddWithValue("@mpp_termination_dt", group.MppTerminationDt);
-                    command.Parameters.AddWithValue("@SPAK_recv_dt", group.SpakRecvDt);
-                    command.Parameters.AddWithValue("@have_psl", group.HavePsl);
-                    command.Parameters.AddWithValue("@psl_type", group.PslType);
-                    command.Parameters.AddWithValue("@pooled_flg", group.PooledFlg);
-                    command.Parameters.AddWithValue("@old_grp_nmbr", group.OldGrpNmbr);
-                    command.Parameters.AddWithValue("@claim_process_day", group.ClaimProcessDay);
-                    command.Parameters.AddWithValue("@va_currency_nmbr", group.VaCurrencyNmbr);
-                    command.Parameters.AddWithValue("@va_dplk_nmbr", group.VaDplkNmbr);
-                    command.Parameters.AddWithValue("@commision_type", group.CommisionType);
-                    command.Parameters.AddWithValue("@commision_flg", group.CommisionFlg);
-                    command.Parameters.AddWithValue("@agent_nmbr", group.AgentNmbr);
-
-                    command.ExecuteNonQuery();
-                }
-
-            }
-        }
 
         private void DDL()
         {

@@ -8,5 +8,6 @@ namespace DPLK.Service
     {
         Task<bool> LoginAsync(string email, string password);
         Task<User> GetUserByEmailAsync(string email);
+
     }
 }

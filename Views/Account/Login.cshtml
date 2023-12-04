@@ -1,4 +1,5 @@
-﻿@model DPLK.Models.Dto.Login
+﻿
+@model DPLK.Models.Dto.Login
 
 @{
     Layout = "_AutLayout";
@@ -26,9 +27,14 @@
             <div class="alert alert-info">@logoutMessage</div>
             Context.Response.Cookies.Delete("LogoutMessage");
         }
-    }
 
-  
+        var loginErrorMessage = Context.Request.Cookies["LoginErrorMessage"];
+        if (!string.IsNullOrEmpty(loginErrorMessage))
+        {
+            <div class="alert alert-danger">@loginErrorMessage</div>
+            Context.Response.Cookies.Delete("LoginErrorMessage");
+        }
+    } 
     <form  class="mb-3" asp-action="Login" method="post" >
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="mb-3">
