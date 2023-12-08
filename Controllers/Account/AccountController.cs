@@ -85,7 +85,6 @@ namespace DPLK.Controllers.Account
 
         private string GetClientIpAddress()
         {
-            // Dapatkan alamat IP dari header X-Forwarded-For (untuk proxy) atau dari HttpContext.Connection.RemoteIpAddress
             string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             if (HttpContext.Request.Headers.ContainsKey("X-Forwarded-For"))

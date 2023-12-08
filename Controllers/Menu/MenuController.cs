@@ -1,4 +1,4 @@
-﻿/*using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System;
 using DPLK.Models.context;
@@ -26,6 +26,12 @@ namespace DPLK.Controllers.Menu
 
         }
 
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         public ActionResult GetMenuList()
         {
             try
@@ -37,7 +43,7 @@ namespace DPLK.Controllers.Menu
                                   IdMenu = m.IdMenu,
                                   IdParent = m.IdParent,
                                   NamaMenu = m.NamaMenu,
-                                  Url = m.Url, 
+                                  Url = m.Url,
                                   Level = m.Level,
                                   StatusMenu = m.StatusMenu,
 
@@ -45,20 +51,13 @@ namespace DPLK.Controllers.Menu
 
                 return View("Menu", result);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 var error = ex.Message.ToString();
                 return Content("Error");
             }
         }
-    
-        public IActionResult Index()
-        {
-            return View();
-        }
 
-       
-        
+
     }
 }
-*/

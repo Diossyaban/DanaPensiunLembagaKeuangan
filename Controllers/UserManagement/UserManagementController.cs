@@ -36,6 +36,25 @@ namespace DPLK.Controllers.UserManagement
             _hostingEnvironment = hostingEnvironment;
 
         }
+
+        public IActionResult CreateUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUser(TUser user)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "data has been saved.";
+                return RedirectToAction("UserList");
+            }
+
+            return View(user);
+        }
         // GET: UserManagementController
         public async Task<IActionResult> UserList(string searchString, string currentFilter, string sortOrder, int? page, int? pageSize)
         {
@@ -77,24 +96,7 @@ namespace DPLK.Controllers.UserManagement
             return View(x.ToPagedList(pageIndex, defaultSize));
         }
 
-        public IActionResult CreateUser()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateUser(TUser user)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "data has been saved.";
-                return RedirectToAction("UserList");
-            }
-
-            return View(user);
-        }
+   
 
         public async Task<IActionResult> EditUser(string id)
         {

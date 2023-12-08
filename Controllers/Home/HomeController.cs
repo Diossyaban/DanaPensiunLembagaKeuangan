@@ -8,35 +8,45 @@ using DPLK.Models.dto;
 using DPLK.Service;
 using DPLK.Models.context;
 using System.Diagnostics;
+using DPLK.Controllers.Menu;
+using Microsoft.AspNetCore.Hosting;
+
+using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 namespace DPLK.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly PensionContext _context;
+        private readonly string _connectionString;
+        private readonly ILogger<HomeController> _logger;
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
         //private readonly UserManager<User> _userManager;
         //private readonly SignInManager<User> _signInManager;
         //private readonly IAccountService _serviceManager;
 
         public HomeController(ILogger<HomeController> logger,
-            PensionContext context, IAccountService service)
+            PensionContext context, IConfiguration configuration, 
+            IAccountService service, IWebHostEnvironment hostingEnvironment)
         {
+            _context = context;
+            _connectionString = configuration.GetConnectionString("Pension");
             _logger = logger;
+            _hostingEnvironment = hostingEnvironment;
             //_userManager = userManager;
             //_signInManager = signInManager;
-            _context = context;
             //_serviceManager = service;
         }
 
         [Authorize]
         public IActionResult Index()
         {
-            /*            var myUser = await _userManager.GetUserAsync(User);
-            */
+            
             return View();
         }
-
+       
         public IActionResult Privacy()
         {
             return View();
@@ -50,6 +60,33 @@ namespace DPLK.Controllers
         {
             return View();
         }
+
+        public ActionResult GetMenuList()
+        {
+            try
+            {
+                var result = _context.TMenus
+                    .Select(m => new DPLK.Models.TMenu
+                    {
+                        IdGroup = m.IdGroup,
+                        IdMenu = m.IdMenu,
+                        IdParent = m.IdParent,
+                        NamaMenu = m.NamaMenu,
+                        Url = m.Url,
+                        Level = m.Level,
+                        StatusMenu = m.StatusMenu,
+                    })
+                    .ToList();
+
+                return View("Menu", result);
+            }
+            catch (System.Exception ex)
+            {
+                var error = ex.Message.ToString();
+                return Content("Error");
+            }
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

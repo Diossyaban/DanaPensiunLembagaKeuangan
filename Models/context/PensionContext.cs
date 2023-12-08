@@ -27,6 +27,7 @@ namespace DPLK.Models.context
         public virtual DbSet<TLogActivity> TLogActivities { get; set; }
         public virtual DbSet<TMenu> TMenus { get; set; }
         public virtual DbSet<TUser> TUsers { get; set; }
+        public virtual DbSet<TAksesMenu> TAksesMenus { get; set; }
 
 
         public DbSet<PayMentAfterCancel> payMentAfterCancels { get; set; }
@@ -20059,7 +20060,16 @@ namespace DPLK.Models.context
                 entity.Property(e => e.Jabatan).IsUnicode(false);
                 entity.Property(e => e.NamaLengkap).IsUnicode(false);
             });
+            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<TAksesMenu>(entity =>
+            {
+                entity.Property(e => e.IdMenu).IsUnicode(false);
+
+                entity.Property(e => e.IdProfile).IsUnicode(false);
+            });
+
+            OnModelCreatingPartial(modelBuilder);
             OnModelCreatingPartial(modelBuilder);
 
         }
