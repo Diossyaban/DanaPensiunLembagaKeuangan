@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DPLK.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using DPLK.Models.dto;
+using DPLK.Models.Dto;
 using DPLK.Service;
 using DPLK.Models.context;
 using System.Diagnostics;
@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using DPLK.Interface;
 
 namespace DPLK.Controllers
 {
@@ -22,28 +23,29 @@ namespace DPLK.Controllers
         private readonly string _connectionString;
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _hostingEnvironment;
-
-        //private readonly UserManager<User> _userManager;
-        //private readonly SignInManager<User> _signInManager;
-        //private readonly IAccountService _serviceManager;
-
+        private readonly IAccountService _accountService;
+/*        private readonly UserManager<TUser> _userManager;
+*/
         public HomeController(ILogger<HomeController> logger,
             PensionContext context, IConfiguration configuration, 
-            IAccountService service, IWebHostEnvironment hostingEnvironment)
+            IAccountService service, IWebHostEnvironment hostingEnvironment, 
+            IAccountService accountService)
         {
             _context = context;
             _connectionString = configuration.GetConnectionString("Pension");
-            _logger = logger;
+            _logger = logger;   
             _hostingEnvironment = hostingEnvironment;
-            //_userManager = userManager;
-            //_signInManager = signInManager;
+            _accountService = accountService;
+/*            _userManager = userManager;
+*/            //_signInManager = signInManager;
             //_serviceManager = service;
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            
+           /* var myEmail = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var myJabatan = await _userManager.FindByIdAsync(User.Identity.Name);*/
             return View();
         }
        

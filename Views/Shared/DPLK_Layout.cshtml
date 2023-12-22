@@ -1,7 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@*@inject UserManager<DPLK.Models.dto.User> UserManager
-@inject SignInManager<DPLK.Models.dto.User> SignInManager
-*@
+﻿@using DPLK.Service
+@using Microsoft.AspNetCore.Identity
+@* @inject UserManager<DPLK.Models.TUser> UserManager
+ *@
 
 <!DOCTYPE html>
 
@@ -989,12 +989,24 @@
                                     </li>
 
                                     <li>
+                                        @{
+                                            // var myEmail = await UserManager.FindByEmailAsync(User.Identity.Name);
 
+                                          
+                                                <a class="dropdown-item menu-link" asp-controller="Home" asp-action="MyProfile" >
+                                                    <i class="bx bx-user me-2"></i>
+                                                    <span class="align-middle">My Profile</span>
+                                                </a>
+                                            
+                                        }
+                                    </li>
+                                    <li>
+                                        @{
                                         <a class="dropdown-item menu-link " asp-controller="Home" asp-action="MyProfile" asp-route-email="">
                                             <i class="bx bx-user me-2"></i>
                                             <span class="align-middle">My Profile</span>
                                         </a>
-
+                                        }
                                     </li>
                                     <li>
                                     <li>

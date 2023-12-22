@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph.Models;
 
 #nullable disable
 
@@ -10,11 +11,11 @@ namespace DPLK.Models
 {
    
     [Table("T_User")]
-    public partial class TUser
+    public partial class TUser 
     {
         [Key]
         [Required]
-        [Column("id_user")]
+        [Column("id_profile")]
         [StringLength(50)]
         public string IdUser { get; set; }
         [Required]

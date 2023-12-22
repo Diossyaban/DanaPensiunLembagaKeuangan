@@ -58,6 +58,30 @@ namespace DPLK.Controllers.Menu
             }
         }
 
+        public IActionResult Pension()
+        {
+            return View();
+        }
+        public IActionResult Transaction()
+        {
+            return View();
+        }
+        public IActionResult CashManagement()
+        {
+            return View();
+        }
+        public IActionResult InvestmentManagement()
+        {
+            return View();
+        }
+        public IActionResult ClientInquery()
+        {
+            return View();
+        }
+        public IActionResult CustomerService()
+        {
+            return View();
+        }
 
     }
 }

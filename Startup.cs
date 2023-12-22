@@ -2,11 +2,13 @@ using System;
 using DPLK.Controllers;
 using DPLK.Interface;
 using DPLK.ModelAcc;
+using DPLK.Models;
 using DPLK.Models.context;
 using DPLK.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +39,7 @@ namespace Test1
                 options.UseSqlServer(Configuration.GetConnectionString("PensionAcc")));
 
             services.AddHttpClient();
+
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
